@@ -1,8 +1,15 @@
+// next
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+// clerk auth
+import { ClerkProvider } from "@clerk/nextjs";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+// utils
+import { cn } from "@/lib/utils";
+// styles
 import "./globals.css";
-
 const inter = Inter({ subsets: ["latin"] });
+
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -15,8 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+          <body className={cn(inter.className, "bg-white dark:bg-[#313338]")}>
+            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="connect-theme">
+              {children}
+            </ThemeProvider>
+          </body>
+      </html>
+    </ClerkProvider>
   );
 }
