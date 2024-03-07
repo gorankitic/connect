@@ -55,7 +55,7 @@ const InviteModal = () => {
                     </Label>
                     <div className="flex items-center mt-2 gap-x-2">
                         <Input
-                        disabled={isLoading} 
+                            disabled={isLoading} 
                             value={inviteUrl}
                             className="bg-neutral-300/50 border-0 focus-visible:ring-0 text-neutral-900 focus-visible:ring-offset-0" 
                         />
