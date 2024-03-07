@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 // components
 import { Toaster } from 'react-hot-toast';
+import { ModalProvider } from "@/components/providers/ModalProvider";
 // clerk auth
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -28,6 +29,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
           <body className={cn(inter.className, "bg-white dark:bg-[#313338]")}>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="connect-theme">
+              <ModalProvider />
               {children}
             </ThemeProvider>
             <Toaster position="top-right" />

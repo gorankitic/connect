@@ -1,9 +1,9 @@
 "use client";
 
 // hooks
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useModal } from "@/hooks/useModalStore";
 // components
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -18,10 +18,9 @@ import { createServer } from "@/actions/actions";
 import toast from "react-hot-toast";
 
 
-const InitialModal = () => {
-    // to solve hydration problem
-    const [isClient, setIsClient] = useState(false);
+const CreateServerModal = () => {
     const router = useRouter();
+    const { isOpen, onClose, type } = useModal();
 
     const form = useForm<ServerFormSchema>({
         resolver: zodResolver(serverFormSchema),
@@ -32,7 +31,7 @@ const InitialModal = () => {
     });
     const { handleSubmit, control, formState: { isSubmitting } } = form;
 
-    useEffect(() => {setIsClient(true)}, []);
+    const isModalOpen = isOpen && type === "createServer";
 
     const onSubmit = async (data: ServerFormSchema) => {
         const response = await createServer(data);
@@ -41,15 +40,16 @@ const InitialModal = () => {
         }
         form.reset();
         router.refresh();
-        window.location.reload();
+        onClose();
     }
 
-    if(!isClient) {
-        return null;
+    const handleClose = () => {
+        form.reset();
+        onClose();
     }
 
     return (
-        <Dialog open>
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent className="bg-white text-neutral-900 p-0 overflow-hidden">
                 <DialogHeader className="pt-8 px-6">
                     <DialogTitle className="text-2xl text-center">
@@ -108,4 +108,4 @@ const InitialModal = () => {
     )
 }
 
-export default InitialModal;
+export default CreateServerModal;
