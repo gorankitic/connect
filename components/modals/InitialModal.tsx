@@ -12,6 +12,9 @@ import FileUpload from "@/components/FileUpload";
 // zod validation
 import { serverFormSchema, ServerFormSchema } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+// server actions
+import { createServer } from "@/actions/actions";
+import toast from "react-hot-toast";
 
 
 const InitialModal = () => {
@@ -25,12 +28,15 @@ const InitialModal = () => {
             imageUrl: ""
         }
     });
-    const { handleSubmit, control, formState: {isSubmitting}  } = form;
+    const { handleSubmit, control, formState: { isSubmitting } } = form;
 
     useEffect(() => {setIsClient(true)}, []);
 
     const onSubmit = async (data: ServerFormSchema) => {
-        console.log(data)
+        const response = await createServer(data);
+        if(response?.message) {
+            toast.error(response.message);
+        }
     }
 
     if(!isClient) {
@@ -64,12 +70,12 @@ const InitialModal = () => {
                                     )}
                                 />
                             </div>
-                            <FormField 
+                            <FormField
                                 control={control} 
                                 name="name" 
                                 render={({ field }) =>
                                     <FormItem>
-                                        <FormLabel className="uppercase text-xs font-bold text-neutral-500 dark:text-secondary/70">
+                                        <FormLabel  className="uppercase text-xs font-bold text-neutral-500 dark:text-secondary/70">
                                             Server name
                                         </FormLabel>
                                         <FormControl>

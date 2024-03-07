@@ -1,6 +1,8 @@
 // next
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+// components
+import { Toaster } from 'react-hot-toast';
 // clerk auth
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -28,6 +30,7 @@ export default function RootLayout({
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="connect-theme">
               {children}
             </ThemeProvider>
+            <Toaster position="top-right" />
           </body>
       </html>
     </ClerkProvider>
