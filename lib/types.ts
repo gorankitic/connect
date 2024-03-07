@@ -1,5 +1,7 @@
 // zod
 import * as z from "zod";
+// prisma
+import { Server, Member, Profile } from "@prisma/client";
 
 // zod validation schema
 export const serverFormSchema = z.object({
@@ -8,3 +10,7 @@ export const serverFormSchema = z.object({
 });
 
 export type ServerFormSchema = z.infer<typeof serverFormSchema>;
+
+export type ServerWithMembersWithProfiles = Server & {
+    members: (Member & { profile: Profile })[]
+}
