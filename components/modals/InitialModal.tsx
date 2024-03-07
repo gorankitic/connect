@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input"; 
 import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/FileUpload";
 // zod validation
 import { serverFormSchema, ServerFormSchema } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +25,7 @@ const InitialModal = () => {
             imageUrl: ""
         }
     });
-    const { handleSubmit, control, formState: {isSubmitting} } = form;
+    const { handleSubmit, control, formState: {isSubmitting}  } = form;
 
     useEffect(() => {setIsClient(true)}, []);
 
@@ -51,24 +52,38 @@ const InitialModal = () => {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                         <div className="space-y-8 px-6">
                             <div className="flex items-center justify-center text-center">
-                                TODO: image upload
+                                <FormField 
+                                    control={control} 
+                                    name="imageUrl" 
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <FileUpload endpoint="serverImage" value={field.value} onChange={field.onChange}   />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
                             </div>
-                            <FormField control={control} name="name" render={({ field }) =>
-                                <FormItem>
-                                    <FormLabel className="uppercase text-xs font-bold text-neutral-500 dark:text-secondary/70">
-                                        Server name
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            placeholder="Server name" 
-                                            disabled={isSubmitting} 
-                                            className="bg-neutral-300/50 border-0 focus-visible:ring-0 text-neutral-900 focus-visible:ring-offset-0"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            } />
+                            <FormField 
+                                control={control} 
+                                name="name" 
+                                render={({ field }) =>
+                                    <FormItem>
+                                        <FormLabel className="uppercase text-xs font-bold text-neutral-500 dark:text-secondary/70">
+                                            Server name
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                placeholder="Server name" 
+                                                disabled={isSubmitting} 
+                                                className="bg-neutral-300/50 border-0 focus-visible:ring-0 text-neutral-900 focus-visible:ring-offset-0"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                } 
+                            />
                         </div>
                         <DialogFooter className="bg-gray-100 px-6 py-4">
                             <Button variant="primary" disabled={isSubmitting}>

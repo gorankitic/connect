@@ -12,8 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 
 export const metadata: Metadata = {
-  title: "Connect",
-  description: "Connect web app",
+  title: "Ramonda",
+  description: "Ramonda web app for team work",
 };
 
 export default function RootLayout({
