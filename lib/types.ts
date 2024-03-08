@@ -2,6 +2,10 @@
 import * as z from "zod";
 // prisma
 import { Server, Member, Profile, ChannelType } from "@prisma/client";
+// socket.io
+import { Server as NetServer, Socket } from "net";
+import { NextApiResponse } from "next";
+import { Server as SocketIOServer } from "socket.io";
 
 // zod validation schema
 export const serverFormSchema = z.object({
@@ -22,4 +26,12 @@ export type ChannelFormSchema = z.infer<typeof channelFormSchema>;
 
 export type ServerWithMembersWithProfiles = Server & {
     members: (Member & { profile: Profile })[]
+}
+
+export type NextApiResponseServerIo = NextApiResponse & {
+    socket: Socket & {
+        server: NetServer & {
+            io: SocketIOServer
+        }
+    }
 }
