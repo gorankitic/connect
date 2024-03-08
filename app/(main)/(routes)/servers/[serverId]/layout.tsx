@@ -9,8 +9,6 @@ import { db } from "@/lib/db";
 // clerk auth
 import { redirectToSignIn } from "@clerk/nextjs";
 
-
-
 const ServerIdLayout = async ({ children, params }: { children: React.ReactNode, params: { serverId: string } }) => {
     const profile = await currentProfile();
     if(!profile) {

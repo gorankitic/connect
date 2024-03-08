@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 // components
 import ServerHeader from "./ServerHeader";
 import ServerSearch from "./ServerSearch";
+import ServerSection from "./ServerSection";
+import ServerChannel from "./ServerChannel";
+import ServerMember from "./ServerMember";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // utils
 import { db } from "@/lib/db";
@@ -67,46 +71,81 @@ const ServerSidebar = async ({ serverId }: { serverId: string }) => {
         <div className="flex flex-col h-full text-primary w-full dark:bg-[#2b2d31] bg-[#f2f3f5]">
             <ServerHeader server={server} role={role} />
             <ScrollArea className="flex-1 px-3">
-                <ServerSearch 
-                    data={[
-                        {
-                            label: "Text channels",
-                            type: "channel",
-                            data: textChannels?.map((channel) => ({
-                                id: channel.id,
-                                name:channel.name,
-                                icon: iconMap[channel.type]
-                            }))
-                        },
-                        {
-                            label: "Audio channels",
-                            type: "channel",
-                            data: audioChannels?.map((channel) => ({
-                                id: channel.id,
-                                name:channel.name,
-                                icon: iconMap[channel.type]
-                            }))
-                        },
-                        {
-                            label: "Video channels",
-                            type: "channel",
-                            data: videoChannels?.map((channel) => ({
-                                id: channel.id,
-                                name:channel.name,
-                                icon: iconMap[channel.type]
-                            }))
-                        },
-                        {
-                            label: "Members",
-                            type: "member",
-                            data: members?.map((member) => ({
-                                id: member.id,
-                                name: member.profile.name,
-                                icon: roleIconMap[member.role]
-                            }))
-                        }
-                    ]} 
-                />
+                <div className="mt-2">
+                    <ServerSearch 
+                        data={[
+                            {
+                                label: "Text channels",
+                                type: "channel",
+                                data: textChannels?.map((channel) => ({
+                                    id: channel.id,
+                                    name:channel.name,
+                                    icon: iconMap[channel.type]
+                                }))
+                            },
+                            {
+                                label: "Audio channels",
+                                type: "channel",
+                                data: audioChannels?.map((channel) => ({
+                                    id: channel.id,
+                                    name:channel.name,
+                                    icon: iconMap[channel.type]
+                                }))
+                            },
+                            {
+                                label: "Video channels",
+                                type: "channel",
+                                data: videoChannels?.map((channel) => ({
+                                    id: channel.id,
+                                    name:channel.name,
+                                    icon: iconMap[channel.type]
+                                }))
+                            },
+                            {
+                                label: "Members",
+                                type: "member",
+                                data: members?.map((member) => ({
+                                    id: member.id,
+                                    name: member.profile.name,
+                                    icon: roleIconMap[member.role]
+                                }))
+                            }
+                        ]} 
+                    />
+                </div>
+                <Separator className="bg-neutral-200 dark:bg-neutral-700 rounded-md my-2" />
+                {!!textChannels?.length && (
+                    <div className="mb-2">
+                        <ServerSection sectionType="channels" channelType={ChannelType.TEXT} role={role} label="Text channels" />
+                        {textChannels.map((channel) => (
+                            <ServerChannel key={channel.id} channel={channel} role={role} server={server} />
+                        ))}
+                    </div>
+                )}
+                {!!audioChannels?.length && (
+                    <div className="mb-2">
+                        <ServerSection sectionType="channels" channelType={ChannelType.AUDIO} role={role} label="Audio channels" />
+                        {audioChannels.map((channel) => (
+                            <ServerChannel key={channel.id} channel={channel} role={role} server={server} />
+                        ))}
+                    </div>
+                )}
+                {!!videoChannels?.length && (
+                    <div className="mb-2">
+                        <ServerSection sectionType="channels" channelType={ChannelType.VIDEO} role={role} label="Video channels" />
+                        {videoChannels.map((channel) => (
+                            <ServerChannel key={channel.id} channel={channel} role={role} server={server} />
+                        ))}
+                    </div>
+                )}
+                {!!members?.length && (
+                    <div className="mb-2">
+                        <ServerSection sectionType="members" role={role} label="Members" server={server} />
+                        {members.map((member) => (
+                            <ServerMember key={member.id} member={member} server={server} />
+                        ))}
+                    </div>
+                )}
             </ScrollArea>
         </div>
     )
