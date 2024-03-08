@@ -158,7 +158,7 @@ model DirectMessage {
   conversationId String       @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-  // @@index([memberId])
-  // @@index([conversationId])
+  @@index([memberId])
+  @@index([conversationId])
   @@map("directMessages")
 }
