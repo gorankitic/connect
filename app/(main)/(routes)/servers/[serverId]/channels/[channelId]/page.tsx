@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 // components
 import ChatHeader from "@/components/chat/ChatHeader";
+import ChatInput from "@/components/chat/ChatInput";
 // utils
 import { db } from "@/lib/db";
 import { currentProfile } from "@/lib/currentProfile";
@@ -18,7 +19,7 @@ type ChannelIdPageProps = {
 
 const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
     const profile = await currentProfile();
-    if(!profile) {
+    if (!profile) {
         return redirectToSignIn();
     }
 
@@ -33,13 +34,17 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
             profileId: profile.id
         }
     });
-    if(!channel || !member) {
+    if (!channel || !member) {
         redirect("/");
     }
 
     return (
         <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
             <ChatHeader name={channel.name} serverId={channel.serverId} type="channel" />
+            <div className="flex-1">
+                Messages
+            </div>
+            <ChatInput name={channel.name} type="channel" apiUrl="/api/socket/messages" query={{ channelId: channel.id, serverId: channel.serverId }} />
         </div>
     )
 }

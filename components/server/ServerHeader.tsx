@@ -3,7 +3,7 @@
 // hooks
 import { useModal } from "@/hooks/useModalStore";
 // types
-import { ServerWithMembersWithProfiles } from "@/lib/types";
+import { ServerWithMembersWithProfiles } from "@/types";
 import { MemberRole } from "@prisma/client";
 // components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";

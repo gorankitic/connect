@@ -3,7 +3,7 @@
 // hooks
 import { useModal } from "@/hooks/useModalStore";
 // types
-import { ServerWithMembersWithProfiles } from "@/lib/types";
+import { ServerWithMembersWithProfiles } from "@/types";
 // prisma types
 import { ChannelType, MemberRole } from "@prisma/client";
 // components
@@ -36,10 +36,10 @@ const ServerSection = ({ label, role, sectionType, channelType, server }: Server
             )}
             {role === MemberRole.ADMIN && sectionType === "members" && (
                 <ActionTooltip label="Manage members" side="top">
-                <button onClick={() => onOpen("members", { server })} className="text-neutral-500 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-300 transition">
-                    <Settings className="h-4 w-4" />
-                </button>
-            </ActionTooltip>
+                    <button onClick={() => onOpen("members", { server })} className="text-neutral-500 hover:text-neutral-600 dark:text-neutral-400 dark:hover:text-neutral-300 transition">
+                        <Settings className="h-4 w-4" />
+                    </button>
+                </ActionTooltip>
             )}
         </div>
     )

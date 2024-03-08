@@ -8,24 +8,24 @@ import { getErrorMessage } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 // types
-import { ServerFormSchema, serverFormSchema } from "@/lib/types";
+import { ServerFormSchema, serverFormSchema } from "@/types";
 
 export const createServer = async ({ name, imageUrl }: ServerFormSchema) => {
     const profile = await currentProfile();
 
-    if(!profile) {
-       throw new Error("❌Server error: There is no current profile.");
+    if (!profile) {
+        throw new Error("❌Server error: There is no current profile.");
     }
 
     // zod server-side validation
     const validatedFields = serverFormSchema.safeParse({ name, imageUrl });
-    
-    if(!validatedFields.success) {
+
+    if (!validatedFields.success) {
         return { message: "Invalid server data." }
     }
 
     const { data } = validatedFields;
-   
+
     try {
         await db.server.create({
             data: {

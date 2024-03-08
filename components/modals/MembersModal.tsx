@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuTrigger, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // types
-import { ServerWithMembersWithProfiles } from "@/lib/types";
+import { ServerWithMembersWithProfiles } from "@/types";
 // assets
 import { ShieldX, ShieldCheck, MoreVertical, ShieldQuestion, Shield, Check, Gavel, Loader2 } from "lucide-react";
 // prisma
@@ -29,7 +29,7 @@ const MembersModal = () => {
     const [loadingId, setLoadingId] = useState("");
     const router = useRouter();
 
-    const { server } = data as { server: ServerWithMembersWithProfiles }; 
+    const { server } = data as { server: ServerWithMembersWithProfiles };
     const isModalOpen = isOpen && type === "members";
 
     const onRoleChange = async (memberId: string, role: MemberRole) => {
@@ -42,13 +42,13 @@ const MembersModal = () => {
                 }
             });
             const response = await axios.patch(url, { role });
-            
+
             router.refresh();
             onOpen("members", { server: response.data });
 
         } catch (error) {
             console.log(error);
-        } finally{
+        } finally {
             setLoadingId("");
         }
     }
@@ -69,11 +69,11 @@ const MembersModal = () => {
 
         } catch (error) {
             console.log(error);
-        } finally{
+        } finally {
             setLoadingId("");
         }
     }
-    
+
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white text-neutral-900 p-0 overflow-hidden">
