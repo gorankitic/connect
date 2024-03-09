@@ -4,6 +4,7 @@
 import { Fragment } from "react";
 // hooks
 import { useChatQuery } from "@/hooks/useChatQuery";
+import { useChatSocket } from "@/hooks/useChatSocket";
 // prisma types
 import { Member, Message, Profile } from "@prisma/client";
 // components
@@ -36,7 +37,11 @@ type ChatMessagesProps = {
 
 const ChatMessages = ({ apiUrl, chatId, member, name, paramKey, paramValue, socketQuery, socketUrl, type }: ChatMessagesProps) => {
     const queryKey = `chat:${chatId}`;
+    const addKey = `chat:${chatId}:messages`;
+    const updateKey = `chat:${chatId}:messages:update`;
+
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useChatQuery({ queryKey, apiUrl, paramKey, paramValue });
+    useChatSocket({ queryKey, addKey, updateKey });
 
     if (status === "loading") {
         return (
