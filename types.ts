@@ -32,6 +32,11 @@ export const messageFileSchema = z.object({
 });
 export type MessageFileSchema = z.infer<typeof messageFileSchema>;
 
+export const editMessageSchema = z.object({
+    content: z.string().min(1)
+});
+export type EditMessageSchema = z.infer<typeof editMessageSchema>;
+
 // Socket types
 export type ServerWithMembersWithProfiles = Server & {
     members: (Member & { profile: Profile })[]
