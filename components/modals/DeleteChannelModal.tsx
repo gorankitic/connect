@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 
 const DeleteChannelModal = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const { isOpen, onClose, type, data: { channel, server  } } = useModal();
+    const { isOpen, onClose, type, data: { channel, server } } = useModal();
     const router = useRouter();
 
     const isModalOpen = isOpen && type === "deleteChannel";
@@ -38,7 +38,7 @@ const DeleteChannelModal = () => {
             setIsLoading(false);
         }
     }
-    
+
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white text-neutral-900 p-0 overflow-hidden">
@@ -47,7 +47,7 @@ const DeleteChannelModal = () => {
                         Delete channel
                     </DialogTitle>
                     <DialogDescription className="text-center text-neutral-700">
-                        Are you sure you want to delete <span className="font-semibold text-purple-600">#{channel?.name}</span>?
+                        Are you sure you want to delete <span className="font-semibold text-sky-600">#{channel?.name}</span>?
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="bg-neutral-100 px-6 py-4">

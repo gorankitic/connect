@@ -1,10 +1,11 @@
+
 // next
 import { redirect } from "next/navigation";
 // utils
+import { db } from "@/lib/db";
 import { currentProfile } from "@/lib/currentProfile";
 // clerk auth
 import { redirectToSignIn } from "@clerk/nextjs";
-import { db } from "@/lib/db";
 
 type InviteCodeProps = {
     params: {
@@ -12,14 +13,13 @@ type InviteCodeProps = {
     }
 }
 
-
 const InviteCode = async ({ params }: InviteCodeProps) => {
     const profile = await currentProfile();
 
-    if(!profile) {
+    if (!profile) {
         return redirectToSignIn();
     }
-    if(!params.inviteCode) {
+    if (!params.inviteCode) {
         return redirect
     }
 
@@ -34,7 +34,7 @@ const InviteCode = async ({ params }: InviteCodeProps) => {
         }
     });
 
-    if(existingServer) {
+    if (existingServer) {
         return redirect(`/servers/${existingServer.id}`);
     }
 
@@ -49,7 +49,7 @@ const InviteCode = async ({ params }: InviteCodeProps) => {
         }
     });
 
-    if(server) {
+    if (server) {
         return redirect(`/servers/${server.id}`);
     }
 

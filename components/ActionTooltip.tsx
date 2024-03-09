@@ -18,7 +18,7 @@ export const ActionTooltip = ({ label, children, side, align }: ActionTooltipPro
                 <TooltipTrigger asChild>
                     {children}
                 </TooltipTrigger>
-                <TooltipContent side={side} align={align}>
+                <TooltipContent side={side} align={align} className="dark:bg-neutral-900 dark:text-neutral-300">
                     <p className="font-semibold text-sm capitalize">{label.toLowerCase()}</p>
                 </TooltipContent>
             </Tooltip>

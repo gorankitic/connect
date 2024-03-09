@@ -4,14 +4,14 @@ import { redirect } from "next/navigation";
 // components
 import ServerSidebar from "@/components/server/ServerSidebar";
 // utils
-import { currentProfile } from "@/lib/currentProfile";
 import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/currentProfile";
 // clerk auth
 import { redirectToSignIn } from "@clerk/nextjs";
 
 const ServerIdLayout = async ({ children, params }: { children: React.ReactNode, params: { serverId: string } }) => {
     const profile = await currentProfile();
-    if(!profile) {
+    if (!profile) {
         return redirectToSignIn();
     }
 
@@ -26,7 +26,7 @@ const ServerIdLayout = async ({ children, params }: { children: React.ReactNode,
         }
     });
 
-    if(!server) {
+    if (!server) {
         return redirect("/");
     }
 

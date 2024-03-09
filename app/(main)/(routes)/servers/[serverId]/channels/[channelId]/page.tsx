@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import { currentProfile } from "@/lib/currentProfile";
 // clerk auth
 import { redirectToSignIn } from "@clerk/nextjs";
+// prisma types
 import { ChannelType } from "@prisma/client";
 
 type ChannelIdPageProps = {
@@ -46,19 +47,19 @@ const ChannelIdPage = async ({ params }: ChannelIdPageProps) => {
             <ChatHeader name={channel.name} serverId={channel.serverId} type="channel" />
             {channel.type === ChannelType.TEXT && (
                 <>
-                    <div className="flex-1">
-                        <ChatMessages
-                            member={member}
-                            name={channel.name}
-                            chatId={channel.id}
-                            type="channel"
-                            apiUrl="/api/messages"
-                            socketUrl="/api/socket/messages"
-                            socketQuery={{ channelId: channel.id, serverId: channel.serverId }}
-                            paramKey="channelId"
-                            paramValue={channel.id}
-                        />
-                    </div>
+                    {/* <div className="flex-1"> */}
+                    <ChatMessages
+                        member={member}
+                        name={channel.name}
+                        chatId={channel.id}
+                        type="channel"
+                        apiUrl="/api/messages"
+                        socketUrl="/api/socket/messages"
+                        socketQuery={{ channelId: channel.id, serverId: channel.serverId }}
+                        paramKey="channelId"
+                        paramValue={channel.id}
+                    />
+                    {/* </div> */}
                     <ChatInput name={channel.name} type="channel" apiUrl="/api/socket/messages" query={{ channelId: channel.id, serverId: channel.serverId }} />
                 </>
             )}

@@ -64,9 +64,8 @@ const ChatMessages = ({ apiUrl, chatId, member, name, paramKey, paramValue, sock
             </div>
         )
     }
-
     return (
-        <div ref={chatRef} className="flex-1 flex flex-col justify-end h-full pt-4 pb-2 overflow-y-auto">
+        <div ref={chatRef} className="flex-1 flex flex-col  pt-4 pb-2 overflow-y-auto">
             {!hasNextPage && <div className="flex-1" />}
             {!hasNextPage && <ChatWelcome type={type} name={name} />}
             {hasNextPage && (
@@ -83,7 +82,7 @@ const ChatMessages = ({ apiUrl, chatId, member, name, paramKey, paramValue, sock
                     }
                 </div>
             )}
-            <div className="flex flex-col-reverse">
+            <div className="flex flex-col-reverse mt-auto">
                 {data?.pages?.map((group, i) => (
                     <Fragment key={i}>
                         {group.items.map((message: MessageWithMemberWithProfile) => (

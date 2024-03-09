@@ -28,15 +28,15 @@ const ServerMember = ({ member, server }: ServerMemberProps) => {
     const icon = roleIconMap[member.role];
 
     const onClick = () => {
-        router.push(`/servers/${params.serverId}/conversations/${member.id}`);
+        router.push(`/servers/${params?.serverId}/conversations/${member.id}`);
     }
 
     return (
-        <button 
+        <button
             onClick={onClick}
             className={cn(
                 "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-neutral-700/10 dark:hover:bg-neutral-700/50 transition mb-1",
-                params?.memberId === member.id && "bg-neutral-700/20 dark:bg-neutral-700" 
+                params?.memberId === member.id && "bg-neutral-700/20 dark:bg-neutral-700"
             )}
         >
             <UserAvatar src={member.profile.imageUrl} className="h-8 w-8 md:h-8 md:w-8" />

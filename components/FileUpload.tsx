@@ -23,7 +23,7 @@ const FileUpload = ({ endpoint, value, onChange }: FileUploadProps) => {
                 <Image fill src={value} alt="server image" className="rounded-full " />
                 <button
                     onClick={() => onChange("")}
-                    className="bg-purple-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
+                    className="bg-sky-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
                     type="button"
                 >
                     <X className="h-3 w-3" />
@@ -52,7 +52,7 @@ const FileUpload = ({ endpoint, value, onChange }: FileUploadProps) => {
 
     return (
         <UploadDropzone
-            className="ut-button:bg-purple-500 ut-label:text-purple-500 ut-label:hover:text-purple-400 cursor-pointer"
+            className="ut-button:bg-sky-500 ut-label:text-sky-500 ut-label:hover:text-sky-400 cursor-pointer"
             endpoint={endpoint}
             onClientUploadComplete={(res) => {
                 onChange(res?.[0].url);

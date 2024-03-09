@@ -13,12 +13,12 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 // styles
 import "./globals.css";
+
 const inter = Inter({ subsets: ["latin"] });
 
-
 export const metadata: Metadata = {
-  title: "Ramonda",
-  description: "Ramonda web app for team work",
+  title: "Connect",
+  description: "Connect app is web app for team work",
 };
 
 export default function RootLayout({

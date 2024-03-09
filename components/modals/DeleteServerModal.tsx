@@ -33,7 +33,7 @@ const DeleteServerModal = () => {
         }
     }
 
-    
+
     return (
         <Dialog open={isModalOpen} onOpenChange={onClose}>
             <DialogContent className="bg-white text-neutral-900 p-0 overflow-hidden">
@@ -42,7 +42,7 @@ const DeleteServerModal = () => {
                         Delete server
                     </DialogTitle>
                     <DialogDescription className="text-center text-neutral-700">
-                        Are you sure you want to delete <span className="font-semibold text-purple-600">{server?.name}</span>?
+                        Are you sure you want to delete <span className="font-semibold text-sky-600">{server?.name}</span>?
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="bg-neutral-100 px-6 py-4">

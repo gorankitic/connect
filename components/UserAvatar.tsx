@@ -1,6 +1,7 @@
 
 // components
-import { Avatar, AvatarImage } from "@/components/ui/avatar"; 
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+// utils
 import { cn } from "@/lib/utils";
 
 type UserAvatarProps = {

@@ -9,13 +9,13 @@ import { ToggleMode } from "@/components/ToggleMode";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 // utils
-import { currentProfile } from "@/lib/currentProfile";
 import { db } from "@/lib/db";
+import { currentProfile } from "@/lib/currentProfile";
 
 const NavigationSidebar = async () => {
     const profile = await currentProfile();
 
-    if(!profile) {
+    if (!profile) {
         return redirect("/");
     }
 
@@ -42,7 +42,7 @@ const NavigationSidebar = async () => {
             </ScrollArea>
             <div className="pb-3 mt-auto flex items-center flex-col gap-y-4">
                 <ToggleMode />
-                <UserButton afterSignOutUrl="/" appearance={{ elements: {avatarBox: "h-[36px] w-[36px]"} }} />
+                <UserButton afterSignOutUrl="/" appearance={{ elements: { avatarBox: "h-[36px] w-[36px]" } }} />
             </div>
         </div>
     )
