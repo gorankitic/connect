@@ -2,6 +2,7 @@
 // components
 import ToggleMobile from "@/components/ToggleMobile";
 import UserAvatar from "@/components/UserAvatar";
+import ChatVideoButton from "./ChatVideoButton";
 import { SocketIndicator } from "@/components/SocketIndicator";
 // assets
 import { Hash } from "lucide-react";
@@ -24,6 +25,9 @@ const ChatHeader = ({ serverId, name, type, imageUrl }: ChatHeaderProps) => {
                 {name}
             </p>
             <div className="flex items-center">
+                {type === "conversation" && (
+                    <ChatVideoButton />
+                )}
                 <SocketIndicator />
             </div>
         </div>
