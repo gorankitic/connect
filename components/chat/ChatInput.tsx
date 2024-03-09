@@ -26,6 +26,7 @@ type ChatInputProps = {
 const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
     const router = useRouter();
     const { onOpen } = useModal();
+
     const form = useForm<ChatInputSchema>({
         resolver: zodResolver(chatInputSchema),
         defaultValues: {
