@@ -1,0 +1,1 @@
+export type MemberRole = "ADMIN" | "MODERATOR" | "GUEST";

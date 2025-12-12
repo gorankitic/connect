@@ -1,11 +1,11 @@
 // modules
-import mongoose, { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 // types
-import { IUser } from "src/lib/types/user.types";
+import { UserDocument } from "@/lib/types/user.types";
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<UserDocument>({
     name: {
         type: String,
         required: [true, "Name is required."]
@@ -21,11 +21,6 @@ const userSchema = new Schema<IUser>({
         required: [true, "Password is required."],
         minlength: 8,
         select: false
-    },
-    role: {
-        type: String,
-        enum: ["admin", "user"],
-        default: "user"
     },
     avatarUuid: String,
     isVerified: {
@@ -50,28 +45,25 @@ const userSchema = new Schema<IUser>({
 }, { timestamps: true });
 
 // Pre-save mongoose document hook/middleware to hash password
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 });
 
 // Pre-save mongoose document hook/middleware to hash verification token
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("verificationToken") || !this.verificationToken) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("verificationToken") || !this.verificationToken) return;
     this.verificationToken = crypto.createHash('sha256').update(this.verificationToken).digest('hex');
-    next();
 });
 
 // Pre-save mongoose document hook/middleware to update passwordChangedAt property when reset password happens
 // Used to invalidate existing JWT issued before user reset or update password
-userSchema.pre("save", function (next) {
+userSchema.pre("save", function () {
     // Only run if password was modified and document isn't new
-    if (!this.isModified("password") || this.isNew) return next();
+    if (!this.isModified("password") || this.isNew) return;
     // Subtract 1 second to avoid timing race conditions between token issuance and saving
     this.passwordChangedAt = new Date(Date.now() - 1000);
-    next();
 });
 
 // Instance methods (correctPassword, passwordChangedAfterJWTIssued, createPasswordResetToken) 
@@ -90,6 +82,4 @@ userSchema.methods.passwordChangedAfterJWTIssued = function (jwtIssuedAt: number
     }
 }
 
-const User = mongoose.model<IUser>("User", userSchema);
-
-export default User;
+export const User = model<UserDocument>("User", userSchema);

@@ -1,27 +1,10 @@
 // modules
 import { NextFunction, Response, Request } from "express";
 import z from "zod";
-import chalk from "chalk";
-// config
-import { logger } from "@/config/logger";
 // constants
 import { NODE_ENV } from "@/config/env";
 // utils
 import { AppError } from "src/lib/utils/AppError";
-
-const logError = (err: any, req: Request) => {
-    logger.error(
-        {
-            message: err.message,
-            stack: err.stack,
-            status: err.statusCode || 500,
-            path: req.originalUrl,
-            method: req.method,
-            ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress || req.ip || "unknown",
-        },
-        "Unhandled error"
-    );
-};
 
 // 🔥 HANDLING MONGOOSE ERRORS
 // Handling invalid database IDs
@@ -85,7 +68,9 @@ const sendErrorProd = (err: AppError, res: Response) => {
         });
     } else {
         // Programming or other unknown error, don't leak too much details
-        // 2. Send generic message
+        // 1. Log error
+        console.error(err);
+        // 2. Send generic message to client
         res.status(500).json({
             status: "error",
             message: "Something went wrong."
@@ -112,10 +97,7 @@ export const globalErrorHandler = (err: any, req: Request, res: Response, next: 
     appError.statusCode = appError.statusCode || 500;
     appError.status = appError.status || "error";
 
-    // 4) Log error using Pino
-    logError(appError, req);
-
-    // 5) Respond to client based on environment
+    // 4) Respond to client based on environment
     if (NODE_ENV === "development") {
         sendErrorDev(appError, res);
     } else if (NODE_ENV === "production") {

@@ -3,7 +3,7 @@ import { deleteFile } from "@uploadcare/rest-client";
 // config
 import { uploadcareAuth } from "src/config/uploadcare";
 // models
-import User from "src/models/user.model";
+import { User } from "src/models/user.model";
 // schemas
 import { UpdateDataSchema } from "../lib/schemas/user.schemas";
 

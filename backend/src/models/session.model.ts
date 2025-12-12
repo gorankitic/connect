@@ -1,9 +1,7 @@
 // modules
 import mongoose, { Schema } from "mongoose";
-// types
-import { ISession } from "src/lib/types/session.types";
 
-const sessionSchema = new Schema<ISession>({
+const sessionSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -48,6 +46,6 @@ const sessionSchema = new Schema<ISession>({
 
 // MongoDB TTL index, sessions are deleted automatically after their expiration date
 
-const Session = mongoose.model<ISession>("Session", sessionSchema);
+const Session = mongoose.model("Session", sessionSchema);
 
 export default Session;

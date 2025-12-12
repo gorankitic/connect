@@ -1,11 +1,10 @@
 import { Document, Types } from "mongoose";
 
-export interface IUser extends Document {
+export interface UserDocument extends Document {
     _id: Types.ObjectId,
     name: string;
     email: string;
     password: string;
-    role: "admin" | "user";
     avatarUuid?: string;
     isVerified: boolean;
     verificationToken?: string;

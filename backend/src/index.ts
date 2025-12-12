@@ -9,18 +9,20 @@ import cookieParser from "cookie-parser";
 import hpp from "hpp";
 // config
 import { connectDatabase } from "./config/database";
+import { connectResend } from "./config/resend";
 // constants
 import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./config/env";
 // middlewares
 import { protect } from "./middleware/authMiddleware";
 import { globalErrorHandler } from "./middleware/globalErrorHandler";
-import { requestLogger } from "./middleware/requestLogger";
 import { globalRateLimiter } from "./middleware/rateLimiters";
 import { sanitizeMongo } from "./middleware/sanitizeMongo";
 // (routers)
 import authRouter from "./routes/auth.routes";
 import userRouter from "./routes/user.routes";
 import sessionRouter from "./routes/session.routes";
+import uploadRouter from "./routes/upload.routes";
+import serverRouter from "./routes/server.routes";
 // lib
 import { AppError } from "./lib/utils/AppError";
 
@@ -38,19 +40,19 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "10kb" }));
 // 5) Cookie parser
 app.use(cookieParser());
-// 6) Logging
-// app.use(requestLogger);
-// 7) Global rate limiter
+// 6) Global rate limiter
 app.use("/api", globalRateLimiter);
-// 8) Sanitize request against NoSQL injection
+// 7) Sanitize request against NoSQL injection
 app.use(sanitizeMongo);
-// 9). Prevent HTTP parameter pollution
+// 8). Prevent HTTP parameter pollution
 app.use(hpp());
 
 // (Routers)
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", protect, userRouter);
 app.use("/api/v1/sessions", protect, sessionRouter);
+app.use("/api/v1/uploads", protect, uploadRouter);
+app.use("/api/v1/servers", protect, serverRouter);
 
 // Catch-all for undefined routes
 app.use((req, res, next) => {
@@ -62,8 +64,10 @@ app.use(globalErrorHandler);
 
 (async () => {
     try {
-        // Connect MongoDb
+        // Connect to MongoDb
         await connectDatabase();
+        // Connect to Resend
+        await connectResend();
         // Start listening for http requests
         app.listen(PORT, () => {
             console.log(chalk.bgGreen.bold(`Server is up in ${NODE_ENV} environment on port ${PORT}.`));

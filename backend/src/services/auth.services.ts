@@ -7,7 +7,7 @@ import { SigninSchema, SignupSchema } from "src/lib/schemas/auth.schemas";
 import { sendEmail } from "src/lib/email/sendEmail";
 import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates";
 // models
-import User from "src/models/user.model";
+import { User } from "src/models/user.model";
 // constants
 import { CLIENT_ORIGIN } from "@/config/env";
 // services

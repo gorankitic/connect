@@ -1,15 +1,9 @@
-// modules
-import { generateSecureSignature } from "@uploadcare/signed-uploads";
 // utils
 import { catchAsync } from "src/lib/utils/catchAsync";
 // models
-import User from "src/models/user.model";
+import { User } from "src/models/user.model";
 // services
 import { updateUserAvatar, updateUserData } from "src/services/user.services";
-// config
-import { UPLOADCARE_SIGNATURE_LIFETIME } from "src/config/uploadcare";
-// constants
-import { UPLOADCARE_PUBLIC_KEY, UPLOADCARE_SECRET_KEY } from "@/config/env";
 
 // Get signed in user
 // GET method
@@ -26,7 +20,6 @@ export const getUser = catchAsync(async (req, res, next) => {
             name: user.name,
             email: user.email,
             avatarUuid: user.avatarUuid,
-            role: user.role,
             isVerified: user.isVerified
         }
     });
@@ -58,22 +51,5 @@ export const updateAvatar = catchAsync(async (req, res, next) => {
     res.status(201).json({
         status: "success",
         message: "Your avatar has been successfully updated."
-    });
-});
-
-// Get signature for upload
-// GET method
-// Protected route /api/v1/users/signature
-export const getUploadcareSignature = catchAsync((req, res) => {
-    const secretKey = UPLOADCARE_SECRET_KEY;
-    const publicKey = UPLOADCARE_PUBLIC_KEY;
-
-    const { secureSignature, secureExpire } = generateSecureSignature(secretKey, { lifetime: UPLOADCARE_SIGNATURE_LIFETIME });
-
-    res.status(200).json({
-        status: "success",
-        secureSignature,
-        secureExpire,
-        publicKey,
     });
 });

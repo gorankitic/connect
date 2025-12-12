@@ -1,5 +1,5 @@
 // utils
-import { resend } from "./resend";
+import { resend } from "../../config/resend";
 
 type EmailInput = {
     to: string,
