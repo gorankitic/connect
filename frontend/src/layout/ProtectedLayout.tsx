@@ -1,15 +1,17 @@
 // react-router
 import { Outlet } from "react-router-dom";
 // components
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import NavigationSidebar from "@/components/NavigationSidebar";
+import ModalProvider from "@/providers/ModalProvider";
 
 const ProtectedLayout = () => {
     return (
-        <div className="flex flex-col min-h-screen max-w-5xl mx-auto px-5">
-            <Header />
-            <Outlet />
-            <Footer />
+        <div className="h-screen w-screen flex overflow-hidden">
+            <NavigationSidebar />
+            <main className="flex-1 overflow-y-auto ml-20">
+                <Outlet />
+            </main>
+            <ModalProvider />
         </div>
     )
 }

@@ -1,7 +1,7 @@
 // api
 import api from "@/lib/api/apiClient";
 // types
-import type { GetUploadSignatureResponse, GetUserResponse, SuccessResponse } from "@/lib/api/apiTypes";
+import type { GetUserResponse, SuccessResponse } from "@/lib/api/apiTypes";
 // schemas
 import type { UpdateDataSchema, UpdateAvatarSchema } from "@/lib/schemas/user.schema";
 
@@ -17,10 +17,5 @@ export const updateDataApi = async ({ name }: UpdateDataSchema) => {
 
 export const updateAvatarApi = async ({ avatarUuid }: UpdateAvatarSchema) => {
     const { data } = await api.patch<SuccessResponse>("/users/update-avatar", { avatarUuid });
-    return data;
-}
-
-export const getUploadSignature = async () => {
-    const { data } = await api.get<GetUploadSignatureResponse>("/users/signature");
     return data;
 }

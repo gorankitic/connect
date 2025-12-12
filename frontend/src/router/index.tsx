@@ -1,7 +1,6 @@
 // react-router
 import { createBrowserRouter } from "react-router-dom";
 // pages
-import Home from "@/pages/Home";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import Settings from "@/pages/Settings";
@@ -9,6 +8,8 @@ import VerificationSuccess from "@/pages/VerificationSuccess";
 import VerificationFailed from "@/pages/VerificationFailed";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
+import Onboarding from "@/pages/Onboarding";
+import Server from "@/pages/Server";
 // route-wrappers
 import ProtectedRoutes from "@/router/ProtectedRoutes";
 import PublicRoutes from "@/router/PublicRoutes";
@@ -23,8 +24,9 @@ const router = createBrowserRouter([
             {
                 element: <ProtectedLayout />,
                 children: [
-                    { path: "/", element: <Home /> },
+                    { path: "/", element: <Onboarding /> },
                     { path: "/settings", element: <Settings /> },
+                    { path: "/servers/:serverId", element: <Server /> }
                 ]
             },
         ]

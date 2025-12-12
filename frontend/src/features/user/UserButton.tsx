@@ -20,8 +20,8 @@ const UserButton = () => {
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger>
-                <div className="relative cursor-pointer">
-                    <Avatar className="size-8" aria-label={`Avatar of ${user.name}`}>
+                <div className="relative group cursor-pointer">
+                    <Avatar className="size-10 shadow-md group-hover:rounded-xl transition-all" aria-label={`Avatar of ${user.name}`}>
                         {user.avatarUuid && <img src={getAvatarUrl(user.avatarUuid)!} className="object-cover w-full h-full" />}
                         {!user.avatarUuid && (
                             <AvatarFallback>
@@ -31,7 +31,7 @@ const UserButton = () => {
                     </Avatar>
                 </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-64 px-5 py-3" align="end">
+            <DropdownMenuContent className="w-64 px-5 py-3 ml-10" align="start" >
                 <div className="mb-2 flex items-center gap-3">
                     {user.avatarUuid ? (
                         <img

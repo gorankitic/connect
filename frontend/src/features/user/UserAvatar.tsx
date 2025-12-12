@@ -7,7 +7,7 @@ import { useUpdateAvatar } from "@/features/user/useUpdateAvatar";
 // components
 import UploadAvatar from "@/features/user/UploadAvatar";
 // utils
-import { getInitials } from "@/lib/utils";
+import { getAvatarUrl, getInitials } from "@/lib/utils";
 
 const UserAvatar = () => {
     const { user } = useUser();
@@ -30,8 +30,8 @@ const UserAvatar = () => {
     return (
         <div className="flex gap-5">
             <UploadAvatar
-                avatarUuid={user.avatarUuid}
-                initials={getInitials(user.name)}
+                avatarUrl={getAvatarUrl(user.avatarUuid)}
+                fallback={getInitials(user.name)}
                 onFileSelect={handleFileSelect}
                 isUploading={isUploading}
             />

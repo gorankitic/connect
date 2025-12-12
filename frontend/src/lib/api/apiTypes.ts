@@ -29,7 +29,6 @@ export type User = {
     name: string,
     email: string,
     avatarUuid: string | null,
-    role: string | null,
     isVerified: boolean
 }
 
@@ -55,4 +54,35 @@ export type GetSessionsResponse = {
     status: "success",
     currentSessionId: string,
     sessions: Session[]
+}
+
+type CreateServerData = {
+    _id: string
+}
+
+export type CreateServerResponse = {
+    status: "success",
+    server: CreateServerData;
+}
+
+export type ServerLite = {
+    _id: string,
+    name: string,
+    avatarUuid: string
+}
+
+export type Channel = {
+    _id: string;
+    name: string;
+    type: "TEXT" | "AUDIO" | "VIDEO";
+    server: string
+};
+
+export type Server = {
+    _id: string;
+    name: string;
+    avatarUuid: string;
+    inviteCode: string;
+    owner: string;
+    channels: Channel[];
 }

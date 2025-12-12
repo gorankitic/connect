@@ -1,16 +1,15 @@
 // lib
-import { cn, getAvatarUrl } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Camera } from "lucide-react";
 
 type UploadAvatarProps = {
-    avatarUuid: string | null;
-    initials: string;
+    avatarUrl: string | null;
+    fallback: React.ReactNode;
     isUploading: boolean;
     onFileSelect: (file: File) => void;
 }
 
-const UploadAvatar = ({ avatarUuid, initials, isUploading, onFileSelect }: UploadAvatarProps) => {
-    const avatarUrl = getAvatarUrl(avatarUuid);
+const UploadAvatar = ({ avatarUrl, fallback, isUploading, onFileSelect }: UploadAvatarProps) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -26,10 +25,9 @@ const UploadAvatar = ({ avatarUuid, initials, isUploading, onFileSelect }: Uploa
                 />
             ) : (
                 <div className={cn("w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-xl font-semibold tracking-wider shadow-sm", isUploading && "opacity-40 blur-[1px]")}>
-                    {initials}
+                    {fallback}
                 </div>
             )}
-
             <input
                 type="file"
                 id="avatarInput"

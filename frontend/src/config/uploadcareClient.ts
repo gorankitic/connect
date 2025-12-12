@@ -1,7 +1,7 @@
 // lib
 import { UploadClient } from "@uploadcare/upload-client";
 // services
-import { getUploadSignature } from "@/services/user.services";
+import { getUploadSignature } from "@/services/upload.services";
 
 export const uploadToUploadcare = async (file: File) => {
     const { secureSignature, secureExpire, publicKey } = await getUploadSignature();

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 type IconType = ComponentType<{ className?: string }>;
 
 type ButtonProps = {
+    type?: "submit" | "button" | "reset",
     children: React.ReactNode,
     disabled?: boolean,
     className?: string,
@@ -14,10 +15,11 @@ type ButtonProps = {
     onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button = ({ children, disabled, onClick, icon: Icon, className }: ButtonProps) => {
+const Button = ({ children, disabled, onClick, icon: Icon, className, type }: ButtonProps) => {
 
     return (
         <motion.button
+            type={type}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             disabled={disabled}
