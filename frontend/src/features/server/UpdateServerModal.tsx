@@ -1,4 +1,5 @@
 // lib
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send, Server, X } from "lucide-react";
@@ -6,23 +7,29 @@ import { Send, Server, X } from "lucide-react";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import ServerAvatar from "./ServerAvatar";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 // types & schemas
 import { upsertServerSchema, type UpsertServerSchema } from "@/lib/schemas/server.schema";
 // hooks
 import { useModal } from "@/hooks/useModal";
-import { useCreateServer } from "@/features/server/useCreateServer";
+import { useUpdateServer } from "@/features/server/useUpdateServer";
 
-const CreateServerModal = () => {
-    const { isOpen, onClose, type } = useModal();
-    const { createServer, isPending } = useCreateServer();
+const UpdateServerModal = () => {
+    const { isOpen, onClose, type, data: { server } } = useModal();
+    const { updateServer, isPending } = useUpdateServer();
 
     const { register, handleSubmit, setValue, formState: { errors }, watch, reset } = useForm<UpsertServerSchema>({
         resolver: zodResolver(upsertServerSchema),
         defaultValues: { name: "", avatarUuid: "" }
     });
 
-    const isModalOpen = isOpen && type === "createServer";
+    const isModalOpen = isOpen && type === "updateServer";
+
+    useEffect(() => {
+        if (isModalOpen && server) {
+            reset({ name: server?.name, avatarUuid: server?.avatarUuid });
+        }
+    }, [isModalOpen, server, reset]);
 
     const handleClose = () => {
         reset({ name: "", avatarUuid: "" });
@@ -30,7 +37,9 @@ const CreateServerModal = () => {
     }
 
     const onSubmit = ({ name, avatarUuid }: UpsertServerSchema) => {
-        createServer({ name, avatarUuid });
+        if (!server) return;
+
+        updateServer({ serverId: server._id, name, avatarUuid });
 
         reset({ name: "", avatarUuid: "" });
         onClose();
@@ -40,8 +49,8 @@ const CreateServerModal = () => {
         <Dialog open={isModalOpen} onOpenChange={handleClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle className="text-center uppercase text-blue-600 my-3">Create a new server</DialogTitle>
-                    <DialogDescription className="text-center">Add a name and upload an avatar for your server. <br /> You can customize your server later. Click <em>Create</em> when you&apos;re ready.</DialogDescription>
+                    <DialogTitle className="text-center uppercase text-blue-600 my-3">Customize your server</DialogTitle>
+                    <DialogDescription className="text-center">Change the server name or upload a new avatar. <br /> Click <em>Update</em> when you&apos;re ready.</DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <section className="flex items-center justify-center w-full mb-5">
@@ -60,21 +69,23 @@ const CreateServerModal = () => {
                         icon={Server}
                     />
                     <div className="flex gap-3 justify-end mt-5">
-                        <Button
-                            type="button"
-                            icon={X}
-                            disabled={isPending}
-                            className="bg-gray-200 text-gray-700 w-28"
-                            onClick={handleClose}
-                        >
-                            Cancel
-                        </Button>
+                        <DialogClose asChild>
+                            <Button
+                                type="button"
+                                icon={X}
+                                disabled={isPending}
+                                className="bg-gray-200 text-gray-700 w-28"
+                                onClick={handleClose}
+                            >
+                                Cancel
+                            </Button>
+                        </DialogClose>
                         <Button
                             icon={Send}
                             disabled={isPending}
                             className="bg-linear-to-r from-blue-400 to-blue-600 text-white w-28"
                         >
-                            Create
+                            Update
                         </Button>
                     </div>
                 </form>
@@ -83,4 +94,4 @@ const CreateServerModal = () => {
     )
 }
 
-export default CreateServerModal;
+export default UpdateServerModal;

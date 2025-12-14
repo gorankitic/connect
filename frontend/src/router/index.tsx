@@ -9,13 +9,16 @@ import VerificationFailed from "@/pages/VerificationFailed";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import Onboarding from "@/pages/Onboarding";
-import Server from "@/pages/Server";
+import Channel from "@/pages/Channel";
+import Invite from "@/pages/Invite";
 // route-wrappers
 import ProtectedRoutes from "@/router/ProtectedRoutes";
 import PublicRoutes from "@/router/PublicRoutes";
+import ServerIndexRoute from "@/router/ServerIndexRoute";
 // layouts
 import ProtectedLayout from "@/layout/ProtectedLayout";
 import PublicLayout from "@/layout/PublicLayout";
+import ServerLayout from "@/layout/ServerLayout";
 
 const router = createBrowserRouter([
     {
@@ -26,9 +29,17 @@ const router = createBrowserRouter([
                 children: [
                     { path: "/", element: <Onboarding /> },
                     { path: "/settings", element: <Settings /> },
-                    { path: "/servers/:serverId", element: <Server /> }
+                    {
+                        path: "/servers/:serverId",
+                        element: <ServerLayout />,
+                        children: [
+                            { index: true, element: <ServerIndexRoute /> },
+                            { path: "channels/:channelId", element: <Channel /> }
+                        ]
+                    },
                 ]
             },
+            { path: "/invite/:inviteCode", element: <Invite /> },
         ]
     },
     {

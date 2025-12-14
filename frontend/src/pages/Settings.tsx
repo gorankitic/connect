@@ -7,7 +7,7 @@ import UserAvatar from "@/features/user/UserAvatar";
 const Settings = () => {
 
     return (
-        <main className="flex flex-1 flex-col mt-10 mx-auto w-full max-w-lg text-gray-700 space-y-5">
+        <main className="flex flex-1 flex-col my-10 mx-auto w-full max-w-lg text-gray-700 space-y-5">
             <section>
                 <UserAvatar />
             </section>

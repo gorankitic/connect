@@ -11,5 +11,5 @@ export const useServers = () => {
         retry: false,
     });
 
-    return { isPending, servers: data ?? [] };
+    return { isPending, servers: data?.servers ?? [] };
 }

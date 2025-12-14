@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 // Components
 import ServerSidebar from "@/features/server/ServerSidebar";
 
-const Server = () => {
+const ServerLayout = () => {
     return (
         <div className="flex h-full">
             <ServerSidebar />
@@ -13,5 +13,4 @@ const Server = () => {
         </div>
     )
 }
-
-export default Server;
+export default ServerLayout;

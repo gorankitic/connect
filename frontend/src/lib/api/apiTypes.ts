@@ -56,33 +56,54 @@ export type GetSessionsResponse = {
     sessions: Session[]
 }
 
-type CreateServerData = {
-    _id: string
-}
-
 export type CreateServerResponse = {
     status: "success",
-    server: CreateServerData;
+    server: { _id: string };
 }
 
-export type ServerLite = {
+export type ServerListItem = {
     _id: string,
     name: string,
     avatarUuid: string
 }
 
+export type GetServersResponse = {
+    status: "success";
+    servers: ServerListItem[];
+}
+
+export type ChannelType = "TEXT" | "AUDIO" | "VIDEO";
 export type Channel = {
     _id: string;
     name: string;
-    type: "TEXT" | "AUDIO" | "VIDEO";
-    server: string
+    type: ChannelType;
+    server: string;
 };
 
-export type Server = {
+export type ServerWithChannels = {
     _id: string;
     name: string;
     avatarUuid: string;
     inviteCode: string;
     owner: string;
     channels: Channel[];
+}
+
+export type MemberRole = "ADMIN" | "MODERATOR" | "GUEST";
+export type ServerMember = {
+    _id: string;
+    role: MemberRole;
+    name: string;
+    avatarUuid: string;
+}
+
+export type GetServerResponse = {
+    status: "success";
+    server: ServerWithChannels;
+    member: ServerMember;
+}
+
+export type JoinServerResponse = {
+    status: "success";
+    serverId: string;
 }
