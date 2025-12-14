@@ -12,7 +12,9 @@ export const restrictTo = (...allowedRoles: MemberRole[]) => {
         const { serverId } = req.params;
 
         // 1) Check is user a member of this server
-        const member = await Member.findOne({ user: userId, server: serverId });
+        const member = await Member
+            .findOne({ user: userId, server: serverId })
+            .populate({ path: "user", select: "_id name avatarUuid" });
 
         if (!member) {
             return next(new AppError("You don't have a permission for this action.", 403));

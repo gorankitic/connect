@@ -4,8 +4,9 @@ import mongoose from "mongoose";
 import { Server } from "@/models/server.model";
 import { Member } from "@/models/member.model";
 import { Channel } from "@/models/channel.model";
-// types
+// schemas & types
 import { CreateServerDTO } from "@/lib/types/server.types";
+import { UpsertServerSchema } from "@/lib/schemas/server.schemas";
 // utils
 import { AppError } from "@/lib/utils/AppError";
 import { generateToken } from "@/lib/utils/crypto";
@@ -25,10 +26,10 @@ export const createNewServer = async ({ name, avatarUuid, owner }: CreateServerD
         // Create a member document
         await Member.create([{ user: owner, server: server._id, role: "ADMIN" }], { session });
         // Create a default channel document
-        await Channel.create([{ name: "#general", server: server._id }], { session });
+        await Channel.create([{ name: "general", server: server._id }], { session });
         // Commit successfull transaction
         await session.commitTransaction();
-        return { server };
+        return server;
     } catch (error) {
         await session.abortTransaction();
         throw new AppError("Creating server failed.", 500);
@@ -52,7 +53,6 @@ export const getAllUserServers = async (userId: string) => {
 }
 
 export const getServerById = async (serverId: string) => {
-
     const server = await Server
         .findById(serverId)
         .select("_id name avatarUuid inviteCode owner")
@@ -62,5 +62,24 @@ export const getServerById = async (serverId: string) => {
         throw new AppError("That document does not exist.", 404);
     }
 
+    return server;
+}
+
+export const updateServerById = async (serverId: string, { name, avatarUuid }: UpsertServerSchema) => {
+    const server = await Server.findByIdAndUpdate(serverId, { name, avatarUuid }, { new: true, runValidators: true });
+
+    if (!server) {
+        throw new AppError("That document does not exist.", 404);
+    }
+    return server;
+}
+
+export const createNewInviteCode = async (serverId: string) => {
+    const inviteCode = generateToken(16);
+    const server = await Server.findByIdAndUpdate(serverId, { inviteCode }, { new: true, runValidators: true });
+
+    if (!server) {
+        throw new AppError("That document does not exist.", 404);
+    }
     return server;
 }

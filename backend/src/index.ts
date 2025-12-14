@@ -23,6 +23,7 @@ import userRouter from "./routes/user.routes";
 import sessionRouter from "./routes/session.routes";
 import uploadRouter from "./routes/upload.routes";
 import serverRouter from "./routes/server.routes";
+import inviteRouter from "./routes/invite.routes";
 // lib
 import { AppError } from "./lib/utils/AppError";
 
@@ -53,6 +54,7 @@ app.use("/api/v1/users", protect, userRouter);
 app.use("/api/v1/sessions", protect, sessionRouter);
 app.use("/api/v1/uploads", protect, uploadRouter);
 app.use("/api/v1/servers", protect, serverRouter);
+app.use("/api/v1/invites", protect, inviteRouter);
 
 // Catch-all for undefined routes
 app.use((req, res, next) => {

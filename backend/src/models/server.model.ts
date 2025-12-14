@@ -20,7 +20,8 @@ const serverSchema = new Schema({
     },
     inviteCode: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     }
 }, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
