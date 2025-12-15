@@ -107,3 +107,18 @@ export type JoinServerResponse = {
     status: "success";
     serverId: string;
 }
+
+export type Member = {
+    _id: string;
+    role: MemberRole;
+    serverId: string;
+    createdAt: string;
+    name: string;
+    avatarUuid: string;
+    email: string;
+}
+
+export type GetMembersResponse = {
+    staus: "success";
+    members: Member[]
+}

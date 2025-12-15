@@ -11,8 +11,7 @@ export function useSignOut() {
     const { mutate: signOut, isPending } = useMutation({
         mutationFn: signOutApi,
         onSuccess: () => {
-            queryClient.removeQueries({ queryKey: ["user"] });
-            queryClient.removeQueries({ queryKey: ["sessions"] });
+            queryClient.clear();
             navigate("/signin", { replace: true });
         },
     });

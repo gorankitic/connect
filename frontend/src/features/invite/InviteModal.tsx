@@ -11,15 +11,14 @@ import { useServer } from "@/features/server/useServer";
 import { useGenerateInviteCode } from "@/features/invite/useGenerateInviteCode";
 
 const InviteModal = () => {
-    const origin = useOrigin();
+    const { origin } = useOrigin();
     const [copied, setCopied] = useState(false);
     const { isOpen, onClose, type, data } = useModal();
     const { server } = useServer(data.server?._id);
     const { generateInviteCode, isPending } = useGenerateInviteCode();
 
-    if (!server) return null;
-
     const isModalOpen = isOpen && type === "invite";
+    if (!isModalOpen || !server) return null;
 
     const inviteUrl = `${origin}/invite/${server.inviteCode}`;
 
@@ -27,10 +26,6 @@ const InviteModal = () => {
         navigator.clipboard.writeText(inviteUrl);
         setCopied(true);
         setTimeout(() => { setCopied(false) }, 1000);
-    }
-
-    const onNewInviteCode = () => {
-        generateInviteCode(server._id);
     }
 
     return (
@@ -65,7 +60,7 @@ const InviteModal = () => {
                         </button>
                     </div>
                     <button
-                        onClick={onNewInviteCode}
+                        onClick={() => generateInviteCode(server._id)}
                         disabled={isPending}
                         className="flex items-center gap-2 text-gray-700 text-sm mt-4 mb-3 cursor-pointer hover:underline"
                     >

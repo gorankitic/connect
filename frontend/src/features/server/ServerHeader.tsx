@@ -21,7 +21,7 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-                <button className="group w-full flex items-center px-5 py-1 border border-b-gray-300 bg-gray-200 hover:bg-gray-300/80 transition-all text-gray-600 text-lg font-semibold cursor-pointer">
+                <button className="group w-full flex items-center px-5 py-1 border border-b-gray-300 bg-gray-200 hover:bg-gray-300/80 transition-all text-gray-600 font-semibold cursor-pointer">
                     {server.name}
                     <ChevronDown className="text-gray-600 size-5 ml-auto group-hover:translate-y-1 transition-all duration-300 ease-in-out" />
                 </button>
@@ -46,7 +46,10 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
                     </DropdownMenuItem>
                 )}
                 {isAdmin && (
-                    <DropdownMenuItem className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer">
+                    <DropdownMenuItem
+                        onClick={() => onOpen("manageMembers", { server })}
+                        className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer"
+                    >
                         Manage members
                         <Users className="size-4 ml-auto group-hover:-translate-x-1 transition-all duration-500 ease-in-out" />
                     </DropdownMenuItem>
@@ -61,15 +64,15 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
                     <DropdownMenuSeparator />
                 )}
                 {isAdmin && (
-                    <DropdownMenuItem className="text-red-500 focus:text-red-500 px-3 py-1.5 group cursor-pointer">
+                    <DropdownMenuItem className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer">
                         Delete server
-                        <Trash className="text-red-500 size-4 ml-auto group-hover:scale-110 transition-all duration-300 ease-in-out" />
+                        <Trash className="text-rose-400 size-4 ml-auto group-hover:scale-110 transition-all duration-300 ease-in-out" />
                     </DropdownMenuItem>
                 )}
                 {!isAdmin && (
-                    <DropdownMenuItem className="text-red-500 focus:text-red-500 px-3 py-1.5 group cursor-pointer">
+                    <DropdownMenuItem className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer">
                         Leave server
-                        <LogOut className="text-red-500 size-4 ml-auto group-hover:-translate-x-1 transition-all duration-500 ease-in-out" />
+                        <LogOut className="text-rose-400 size-4 ml-auto group-hover:-translate-x-1 transition-all duration-500 ease-in-out" />
                     </DropdownMenuItem>
                 )}
             </DropdownMenuContent>

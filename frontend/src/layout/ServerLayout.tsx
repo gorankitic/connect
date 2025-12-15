@@ -13,4 +13,5 @@ const ServerLayout = () => {
         </div>
     )
 }
+
 export default ServerLayout;

@@ -11,8 +11,7 @@ export function useSignOutAll() {
     const { mutate: signOutAll, isPending: isSigningOutAll } = useMutation({
         mutationFn: signOutAllApi,
         onSuccess: () => {
-            queryClient.removeQueries({ queryKey: ["user"] });
-            queryClient.removeQueries({ queryKey: ["sessions"] });
+            queryClient.clear();
             navigate("/signin", { replace: true });
         },
     });

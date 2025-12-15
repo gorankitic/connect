@@ -5,7 +5,7 @@ import { getServerApi } from "@/services/server.services";
 // types
 import type { GetServerResponse, NormalizedError } from "@/lib/api/apiTypes";
 
-export function useServer(serverId?: string) {
+export function useServer(serverId: string | undefined) {
     const { data, isPending, error } = useQuery<GetServerResponse, NormalizedError>({
         queryKey: ["server", serverId],
         queryFn: () => getServerApi(serverId!),
