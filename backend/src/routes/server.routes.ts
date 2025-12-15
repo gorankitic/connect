@@ -5,10 +5,14 @@ import { createServer, generateNewInviteCode, getAllServers, getServer, updateSe
 // middlewares
 import { validate } from "@/middleware/validateSchema";
 import { restrictTo } from "@/middleware/restrictTo";
+// routers
+import memberRouter from "@/routes/member.routes";
 // schemas
 import { upsertServerSchema } from "@/lib/schemas/server.schemas";
 
 const router = express.Router();
+
+router.use("/:serverId/members", memberRouter);
 
 router
     .route("/")

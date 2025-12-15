@@ -1,5 +1,8 @@
 // modules
 import { model, Schema } from "mongoose";
+// constants
+import { MEMBER_ROLES } from "@/lib/constants/member.constants";
+
 
 const memberSchema = new Schema({
     user: {
@@ -14,7 +17,7 @@ const memberSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["ADMIN", "MODERATOR", "GUEST"],
+        enum: MEMBER_ROLES,
         default: "GUEST"
     }
 }, { timestamps: true });
