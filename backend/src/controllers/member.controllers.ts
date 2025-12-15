@@ -29,8 +29,9 @@ export const updateMemberRole = catchAsync(async (req, res) => {
     const { serverId, memberId } = req.params;
     // Request validation is done in the validateSchema middleware
     const { role } = req.body;
+    const adminId = String(req.user._id);
 
-    await updateRole(serverId, memberId, req.user._id, role)
+    await updateRole(serverId, memberId, adminId, role);
 
     res.status(200).json({
         status: "success",

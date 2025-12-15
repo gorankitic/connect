@@ -22,14 +22,8 @@ export const updateRole = async (serverId: string, memberId: string, adminId: st
         throw new AppError("You are not authorized to perform this action.", 403);
     }
 
-    // Verify that the acting member is an admin member of this server
-    const admin = await Member.findOne({ server: serverId, user: adminId });
-    if (!admin) {
-        throw new AppError("Admin membership not found.", 403);
-    }
-
     // Prevent admin from changing their own role
-    if (admin._id.equals(memberId)) {
+    if (adminId === memberId) {
         throw new AppError("You are not authorized to perform this action.", 403);
     }
 
