@@ -1,7 +1,7 @@
 // modules
 import express from "express";
 // controllers
-import { createServer, generateNewInviteCode, getAllServers, getServer, updateServer } from "@/controllers/server.controllers";
+import { createServer, deleteServer, generateNewInviteCode, getAllServers, getServer, updateServer } from "@/controllers/server.controllers";
 // middlewares
 import { validate } from "@/middleware/validateSchema";
 import { restrictTo } from "@/middleware/restrictTo";
@@ -23,6 +23,7 @@ router
     .route("/:serverId")
     .get(restrictTo(), getServer)
     .patch(restrictTo("ADMIN"), validate(upsertServerSchema), updateServer)
+    .delete(restrictTo("ADMIN"), deleteServer)
 
 router
     .route("/:serverId/invite-code")

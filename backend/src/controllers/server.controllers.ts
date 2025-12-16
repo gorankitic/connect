@@ -1,12 +1,12 @@
 // utils
 import { catchAsync } from "@/lib/utils/catchAsync";
 // services
-import { createNewInviteCode, createNewServer, getAllUserServers, getServerById, updateServerById } from "@/services/server.services";
+import { createNewInviteCode, createNewServer, deleteServerById, getAllUserServers, getServerById, updateServerById } from "@/services/server.services";
 
 // Create a new server
 // POST method
 // Protected route /api/v1/servers
-export const createServer = catchAsync(async (req, res, next) => {
+export const createServer = catchAsync(async (req, res) => {
     // 1) Request validation is done in the validateSchema middleware
     const { name, avatarUuid } = req.body;
     const owner = req.user._id;
@@ -37,7 +37,7 @@ export const getAllServers = catchAsync(async (req, res) => {
     });
 });
 
-// Get server by _id
+// Get server
 // GET method
 // Protected route /api/v1/servers/:serverId
 // Restricted route to all server members
@@ -62,7 +62,7 @@ export const getServer = catchAsync(async (req, res) => {
 // PATCH method
 // Protected route /api/v1/servers/:serverId
 // Restricted route to "ADMIN"
-export const updateServer = catchAsync(async (req, res, next) => {
+export const updateServer = catchAsync(async (req, res) => {
     const { serverId } = req.params;
     // 1) Request validation is done in the validateSchema middleware
     const { name, avatarUuid } = req.body;
@@ -79,14 +79,28 @@ export const updateServer = catchAsync(async (req, res, next) => {
 // PATCH method
 // Protected route /api/v1/servers/:serverId/invite-code
 // Restricted route to "ADMIN"
-export const generateNewInviteCode = catchAsync(async (req, res, next) => {
+export const generateNewInviteCode = catchAsync(async (req, res) => {
     const { serverId } = req.params;
 
-    // 2) Handle business logic, call service to update server document
     await createNewInviteCode(serverId);
 
     res.status(200).json({
         status: "success",
         message: "New invitation code is generated successfully."
+    });
+});
+
+// Delete server
+// DELETE method
+// Protected route /api/v1/servers/:serverId
+// Restricted route to "ADMIN"
+export const deleteServer = catchAsync(async (req, res) => {
+    const { serverId } = req.params;
+
+    await deleteServerById(serverId);
+
+    res.status(200).json({
+        status: "success",
+        message: "Server is deleted successfully. Goodbye."
     });
 });

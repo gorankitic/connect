@@ -21,19 +21,23 @@ export const createNewServer = async ({ name, avatarUuid, owner }: CreateServerD
         // Start transaction
         session.startTransaction();
         // Create a server document
-        const servers = await Server.create([{ name, avatarUuid, owner, inviteCode }], { session });
-        const server = servers[0];
-        // Create a member document
-        await Member.create([{ user: owner, server: server._id, role: "ADMIN" }], { session });
-        // Create a default channel document
-        await Channel.create([{ name: "general", server: server._id }], { session });
+        const [server] = await Server.create([{ name, avatarUuid, owner, inviteCode }], { session });
+        // Create a admin member & default #general channel in parallel
+        await Promise.all([
+            // Create a member document
+            Member.create([{ user: owner, server: server._id, role: "ADMIN" }], { session }),
+            // Create a default channel document
+            Channel.create([{ name: "general", server: server._id }], { session }),
+        ]);
         // Commit successfull transaction
         await session.commitTransaction();
         return server;
     } catch (error) {
+        // (On error) abort the transaction, reverting all changes made in that transaction
         await session.abortTransaction();
         throw new AppError("Creating server failed.", 500);
     } finally {
+        // Finish transaction
         session.endSession();
     }
 }
@@ -82,4 +86,37 @@ export const createNewInviteCode = async (serverId: string) => {
         throw new AppError("That document does not exist.", 404);
     }
     return server;
+}
+
+export const deleteServerById = async (serverId: string) => {
+    // MongoDB transactions ensure that a series of operations on the database either all succeed or all fail
+    // Start a session for transaction (keeps track of all operations that are part of the transaction)
+    const session = await mongoose.startSession();
+    try {
+        // Start transaction
+        session.startTransaction();
+        // Find the server
+        const server = await Server.findById(serverId).session(session);
+        if (!server) {
+            throw new AppError("Server not found.", 404);
+        }
+        // Delete all channels and members linked to server in parallel
+        await Promise.all([
+            // Delete all channels
+            Channel.deleteMany({ server: serverId }).session(session),
+            // Delete all members
+            Member.deleteMany({ server: serverId }).session(session)
+        ]);
+        // Delete server document
+        await server.deleteOne({ session });
+        // Commit successfull transaction
+        await session.commitTransaction();
+    } catch (error) {
+        // (On error) abort the transaction, reverting all changes made in that transaction
+        await session.abortTransaction();
+        throw new AppError("Deleting server failed.", 500);
+    } finally {
+        // Finish transaction
+        session.endSession();
+    }
 }
