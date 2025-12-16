@@ -40,11 +40,7 @@ export const updateRole = async (serverId: string, memberId: string, adminId: st
     return member;
 }
 
-export const removeMemberFromServer = async (serverId: string, memberId: string, adminId: string) => {
-    // Prevent admin removing themselves (single-admin rule)
-    if (adminId === memberId) {
-        throw new AppError("You are not authorized to perform this action.", 403);
-    }
+export const removeMemberFromServer = async (serverId: string, memberId: string) => {
 
     // Find & delete the target member within the same server
     const deletedMember = await Member.findOneAndDelete({ _id: memberId, server: serverId });

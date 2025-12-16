@@ -1,7 +1,7 @@
 export const formatMember = (member: any) => ({
     _id: member._id,
     role: member.role,
-    server: member.server,
+    serverId: member.server,
     createdAt: member.createdAt,
     name: member.user.name,
     avatarUuid: member.user.avatarUuid,
