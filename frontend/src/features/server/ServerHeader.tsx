@@ -65,7 +65,10 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                     <DropdownMenuSeparator />
                 )}
                 {isAdmin && (
-                    <DropdownMenuItem className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer">
+                    <DropdownMenuItem
+                        onClick={() => onOpen("deleteServer", { server })}
+                        className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer"
+                    >
                         Delete server
                         <Trash className="text-rose-500 size-4 ml-auto group-hover:scale-110 transition-all duration-300 ease-in-out" />
                     </DropdownMenuItem>
