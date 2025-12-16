@@ -21,7 +21,7 @@ const ServerSidebar = () => {
 
     return (
         <div className="w-72 bg-gray-100 border border-r-gray-300 h-full">
-            <ServerHeader server={server} role={member.role} />
+            <ServerHeader server={server} memberId={member._id} role={member.role} />
             {textChannels.length > 0 && (
                 <div className="mb-2 px-5">
                     <ServerSection

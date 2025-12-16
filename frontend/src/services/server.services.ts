@@ -23,3 +23,8 @@ export const updateServerApi = async ({ serverId, name, avatarUuid }: { serverId
     const { data } = await api.patch<SuccessResponse>(`/servers/${serverId}`, { name, avatarUuid });
     return data;
 }
+
+export const leaveServerApi = async ({ serverId }: { serverId: string }) => {
+    const { data } = await api.delete<SuccessResponse>(`/servers/${serverId}/members`);
+    return data;
+}

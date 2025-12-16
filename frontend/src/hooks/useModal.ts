@@ -3,10 +3,11 @@ import { create } from "zustand";
 // types
 import type { ServerWithChannels } from "@/lib/api/apiTypes";
 
-export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers";
+export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer";
 
 export type ModalData = {
-    server?: ServerWithChannels
+    server?: ServerWithChannels,
+    memberId?: string,
 }
 
 type ModalStore = {

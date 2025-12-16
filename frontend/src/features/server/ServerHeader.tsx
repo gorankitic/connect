@@ -9,10 +9,11 @@ import { useModal } from "@/hooks/useModal";
 
 type ServerHeaderProps = {
     server: ServerWithChannels,
+    memberId: string,
     role: MemberRole
 }
 
-const ServerHeader = ({ server, role }: ServerHeaderProps) => {
+const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
     const { onOpen } = useModal();
 
     const isAdmin = role === "ADMIN";
@@ -66,13 +67,16 @@ const ServerHeader = ({ server, role }: ServerHeaderProps) => {
                 {isAdmin && (
                     <DropdownMenuItem className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer">
                         Delete server
-                        <Trash className="text-rose-400 size-4 ml-auto group-hover:scale-110 transition-all duration-300 ease-in-out" />
+                        <Trash className="text-rose-500 size-4 ml-auto group-hover:scale-110 transition-all duration-300 ease-in-out" />
                     </DropdownMenuItem>
                 )}
                 {!isAdmin && (
-                    <DropdownMenuItem className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer">
+                    <DropdownMenuItem
+                        onClick={() => onOpen("leaveServer", { server, memberId })}
+                        className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer"
+                    >
                         Leave server
-                        <LogOut className="text-rose-400 size-4 ml-auto group-hover:-translate-x-1 transition-all duration-500 ease-in-out" />
+                        <LogOut className="text-rose-500 size-4 ml-auto group-hover:-translate-x-1 transition-all duration-500 ease-in-out" />
                     </DropdownMenuItem>
                 )}
             </DropdownMenuContent>
