@@ -1,10 +1,11 @@
-// modules
-import { Types } from "mongoose";
+// constants
+import { CHANNEL_TYPES } from "@/lib/constants";
+// schemas
+import { CreateChannelSchema } from "@/lib/schemas/channel.schemas";
 
-export type ChannelType = "TEXT" | "AUDIO" | "VIDEO";
+export type ChannelType = typeof CHANNEL_TYPES[number];
 
-export interface CreateChannelDTO {
-    name: string,
-    type?: ChannelType,
-    server: Types.ObjectId,
+export type CreateChannelDTO = {
+    data: CreateChannelSchema,
+    serverId: string,
 }

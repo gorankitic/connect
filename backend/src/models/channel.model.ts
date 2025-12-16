@@ -1,5 +1,7 @@
 // modules
 import { model, Schema } from "mongoose";
+// constants
+import { CHANNEL_TYPES } from "@/lib/constants";
 
 const channelSchema = new Schema({
     name: {
@@ -11,7 +13,7 @@ const channelSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ["TEXT", "AUDIO", "VIDEO"],
+        enum: CHANNEL_TYPES,
         default: "TEXT"
     },
     server: {
