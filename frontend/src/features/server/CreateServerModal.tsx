@@ -5,9 +5,9 @@ import { Send, Server, X } from "lucide-react";
 // components
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import ServerAvatar from "./ServerAvatar";
+import ServerAvatar from "@/features/server/ServerAvatar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// types & schemas
+// schemas, types & constants
 import { upsertServerSchema, type UpsertServerSchema } from "@/lib/schemas/server.schema";
 // hooks
 import { useModal } from "@/hooks/useModal";

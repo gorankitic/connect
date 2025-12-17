@@ -1,17 +1,17 @@
 // lib
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom";
 // utils
-import { cn, getAvatarUrl } from "@/lib/utils"
+import { cn, getAvatarUrl } from "@/lib/utils";
 // components
-import ActionTooltip from "@/components/ActionTooltip"
+import ActionTooltip from "@/components/ActionTooltip";
 
-type ServerItemProps = {
+type ServerListItemProps = {
     _id: string
     name: string,
     avatarUuid: string
 }
 
-const ServerItem = ({ _id, name, avatarUuid }: ServerItemProps) => {
+const ServerListItem = ({ _id, name, avatarUuid }: ServerListItemProps) => {
     const { serverId } = useParams();
     const navigate = useNavigate();
 
@@ -45,4 +45,4 @@ const ServerItem = ({ _id, name, avatarUuid }: ServerItemProps) => {
     )
 }
 
-export default ServerItem;
+export default ServerListItem;

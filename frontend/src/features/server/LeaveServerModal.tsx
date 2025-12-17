@@ -5,19 +5,19 @@ import Button from "@/components/Button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 // hooks
 import { useModal } from "@/hooks/useModal";
+import { useServer } from "@/features/server/useServer";
 import { useLeaveServer } from "@/features/server/useLeaveServer";
 
-
 const LeaveServerModal = () => {
-    const { isOpen, type, onClose, data: { server } } = useModal();
+    const { isOpen, type, onClose, data: { serverId } } = useModal();
+    const { server } = useServer(serverId);
     const { leaveServer, isPending } = useLeaveServer();
 
-    const isModalOpen = isOpen && type === "leaveServer";
-
+    const isModalOpen = isOpen && type === "leaveServer" && !!serverId;
     if (!isModalOpen || !server) return null;
 
     const handleLeaveServer = () => {
-        leaveServer({ serverId: server._id });
+        leaveServer({ serverId });
         onClose();
     }
 

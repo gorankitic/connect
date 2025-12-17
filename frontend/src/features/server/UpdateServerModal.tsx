@@ -8,14 +8,16 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import ServerAvatar from "./ServerAvatar";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// types & schemas
+// schemasm types & constants
 import { upsertServerSchema, type UpsertServerSchema } from "@/lib/schemas/server.schema";
 // hooks
 import { useModal } from "@/hooks/useModal";
+import { useServer } from "@/features/server/useServer";
 import { useUpdateServer } from "@/features/server/useUpdateServer";
 
 const UpdateServerModal = () => {
-    const { isOpen, onClose, type, data: { server } } = useModal();
+    const { isOpen, onClose, type, data: { serverId } } = useModal();
+    const { server } = useServer(serverId);
     const { updateServer, isPending } = useUpdateServer();
 
     const { register, handleSubmit, setValue, formState: { errors }, watch, reset } = useForm<UpsertServerSchema>({
@@ -23,13 +25,15 @@ const UpdateServerModal = () => {
         defaultValues: { name: "", avatarUuid: "" }
     });
 
-    const isModalOpen = isOpen && type === "updateServer";
+    const isModalOpen = isOpen && type === "updateServer" && !!serverId;
 
     useEffect(() => {
         if (isModalOpen && server) {
-            reset({ name: server?.name, avatarUuid: server?.avatarUuid });
+            reset({ name: server.name, avatarUuid: server.avatarUuid });
         }
     }, [isModalOpen, server, reset]);
+
+    if (!isModalOpen || !server) return null;
 
     const handleClose = () => {
         reset({ name: "", avatarUuid: "" });
@@ -37,9 +41,7 @@ const UpdateServerModal = () => {
     }
 
     const onSubmit = ({ name, avatarUuid }: UpsertServerSchema) => {
-        if (!server) return;
-
-        updateServer({ serverId: server._id, name, avatarUuid });
+        updateServer({ serverId, name, avatarUuid });
 
         reset({ name: "", avatarUuid: "" });
         onClose();

@@ -11,10 +11,10 @@ import { useServer } from "@/features/server/useServer";
 import { useGenerateInviteCode } from "@/features/invite/useGenerateInviteCode";
 
 const InviteModal = () => {
-    const { origin } = useOrigin();
     const [copied, setCopied] = useState(false);
-    const { isOpen, onClose, type, data } = useModal();
-    const { server } = useServer(data.server?._id);
+    const { origin } = useOrigin();
+    const { isOpen, onClose, type, data: { serverId } } = useModal();
+    const { server } = useServer(serverId);
     const { generateInviteCode, isPending } = useGenerateInviteCode();
 
     const isModalOpen = isOpen && type === "invite";

@@ -1,24 +1,20 @@
 // lib
 import { format } from "date-fns";
-import { Crown, ShieldCheck } from "lucide-react";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-// types
+// types & constants
 import type { Member } from "@/lib/api/apiTypes";
+import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // utils
-import { getAvatarUrl, getInitials } from "@/lib/utils";
+import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 
 type MemberAvatarProps = {
     member: Member;
 }
 
-const roleIconMap = {
-    "GUEST": null,
-    "MODERATOR": <ShieldCheck className="size-4 text-blue-500" />,
-    "ADMIN": <Crown className="size-4 text-amber-500" />
-}
-
 const MemberAvatar = ({ member }: MemberAvatarProps) => {
+
+    const Icon = MEMBER_ROLE_ICON_MAP[member.role];
 
     return (
         <div className="flex items-center gap-3">
@@ -29,7 +25,7 @@ const MemberAvatar = ({ member }: MemberAvatarProps) => {
                     className="rounded-full object-cover size-12"
                 />
             ) : (
-                <Avatar className="size-12">
+                <Avatar className="size-12 text-gray-700 border border-gray-300">
                     <AvatarFallback>
                         {getInitials(member.name)}
                     </AvatarFallback>
@@ -38,7 +34,7 @@ const MemberAvatar = ({ member }: MemberAvatarProps) => {
             <div>
                 <div className="flex items-center gap-1">
                     <p className="text-sm font-semibold text-gray-700">{member.name}</p>
-                    {roleIconMap[member.role]}
+                    {Icon && <Icon className={cn("size-5", member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
                 </div>
                 <p className="text-xs text-gray-500">{member.email}</p>
                 <p className="text-xs text-gray-500">Joined {format(new Date(member.createdAt), "dd.MM.yyyy.")}</p>

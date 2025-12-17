@@ -6,19 +6,20 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 // hooks
 import { useModal } from "@/hooks/useModal";
 import { useServer } from "@/features/server/useServer";
-import { useDeleteServer } from "@/features/server/useDeleteServer";
+import { useDeleteChannel } from "@/features/channels/useDeleteChannel";
 
-
-const DeleteServerModal = () => {
-    const { isOpen, type, onClose, data: { serverId } } = useModal();
+const DeleteChannelModal = () => {
+    const { isOpen, type, onClose, data: { serverId, channelId } } = useModal();
     const { server } = useServer(serverId);
-    const { deleteServer, isPending } = useDeleteServer();
+    const { deleteChannel, isPending } = useDeleteChannel();
 
-    const isModalOpen = isOpen && type === "deleteServer" && !!serverId;
-    if (!isModalOpen || !server) return null;
+    const channel = server?.channels.find(ch => ch._id === channelId);
+
+    const isModalOpen = isOpen && type === "deleteChannel" && !!serverId && !!channelId;
+    if (!isModalOpen || !server || !channel) return null;
 
     const handleDeleteServer = () => {
-        deleteServer({ serverId });
+        deleteChannel({ serverId, channelId });
         onClose();
     }
 
@@ -27,11 +28,11 @@ const DeleteServerModal = () => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-center uppercase text-red-500 my-3">
-                        Delete server
+                        Delete channel
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        Are you sure you want to delete <span className="font-semibold text-red-500">{server.name}</span> server?
-                        This action cannot be undone. All server channels and members will be deleted.
+                        Are you sure you want to delete <span className="font-semibold text-red-500">{channel.name}</span> channel?
+                        This action cannot be undone. All channel content will be deleted.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex gap-3 justify-end mt-5">
@@ -58,4 +59,4 @@ const DeleteServerModal = () => {
     )
 }
 
-export default DeleteServerModal;
+export default DeleteChannelModal;

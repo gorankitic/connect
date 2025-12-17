@@ -1,19 +1,19 @@
 // lib
 import { ChevronDown, LogOut, PlusCircle, Settings, Trash, UserPlus, Users } from "lucide-react";
-// types
-import type { MemberRole, ServerWithChannels } from "@/lib/api/apiTypes";
+// types & constants
+import type { MemberRole } from "@/lib/constants/member.constants";
 // components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 // hooks
 import { useModal } from "@/hooks/useModal";
 
 type ServerHeaderProps = {
-    server: ServerWithChannels,
-    memberId: string,
-    role: MemberRole
+    serverId: string;
+    name: string;
+    role: MemberRole;
 }
 
-const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
+const ServerHeader = ({ serverId, name, role }: ServerHeaderProps) => {
     const { onOpen } = useModal();
 
     const isAdmin = role === "ADMIN";
@@ -22,15 +22,15 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-                <button className="group w-full flex items-center px-5 py-1 border border-b-gray-300 bg-gray-200 hover:bg-gray-300/80 transition-all text-gray-600 font-semibold cursor-pointer">
-                    {server.name}
+                <button className="group w-full flex items-center px-5 py-2 border border-b-gray-300 bg-gray-200 hover:bg-gray-300/80 transition-all text-gray-600 font-semibold cursor-pointer">
+                    {name}
                     <ChevronDown className="text-gray-600 size-5 ml-auto group-hover:translate-y-1 transition-all duration-300 ease-in-out" />
                 </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 p-3 text-gray-600" align="end">
-                {isModerator && (
+                {isAdmin && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("invite", { server })}
+                        onClick={() => onOpen("invite", { serverId })}
                         className="text-blue-600 focus:text-blue-600 px-3 py-1.5 group cursor-pointer"
                     >
                         Invite people
@@ -39,7 +39,7 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("updateServer", { server })}
+                        onClick={() => onOpen("updateServer", { serverId })}
                         className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer"
                     >
                         Server settings
@@ -48,7 +48,7 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("manageMembers", { server })}
+                        onClick={() => onOpen("manageMembers", { serverId })}
                         className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer"
                     >
                         Manage members
@@ -56,7 +56,10 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                     </DropdownMenuItem>
                 )}
                 {isModerator && (
-                    <DropdownMenuItem className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer">
+                    <DropdownMenuItem
+                        onClick={() => onOpen("createChannel", { serverId })}
+                        className="px-3 py-1.5 focus:text-gray-600 group cursor-pointer"
+                    >
                         Create a channel
                         <PlusCircle className="size-4 ml-auto group-hover:rotate-180 transition-all duration-500 ease-in-out" />
                     </DropdownMenuItem>
@@ -66,7 +69,7 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                 )}
                 {isAdmin && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("deleteServer", { server })}
+                        onClick={() => onOpen("deleteServer", { serverId })}
                         className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer"
                     >
                         Delete server
@@ -75,7 +78,7 @@ const ServerHeader = ({ server, memberId, role }: ServerHeaderProps) => {
                 )}
                 {!isAdmin && (
                     <DropdownMenuItem
-                        onClick={() => onOpen("leaveServer", { server, memberId })}
+                        onClick={() => onOpen("leaveServer", { serverId })}
                         className="text-rose-500 focus:text-rose-500 px-3 py-1.5 group cursor-pointer"
                     >
                         Leave server

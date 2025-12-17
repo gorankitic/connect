@@ -1,13 +1,14 @@
 // lib
 import { create } from "zustand";
-// types
-import type { ServerWithChannels } from "@/lib/api/apiTypes";
+// types & constants
+import type { ChannelType } from "@/lib/constants/channel.constants";
 
-export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer" | "deleteServer";
+export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer" | "deleteServer" | "createChannel" | "updateChannel" | "deleteChannel";
 
 export type ModalData = {
-    server?: ServerWithChannels,
-    memberId?: string,
+    serverId?: string,
+    channelId?: string,
+    channelType?: ChannelType,
 }
 
 type ModalStore = {

@@ -1,7 +1,7 @@
 // hooks
 import { useServers } from "@/features/server/useServers";
 // components
-import ServerItem from "@/features/server/ServerItem";
+import ServerListItem from "@/features/server/ServerListItem";
 
 const ServersList = () => {
     const { servers } = useServers();
@@ -9,7 +9,7 @@ const ServersList = () => {
     return (
         <div className="space-y-2">
             {servers.map((server) => (
-                <ServerItem
+                <ServerListItem
                     key={server._id}
                     _id={server._id}
                     name={server.name}

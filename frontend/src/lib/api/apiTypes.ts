@@ -1,3 +1,7 @@
+// constants & types
+import type { ChannelType } from "@/lib/constants/channel.constants";
+import type { MemberRole } from "@/lib/constants/member.constants";
+
 // Zod error response from server
 export type FieldError = {
     path: string;
@@ -72,7 +76,6 @@ export type GetServersResponse = {
     servers: ServerListItem[];
 }
 
-export type ChannelType = "TEXT" | "AUDIO" | "VIDEO";
 export type Channel = {
     _id: string;
     name: string;
@@ -89,7 +92,6 @@ export type ServerWithChannels = {
     channels: Channel[];
 }
 
-export type MemberRole = "ADMIN" | "MODERATOR" | "GUEST";
 export type ServerMember = {
     _id: string;
     role: MemberRole;
