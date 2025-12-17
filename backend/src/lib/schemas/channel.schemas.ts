@@ -3,7 +3,7 @@ import { z } from "zod";
 // constants
 import { CHANNEL_TYPES } from "@/lib/constants";
 
-export const createChannelSchema = z.object({
+export const upsertChannelSchema = z.object({
     name: z
         .string()
         .min(1, "Channel name is required")
@@ -14,4 +14,4 @@ export const createChannelSchema = z.object({
         }),
     type: z.enum(CHANNEL_TYPES),
 });
-export type CreateChannelSchema = z.infer<typeof createChannelSchema>;
+export type UpsertChannelSchema = z.infer<typeof upsertChannelSchema>;
