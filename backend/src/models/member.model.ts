@@ -2,8 +2,10 @@
 import { model, Schema } from "mongoose";
 // constants
 import { MEMBER_ROLES } from "@/lib/constants";
+// types
+import { IMember } from "@/lib/types/member.types";
 
-const memberSchema = new Schema({
+const memberSchema = new Schema<IMember>({
     user: {
         type: Schema.Types.ObjectId,
         ref: "User",
@@ -24,4 +26,4 @@ const memberSchema = new Schema({
 memberSchema.index({ user: 1, server: 1 }, { unique: true })
 memberSchema.index({ server: 1 });
 
-export const Member = model("Member", memberSchema);
+export const Member = model<IMember>("Member", memberSchema);

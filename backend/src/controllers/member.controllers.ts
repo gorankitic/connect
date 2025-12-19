@@ -8,7 +8,7 @@ import { findAllServerMembers, removeMemberFromServer, updateRole } from "@/serv
 // Get all server members
 // GET method
 // Protected route /api/v1/servers/:serverId/members
-// Restricted route to "ADMIN"
+// Restricted route to all members
 export const getServerMembers = catchAsync(async (req, res) => {
     const { serverId } = req.params;
 

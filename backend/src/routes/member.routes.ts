@@ -12,7 +12,7 @@ const router = express.Router({ mergeParams: true });
 
 router
     .route("/")
-    .get(restrictTo("ADMIN"), getServerMembers)
+    .get(restrictTo(), getServerMembers)
     .delete(restrictTo(), leaveServer)
 
 router

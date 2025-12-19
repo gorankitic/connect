@@ -8,6 +8,7 @@ import { restrictTo } from "@/middleware/restrictTo";
 // routers
 import memberRouter from "@/routes/member.routes";
 import channelRouter from "@/routes/channel.routes";
+import conversationRouter from "@/routes/conversation.routes";
 // schemas
 import { upsertServerSchema } from "@/lib/schemas/server.schemas";
 
@@ -15,6 +16,7 @@ const router = express.Router();
 
 router.use("/:serverId/members", memberRouter);
 router.use("/:serverId/channels", channelRouter);
+router.use("/:serverId/conversations", conversationRouter);
 
 router
     .route("/")

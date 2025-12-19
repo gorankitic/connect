@@ -7,8 +7,12 @@ import { validate } from "@/middleware/validateSchema";
 import { upsertChannelSchema } from "@/lib/schemas/channel.schemas";
 // controllers
 import { createChannel, deleteChannel, updateChannel } from "@/controllers/channel.controllers";
+// routers
+import channelMessageRouter from "@/routes/channelMessage.routes";
 
 const router = express.Router({ mergeParams: true });
+
+router.use("/:channelId/messages", channelMessageRouter);
 
 router
     .route("/")
