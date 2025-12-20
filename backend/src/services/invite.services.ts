@@ -1,10 +1,12 @@
 // models
 import { Member } from "@/models/member.model";
-import { Server } from "@/models/server.model"
+import { Server } from "@/models/server.model";
 // utils
 import { AppError } from "@/lib/utils/AppError";
+// types
+import { JoinServerDTO } from "@/lib/types/invite.types";
 
-export const joinServerWithInviteCode = async (inviteCode: string, userId: string) => {
+export const joinServerWithInviteCode = async ({ inviteCode, userId }: JoinServerDTO) => {
     // 1) Find server by unique inviteCode
     const server = await Server.findOne({ inviteCode });
     if (!server) {

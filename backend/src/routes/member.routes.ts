@@ -1,7 +1,7 @@
 // modules
 import express from "express";
 // controllers
-import { getServerMembers, leaveServer, removeMember, updateMemberRole } from "@/controllers/member.controllers";
+import { getMember, getServerMembers, leaveServer, removeMember, updateMemberRole } from "@/controllers/member.controllers";
 // middlewares
 import { restrictTo } from "@/middleware/restrictTo";
 import { validate } from "@/middleware/validateSchema";
@@ -16,9 +16,12 @@ router
     .delete(restrictTo(), leaveServer)
 
 router
+    .route("/me")
+    .get(restrictTo(), getMember)
+
+router
     .route("/:memberId")
     .patch(restrictTo("ADMIN"), validate(updateMemberRoleSchema), updateMemberRole)
     .delete(restrictTo("ADMIN"), removeMember);
-
 
 export default router;

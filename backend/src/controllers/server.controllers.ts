@@ -1,7 +1,9 @@
 // utils
+import { AppError } from "@/lib/utils/AppError";
 import { catchAsync } from "@/lib/utils/catchAsync";
+import { formatServer, formatServers } from "@/lib/utils/formatting";
 // services
-import { createNewInviteCode, createNewServer, deleteServerById, getAllUserServers, getServerById, updateServerById } from "@/services/server.services";
+import { createNewInviteCode, createNewServer, deleteServerById, findAllServers, findServerById, updateServerById } from "@/services/server.services";
 
 // Create a new server
 // POST method
@@ -14,10 +16,11 @@ export const createServer = catchAsync(async (req, res) => {
     // 2) Handle business logic to create server document
     const server = await createNewServer({ name, avatarUuid, owner });
 
+    // 3) Return response to the client
     res.status(201).json({
         status: "success",
-        server: {
-            _id: server._id,
+        data: {
+            serverId: server._id
         }
     });
 });
@@ -27,13 +30,21 @@ export const createServer = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers
 // Restricted route to members
 export const getAllServers = catchAsync(async (req, res) => {
-    const userId = req.user._id;
+    const userId = String(req.user._id);
 
-    const servers = await getAllUserServers(userId);
+    // 1) Handle business logic to find all user's server documents
+    const servers = await findAllServers({ userId });
 
+    // 2) Format server documents
+    const formattedServers = servers.map(formatServers);
+
+    // 3) Return response to the client
     res.status(200).json({
         status: "success",
-        servers
+        results: servers.length,
+        data: {
+            servers: formattedServers
+        }
     });
 });
 
@@ -44,16 +55,17 @@ export const getAllServers = catchAsync(async (req, res) => {
 export const getServer = catchAsync(async (req, res) => {
     const { serverId } = req.params;
 
-    const server = await getServerById(serverId);
+    // 1) Handle business logic to find server document
+    const server = await findServerById({ serverId });
 
+    // 2) Format server document
+    const formattedServer = formatServer(server);
+
+    // 3) Return response to the client
     res.status(200).json({
         status: "success",
-        server,
-        member: {
-            _id: req.member._id,
-            role: req.member.role,
-            name: req.member.user.name,
-            avatarUuid: req.member.user.avatarUuid,
+        data: {
+            server: formattedServer
         }
     });
 });
@@ -65,28 +77,13 @@ export const getServer = catchAsync(async (req, res) => {
 export const updateServer = catchAsync(async (req, res) => {
     const { serverId } = req.params;
     // 1) Request validation is done in the validateSchema middleware
-    const { name, avatarUuid } = req.body;
     // 2) Handle business logic, call service to update server document
-    await updateServerById(serverId, { name, avatarUuid });
+    await updateServerById({ serverId, body: req.body });
 
+    // 3) Return response to the client
     res.status(200).json({
         status: "success",
         message: "Server is updated successfully."
-    });
-});
-
-// Generate new inviteCode
-// PATCH method
-// Protected route /api/v1/servers/:serverId/invite-code
-// Restricted route to "ADMIN"
-export const generateNewInviteCode = catchAsync(async (req, res) => {
-    const { serverId } = req.params;
-
-    await createNewInviteCode(serverId);
-
-    res.status(200).json({
-        status: "success",
-        message: "New invitation code is generated successfully."
     });
 });
 
@@ -97,10 +94,29 @@ export const generateNewInviteCode = catchAsync(async (req, res) => {
 export const deleteServer = catchAsync(async (req, res) => {
     const { serverId } = req.params;
 
-    await deleteServerById(serverId);
+    // 2) Handle business logic, call service to delete server document
+    await deleteServerById({ serverId });
 
+    // 3) Return response to the client
     res.status(200).json({
         status: "success",
         message: "Server is deleted successfully. Goodbye."
+    });
+});
+
+// Generate new inviteCode
+// PATCH method
+// Protected route /api/v1/servers/:serverId/invite-code
+// Restricted route to "ADMIN"
+export const generateNewInviteCode = catchAsync(async (req, res) => {
+    const { serverId } = req.params;
+
+    // 2) Handle business logic, call service to update server document
+    await createNewInviteCode({ serverId });
+
+    // 3) Return response to the client
+    res.status(200).json({
+        status: "success",
+        message: "New invitation code is generated successfully."
     });
 });

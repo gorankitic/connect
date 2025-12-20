@@ -23,3 +23,36 @@ export const formatMessage = (message: any) => ({
         avatarUuid: message.sender.user.avatarUuid
     }
 });
+
+export const formatChannel = (channel: any) => ({
+    _id: channel._id.toString(),
+    name: channel.name,
+    type: channel.type,
+    createdAt: channel.createdAt
+});
+
+export const formatServers = (server: any) => ({
+    _id: server._id.toString(),
+    name: server.name,
+    avatarUuid: server.avatarUuid,
+    createdAt: server.createdAt
+});
+
+export const formatServer = (server: any) => ({
+    _id: server._id.toString(),
+    owner: server.owner.toString(),
+    name: server.name,
+    avatarUuid: server.avatarUuid,
+    inviteCode: server.inviteCode,
+    createdAt: server.createdAt
+});
+
+export const formatConversation = (conversation: any, currentMemberId: string) => {
+    const isCurrentMemberOne = String(conversation.memberOne._id) === currentMemberId;
+
+    return {
+        conversationId: conversation._id,
+        currentMember: isCurrentMemberOne ? formatMember(conversation.memberOne) : formatMember(conversation.memberTwo),
+        otherMember: isCurrentMemberOne ? formatMember(conversation.memberTwo) : formatMember(conversation.memberOne),
+    };
+};

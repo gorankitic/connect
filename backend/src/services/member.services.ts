@@ -1,11 +1,11 @@
 // models
 import { Member } from "@/models/member.model";
 // types
-import { MemberRole } from "@/lib/types/member.types";
+import { GetMemberDTO, GetServerMembersDTO, RemoveMemberDTO, UpdateMemberRoleDTO } from "@/lib/types/member.types";
 // utils
 import { AppError } from "@/lib/utils/AppError";
 
-export const findAllServerMembers = async (serverId: string) => {
+export const findServerMembers = async ({ serverId }: GetServerMembersDTO) => {
 
     const members = await Member
         .find({ server: serverId })
@@ -16,7 +16,7 @@ export const findAllServerMembers = async (serverId: string) => {
     return members;
 }
 
-export const updateRole = async (serverId: string, memberId: string, adminId: string, role: MemberRole) => {
+export const updateRole = async ({ serverId, memberId, adminId, role }: UpdateMemberRoleDTO) => {
     // Prevent creation of additional admins (single-admin rule)
     if (role === "ADMIN") {
         throw new AppError("You are not authorized to perform this action.", 403);
@@ -40,7 +40,7 @@ export const updateRole = async (serverId: string, memberId: string, adminId: st
     return member;
 }
 
-export const removeMemberFromServer = async (serverId: string, memberId: string) => {
+export const removeMemberFromServer = async ({ serverId, memberId }: RemoveMemberDTO) => {
 
     // Find & delete the target member within the same server
     const deletedMember = await Member.findOneAndDelete({ _id: memberId, server: serverId });

@@ -1,7 +1,7 @@
 // models
 import { Channel } from "@/models/channel.model";
 // types
-import { CreateChannelDTO, DeleteChannelDTO, UpdateChannelDTO } from "@/lib/types/channel.types";
+import { CreateChannelDTO, DeleteChannelDTO, GetChannelsDTO, UpdateChannelDTO } from "@/lib/types/channel.types";
 // utils
 import { AppError } from "@/lib/utils/AppError";
 
@@ -9,7 +9,7 @@ export const createNewChannel = async ({ data, serverId }: CreateChannelDTO) => 
     const { name, type } = data;
     // 1) Ensure that server exist. Already done in restrictTo middleware
     // 2) Prevent creating default channel. Already done in validation createChannelSchema
-    // Zod can be bypassed (different route, future refactor), keep business rules in service
+    //    Zod can be bypassed (different route, future refactor), keep business rules in service
     if (name.trim().toLowerCase() === "general") {
         throw new AppError("The 'general' channel already exists and cannot be recreated.", 400);
     }
@@ -17,6 +17,17 @@ export const createNewChannel = async ({ data, serverId }: CreateChannelDTO) => 
     const channel = await Channel.create({ name, type, server: serverId });
 
     return channel;
+}
+
+export const findAllChannels = async ({ serverId }: GetChannelsDTO) => {
+
+    const channels = await Channel
+        .find({ server: serverId })
+        .select("name type createdAt")
+        .sort({ createdAt: 1 })
+        .lean();
+
+    return channels;
 }
 
 export const updateChannelById = async ({ data, serverId, channelId }: UpdateChannelDTO) => {

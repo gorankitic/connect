@@ -6,7 +6,7 @@ import { validate } from "@/middleware/validateSchema";
 // schemas
 import { getOrCreateConversationSchema } from "@/lib/schemas/conversation.schema";
 // controllers
-import { getOrCreateConversation } from "@/controllers/conversation.controllers";
+import { getConversation, getOrCreateConversation } from "@/controllers/conversation.controllers";
 // routers
 import conversationMessageRouter from "@/routes/conversationMessage.routes";
 
@@ -18,5 +18,8 @@ router
     .route("/")
     .post(restrictTo(), validate(getOrCreateConversationSchema), getOrCreateConversation)
 
+router
+    .route("/:conversationId")
+    .get(restrictTo(), getConversation)
 
 export default router;

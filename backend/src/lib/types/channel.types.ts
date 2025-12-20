@@ -10,6 +10,10 @@ export type CreateChannelDTO = {
     serverId: string,
 }
 
+export type GetChannelsDTO = {
+    serverId: string
+}
+
 export type UpdateChannelDTO = {
     data: UpsertChannelSchema,
     serverId: string,

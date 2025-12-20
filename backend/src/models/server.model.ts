@@ -27,13 +27,4 @@ const serverSchema = new Schema({
 
 serverSchema.index({ owner: 1 });
 
-// Parent referencing: Parent (Server) doesn't know about children (Channels)
-// Virtual populate parent (Server) with children (Channels)
-// Virtual field "channels" is not stored into Server document, it is populated on Server query
-serverSchema.virtual("channels", {
-    ref: "Channel",
-    localField: "_id",
-    foreignField: "server"
-});
-
 export const Server = model("Server", serverSchema);

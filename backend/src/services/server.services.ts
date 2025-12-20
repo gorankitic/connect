@@ -4,9 +4,8 @@ import mongoose from "mongoose";
 import { Server } from "@/models/server.model";
 import { Member } from "@/models/member.model";
 import { Channel } from "@/models/channel.model";
-// schemas & types
-import { CreateServerDTO } from "@/lib/types/server.types";
-import { UpsertServerSchema } from "@/lib/schemas/server.schemas";
+// types
+import type { CreateNewInviteCodeDTO, CreateServerDTO, DeleteServerDTO, GetServerDTO, GetServersDTO, UpdateServerDTO } from "@/lib/types/server.types";
 // utils
 import { AppError } from "@/lib/utils/AppError";
 import { generateToken } from "@/lib/utils/crypto";
@@ -42,7 +41,7 @@ export const createNewServer = async ({ name, avatarUuid, owner }: CreateServerD
     }
 }
 
-export const getAllUserServers = async (userId: string) => {
+export const findAllServers = async ({ userId }: GetServersDTO) => {
     // Find all server IDs where user is a member
     const memberships = await Member.find({ user: userId }).select("server");
     const serverIds = memberships.map(m => m.server);
@@ -50,45 +49,36 @@ export const getAllUserServers = async (userId: string) => {
     // Find all server documents
     const servers = await Server
         .find({ _id: { $in: serverIds } })
-        .select("name avatarUuid")
-        .sort({ createdAt: 1 });
+        .select("_id name avatarUuid createdAt")
+        .sort({ createdAt: 1 })
+        .lean();
 
     return servers;
 }
 
-export const getServerById = async (serverId: string) => {
+export const findServerById = async ({ serverId }: GetServerDTO) => {
+
     const server = await Server
         .findById(serverId)
-        .select("_id name avatarUuid inviteCode owner")
-        .populate({ path: "channels", select: "_id name type" });
+        .select("_id name avatarUuid inviteCode owner createdAt");
 
     if (!server) {
-        throw new AppError("That document does not exist.", 404);
+        throw new AppError("Server not found.", 404);
     }
 
     return server;
 }
 
-export const updateServerById = async (serverId: string, { name, avatarUuid }: UpsertServerSchema) => {
-    const server = await Server.findByIdAndUpdate(serverId, { name, avatarUuid }, { new: true, runValidators: true });
+export const updateServerById = async ({ serverId, body }: UpdateServerDTO) => {
+    const server = await Server.findByIdAndUpdate(serverId, body, { new: true, runValidators: true });
 
     if (!server) {
-        throw new AppError("That document does not exist.", 404);
+        throw new AppError("Server not found.", 404);
     }
     return server;
 }
 
-export const createNewInviteCode = async (serverId: string) => {
-    const inviteCode = generateToken(16);
-    const server = await Server.findByIdAndUpdate(serverId, { inviteCode }, { new: true, runValidators: true });
-
-    if (!server) {
-        throw new AppError("That document does not exist.", 404);
-    }
-    return server;
-}
-
-export const deleteServerById = async (serverId: string) => {
+export const deleteServerById = async ({ serverId }: DeleteServerDTO) => {
     // MongoDB transactions ensure that a series of operations on the database either all succeed or all fail
     // Start a session for transaction (keeps track of all operations that are part of the transaction)
     const session = await mongoose.startSession();
@@ -119,4 +109,14 @@ export const deleteServerById = async (serverId: string) => {
         // Finish transaction
         session.endSession();
     }
+}
+
+export const createNewInviteCode = async ({ serverId }: CreateNewInviteCodeDTO) => {
+    const inviteCode = generateToken(16);
+    const server = await Server.findByIdAndUpdate(serverId, { inviteCode }, { new: true, runValidators: true });
+
+    if (!server) {
+        throw new AppError("Server not found.", 404);
+    }
+    return server;
 }

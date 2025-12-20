@@ -1,7 +1,7 @@
 // utils
 import { AppError } from "@/lib/utils/AppError";
 // types
-import { AssertConversationAccessDTO, GetOrCreateConversationDTO } from "@/lib/types/conversation.types";
+import { AssertConversationAccessDTO, GetConversationDTO, GetOrCreateConversationDTO } from "@/lib/types/conversation.types";
 // models
 import { Conversation } from "@/models/conversation.model";
 import { Member } from "@/models/member.model";
@@ -24,22 +24,24 @@ export const getOrCreate = async ({ serverId, memberId, currentMemberId }: GetOr
     const [memberOne, memberTwo] = currentMemberId < memberId ? [currentMemberId, memberId] : [memberId, currentMemberId];
 
     // Try to find conversation based on serverId and two members
-    let conversation = await Conversation.findOne({ server: serverId, memberOne, memberTwo });
-    // If such conversation does not exists create a new one
-    if (!conversation) {
+    const conversationDoc = await Conversation.findOne({ server: serverId, memberOne, memberTwo });
+    if (!conversationDoc) {
         try {
-            conversation = await Conversation.create({ server: serverId, memberOne, memberTwo });
+            // If such conversation does not exists create a new one
+            await Conversation.create({ server: serverId, memberOne, memberTwo });
         } catch (err: any) {
             // Handle rare race condition (duplicate key)
-            // The race condition handling exists to make sure that two simultaneous “create if not exists” requests 
-            // still result in exactly one conversation and zero user-facing errors
-            if (err.code === 11000) {
-                conversation = await Conversation.findOne({ server: serverId, memberOne, memberTwo });
-            } else {
-                throw err;
-            }
+            // Skip errors with code 11000, conversation already exists, find it
+            if (err.code !== 11000) throw err;
         }
     }
+
+    const conversation = await Conversation
+        .findOne({ server: serverId, memberOne, memberTwo })
+        .populate({ path: "memberOne", populate: { path: "user", select: "name avatarUuid" } })
+        .populate({ path: "memberTwo", populate: { path: "user", select: "name avatarUuid" } })
+        .lean();
+
     if (!conversation) {
         throw new AppError("Conversation creation failed", 500);
     }
@@ -47,19 +49,38 @@ export const getOrCreate = async ({ serverId, memberId, currentMemberId }: GetOr
     return conversation;
 }
 
-export const assertConversationAccess = async ({ serverId, conversationId, currentMemberId }: AssertConversationAccessDTO) => {
-    // Ensure that conversation exists in this server
-    const conversation = await Conversation.findOne({ _id: conversationId, server: serverId });
+export const findConversationById = async ({ serverId, conversationId, currentMemberId }: GetConversationDTO) => {
+
+    const conversation = await Conversation
+        .findOne({
+            _id: conversationId,
+            server: serverId,
+            $or: [{ memberOne: currentMemberId }, { memberTwo: currentMemberId }]
+        })
+        .populate({ path: "memberOne", populate: { path: "user", select: "name avatarUuid" } })
+        .populate({ path: "memberTwo", populate: { path: "user", select: "name avatarUuid" } })
+        .lean();
+
     if (!conversation) {
         throw new AppError("Conversation not found.", 404);
     }
-    const memberOneId = conversation.memberOne.toString();
-    const memberTwoId = conversation.memberTwo.toString();
 
-    // Ensure that member is participant of conversation
-    const isParticipant = memberOneId === currentMemberId || memberTwoId === currentMemberId;
-    if (!isParticipant) {
-        throw new AppError("You are not allowed to access this conversation.", 403);
+    return conversation;
+}
+
+export const assertConversationAccess = async ({ serverId, conversationId, currentMemberId }: AssertConversationAccessDTO) => {
+
+    const conversation = await Conversation
+        .findOne({
+            _id: conversationId,
+            server: serverId,
+            $or: [{ memberOne: currentMemberId }, { memberTwo: currentMemberId }]
+        });
+
+    // Either conversation does not exist in this server or member is not participant in conversation
+    if (!conversation) {
+        throw new AppError("Conversation not found.", 404);
     }
+
     return conversation;
 }

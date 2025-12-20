@@ -11,3 +11,24 @@ export interface IMember extends Document {
     server: Types.ObjectId;
     role: MemberRole;
 }
+
+export type GetServerMembersDTO = {
+    serverId: string
+}
+
+export type UpdateMemberRoleDTO = {
+    serverId: string,
+    memberId: string,
+    adminId: string,
+    role: MemberRole
+}
+
+export type RemoveMemberDTO = {
+    serverId: string,
+    memberId: string
+}
+
+export type GetMemberDTO = {
+    serverId: string,
+    userId: string
+}

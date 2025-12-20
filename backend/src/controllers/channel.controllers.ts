@@ -1,7 +1,8 @@
 // utils
 import { catchAsync } from "@/lib/utils/catchAsync";
+import { formatChannel } from "@/lib/utils/formatting";
 // services
-import { updateChannelById, createNewChannel, deleteChannelById } from "@/services/channel.services";
+import { updateChannelById, createNewChannel, deleteChannelById, findAllChannels } from "@/services/channel.services";
 
 // Create channel
 // POST method
@@ -19,6 +20,29 @@ export const createChannel = catchAsync(async (req, res) => {
     res.status(201).json({
         status: "success",
         message: `New channel ${channel.name} has been created.`
+    });
+});
+
+// Get server channels
+// GET method
+// Protected route /api/v1/servers/:serverId/channels
+// Restricted route to all server members
+export const getChannels = catchAsync(async (req, res) => {
+    const { serverId } = req.params;
+
+    // 1) Handle business logic to find all server's channel documents
+    const channels = await findAllChannels({ serverId });
+
+    // 2) Format channel documents
+    const formattedChannels = channels.map(formatChannel);
+
+    // 3) Return response to the client
+    res.status(200).json({
+        status: "success",
+        results: formattedChannels.length,
+        data: {
+            channels: formattedChannels
+        }
     });
 });
 

@@ -6,7 +6,7 @@ import { validate } from "@/middleware/validateSchema";
 // schemas
 import { upsertChannelSchema } from "@/lib/schemas/channel.schemas";
 // controllers
-import { createChannel, deleteChannel, updateChannel } from "@/controllers/channel.controllers";
+import { createChannel, deleteChannel, getChannels, updateChannel } from "@/controllers/channel.controllers";
 // routers
 import channelMessageRouter from "@/routes/channelMessage.routes";
 
@@ -16,6 +16,7 @@ router.use("/:channelId/messages", channelMessageRouter);
 
 router
     .route("/")
+    .get(restrictTo(), getChannels)
     .post(restrictTo("ADMIN", "MODERATOR"), validate(upsertChannelSchema), createChannel)
 
 router

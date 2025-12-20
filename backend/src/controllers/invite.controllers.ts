@@ -8,12 +8,14 @@ import { joinServerWithInviteCode } from "@/services/invite.services";
 // Protected route /api/v1/invites/:inviteCode
 export const joinServer = catchAsync(async (req, res, next) => {
     const { inviteCode } = req.params;
-    const userId = req.user._id;
+    const userId = String(req.user._id);
 
-    const serverId = await joinServerWithInviteCode(inviteCode, userId);
+    const serverId = await joinServerWithInviteCode({ inviteCode, userId });
 
     res.status(200).json({
         status: "success",
-        serverId
+        data: {
+            serverId
+        }
     });
 });
