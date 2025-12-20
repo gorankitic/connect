@@ -8,24 +8,28 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// schemas, types & constants
+// schemas & types
 import { upsertChannelSchema, type UpsertChannelSchema } from "@/lib/schemas/channel.schema";
-import { CHANNEL_TYPE_OPTIONS, type ChannelType, } from "@/lib/constants/channel.constants";
+import type { ChannelType } from "@/lib/types/channel.types";
+// constants
+import { CHANNEL_TYPE_OPTIONS } from "@/lib/constants/channel.constants";
 // hooks
 import { useModal } from "@/hooks/useModal";
-import { useUpdateChannel } from "@/features/channels/useUpdateChannel";
 import { useServer } from "@/features/server/useServer";
+import { useChannels } from "@/features/channels/useChannels";
+import { useUpdateChannel } from "@/features/channels/useUpdateChannel";
 
 const UpdateChannelModal = () => {
     const { isOpen, onClose, type, data: { serverId, channelId } } = useModal();
     const { updateChannel, isPending } = useUpdateChannel();
     const { server } = useServer(serverId);
+    const { channels } = useChannels(serverId);
     const { register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm<UpsertChannelSchema>({
         resolver: zodResolver(upsertChannelSchema),
         defaultValues: { name: "", type: "TEXT" }
     });
 
-    const channel = server?.channels.find(ch => ch._id === channelId);
+    const channel = channels.find(ch => ch._id === channelId);
 
     const isModalOpen = isOpen && type === "updateChannel" && !!serverId && !!channelId;
 

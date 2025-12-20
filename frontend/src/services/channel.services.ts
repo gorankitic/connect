@@ -1,12 +1,17 @@
 // api
 import api from "@/lib/api/apiClient";
 // types & schemas
-import type { SuccessResponse } from "@/lib/api/apiTypes";
+import type { GetChannelsResponse, SuccessResponse } from "@/lib/api/apiTypes";
 import type { UpsertChannelSchema } from "@/lib/schemas/channel.schema";
 
 export const createChannelApi = async ({ serverId, body }: { serverId: string, body: UpsertChannelSchema }) => {
     const { data } = await api.post<SuccessResponse>(`/servers/${serverId}/channels`, body);
     return data;
+}
+
+export const getChannelsApi = async ({ serverId }: { serverId: string }) => {
+    const { data } = await api.get<GetChannelsResponse>(`/servers/${serverId}/channels`);
+    return data.data.channels;
 }
 
 export const updateChannelApi = async ({ serverId, channelId, body }: { serverId: string, channelId: string, body: UpsertChannelSchema }) => {

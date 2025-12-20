@@ -9,8 +9,9 @@ import VerificationFailed from "@/pages/VerificationFailed";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import Onboarding from "@/pages/Onboarding";
-import Channel from "@/pages/Channel";
 import Invite from "@/pages/Invite";
+import Channel from "@/pages/Channel";
+import Conversation from "@/pages/Conversation";
 // route-wrappers
 import ProtectedRoutes from "@/router/ProtectedRoutes";
 import PublicRoutes from "@/router/PublicRoutes";
@@ -34,7 +35,8 @@ const router = createBrowserRouter([
                         element: <ServerLayout />,
                         children: [
                             { index: true, element: <ServerIndexRoute /> },
-                            { path: "channels/:channelId", element: <Channel /> }
+                            { path: "channels/:channelId", element: <Channel /> },
+                            { path: "conversations/:conversationId", element: <Conversation /> }
                         ]
                     },
                 ]

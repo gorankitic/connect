@@ -5,14 +5,14 @@ import { Mail, Send, User } from "lucide-react";
 // schemas & types
 import { updateDataSchema, type UpdateDataSchema } from "@/lib/schemas/user.schema";
 // hooks
-import { useUser } from "@/features/user/useUser";
+import { useAuth } from "@/features/authentication/useAuth";
 import { useUpdateUser } from "@/features/user/useUpdateUser";
 // components
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 
 const UpdateUserDataForm = () => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const { updateUser, isPending } = useUpdateUser();
 
     const { register, handleSubmit, formState: { errors } } = useForm<UpdateDataSchema>({

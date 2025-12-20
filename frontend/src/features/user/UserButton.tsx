@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router";
 import { Bell, LogOut, Settings } from "lucide-react";
 // hooks
-import { useUser } from "@/features/user/useUser";
+import { useAuth } from "@/features/authentication/useAuth";
 import { useSignOut } from "@/features/authentication/useSignOut";
 // utils
 import { getAvatarUrl, getInitials } from "@/lib/utils";
@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const UserButton = () => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const { signOut } = useSignOut();
     const navigate = useNavigate();
 
@@ -21,7 +21,7 @@ const UserButton = () => {
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger>
                 <div className="relative group cursor-pointer">
-                    <Avatar className="size-10 shadow-md group-hover:rounded-xl transition-all" aria-label={`Avatar of ${user.name}`}>
+                    <Avatar className="size-12 shadow-md group-hover:rounded-xl transition-all" aria-label={`Avatar of ${user.name}`}>
                         {user.avatarUuid && <img src={getAvatarUrl(user.avatarUuid)!} className="object-cover w-full h-full" />}
                         {!user.avatarUuid && (
                             <AvatarFallback>

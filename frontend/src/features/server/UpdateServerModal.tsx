@@ -8,7 +8,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import ServerAvatar from "./ServerAvatar";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// schemasm types & constants
+// schemas & types
 import { upsertServerSchema, type UpsertServerSchema } from "@/lib/schemas/server.schema";
 // hooks
 import { useModal } from "@/hooks/useModal";

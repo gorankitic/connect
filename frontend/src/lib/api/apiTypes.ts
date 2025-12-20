@@ -1,6 +1,9 @@
-// constants & types
-import type { ChannelType } from "@/lib/constants/channel.constants";
-import type { MemberRole } from "@/lib/constants/member.constants";
+// types
+import type { User } from "@/lib/types/user.types";
+import type { Session } from "@/lib/types/session.types";
+import type { Server, ServerListItem } from "@/lib/types/server.types";
+import type { Member } from "@/lib/types/member.types";
+import type { Channel } from "@/lib/types/channel.types";
 
 // Zod error response from server
 export type FieldError = {
@@ -24,103 +27,87 @@ export type NormalizedError = {
 }
 
 export type SuccessResponse = {
-    status: "success",
-    message?: string
-}
-
-export type User = {
-    _id: string,
-    name: string,
-    email: string,
-    avatarUuid: string | null,
-    isVerified: boolean
+    status: "success";
+    message?: string;
 }
 
 export type GetUserResponse = {
-    status: "success",
-    user: User
+    status: "success";
+    user: User;
 }
 
 export type GetUploadSignatureResponse = {
-    status: "success",
-    secureSignature: string,
-    secureExpire: string,
-    publicKey: string
-}
-
-export type Session = {
-    userAgent: string
-    lastUsedAt: string,
-    location: string | null
+    status: "success";
+    secureSignature: string;
+    secureExpire: string;
+    publicKey: string;
 }
 
 export type GetSessionsResponse = {
-    status: "success",
-    currentSessionId: string,
-    sessions: Session[]
+    status: "success";
+    currentSessionId: string;
+    sessions: Session[];
 }
 
 export type CreateServerResponse = {
-    status: "success",
-    server: { _id: string };
-}
-
-export type ServerListItem = {
-    _id: string,
-    name: string,
-    avatarUuid: string
+    status: "success";
+    data: {
+        serverId: string;
+    }
 }
 
 export type GetServersResponse = {
     status: "success";
-    servers: ServerListItem[];
-}
-
-export type Channel = {
-    _id: string;
-    name: string;
-    type: ChannelType;
-    server: string;
-};
-
-export type ServerWithChannels = {
-    _id: string;
-    name: string;
-    avatarUuid: string;
-    inviteCode: string;
-    owner: string;
-    channels: Channel[];
-}
-
-export type ServerMember = {
-    _id: string;
-    role: MemberRole;
-    name: string;
-    avatarUuid: string;
+    results: number;
+    data: {
+        servers: ServerListItem[];
+    }
 }
 
 export type GetServerResponse = {
     status: "success";
-    server: ServerWithChannels;
-    member: ServerMember;
+    data: {
+        server: Server;
+    }
 }
 
 export type JoinServerResponse = {
     status: "success";
-    serverId: string;
-}
-
-export type Member = {
-    _id: string;
-    role: MemberRole;
-    serverId: string;
-    createdAt: string;
-    name: string;
-    avatarUuid: string;
-    email: string;
+    data: {
+        serverId: string;
+    }
 }
 
 export type GetMembersResponse = {
-    staus: "success";
-    members: Member[]
+    status: "success";
+    results: number;
+    data: {
+        members: Member[];
+    }
+}
+
+export type GetMemberResponse = {
+    status: "success",
+    data: {
+        member: Member;
+    }
+}
+
+export type GetChannelsResponse = {
+    status: "success";
+    results: number;
+    data: {
+        channels: Channel[];
+    }
+}
+
+export type GetOrCreateConversationResponse = {
+    status: "success";
+    data: {
+        conversation: {
+            conversationId: string;
+            currentMember: Member;
+            otherMember: Member;
+        }
+    }
 }

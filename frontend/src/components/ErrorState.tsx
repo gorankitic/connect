@@ -1,5 +1,5 @@
 // lib
-import { CircleAlert, Home } from "lucide-react";
+import { Home, ServerCrash } from "lucide-react";
 // types
 import type { NormalizedError } from "@/lib/api/apiTypes";
 // components
@@ -7,9 +7,9 @@ import Button from "@/components/Button";
 
 const ErrorState = ({ error }: { error: NormalizedError }) => {
     return (
-        <div className="h-full w-full flex flex-col items-center justify-center text-center gap-5">
-            <CircleAlert className="size-10 text-gray-800" />
-            <p className="text-gray-800 font-medium text-xl">Something went wrong. We hit a brick wall.</p>
+        <div className="h-full w-full flex flex-col items-center justify-center text-center gap-5 bg-gray-100">
+            <ServerCrash className="size-12 text-gray-700" />
+            <p className="text-gray-700 font-medium text-xl">Something went wrong. We hit a brick wall.</p>
             <p className="text-gray-600">{error.message}</p>
 
             <Button

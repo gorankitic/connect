@@ -8,7 +8,6 @@ import { useModal } from "@/hooks/useModal";
 import { useServer } from "@/features/server/useServer";
 import { useDeleteServer } from "@/features/server/useDeleteServer";
 
-
 const DeleteServerModal = () => {
     const { isOpen, type, onClose, data: { serverId } } = useModal();
     const { server } = useServer(serverId);

@@ -1,7 +1,7 @@
 // lib
 import { create } from "zustand";
-// types & constants
-import type { ChannelType } from "@/lib/constants/channel.constants";
+// types
+import type { ChannelType } from "@/lib/types/channel.types";
 
 export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer" | "deleteServer" | "createChannel" | "updateChannel" | "deleteChannel";
 

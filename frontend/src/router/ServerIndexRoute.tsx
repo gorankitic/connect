@@ -1,16 +1,19 @@
 // lib
 import { Navigate, useParams } from "react-router-dom";
 // types
-import type { Channel } from "@/lib/api/apiTypes";
+import type { Channel } from "@/lib/types/channel.types";
+// components
+import Loader from "@/components/Loader";
 // hooks
 import { useServer } from "@/features/server/useServer";
-import Loader from "@/components/Loader";
+import { useChannels } from "@/features/channels/useChannels";
 
 const ServerIndexRoute = () => {
     const { serverId } = useParams<{ serverId: string }>();
-    const { server, isPending } = useServer(serverId);
+    const { server, isPending: isPendingServer } = useServer(serverId);
+    const { channels, isPending: isPendingChannels } = useChannels(serverId);
 
-    if (isPending) {
+    if (isPendingServer || isPendingChannels) {
         return (
             <div className="flex h-full items-center justify-center">
                 <Loader className="size-12" />
@@ -18,9 +21,9 @@ const ServerIndexRoute = () => {
         );
     }
 
-    if (!server) return null;
+    if (!server || !channels.length) return null;
 
-    const generalChannel = server.channels.find((ch: Channel) => ch.type === "TEXT" && ch.name === "general") ?? server.channels[0];
+    const generalChannel = channels.find((ch: Channel) => ch.type === "TEXT" && ch.name === "general") ?? channels[0];
 
     return (
         <Navigate

@@ -60,7 +60,7 @@ const InviteModal = () => {
                         </button>
                     </div>
                     <button
-                        onClick={() => generateInviteCode(server._id)}
+                        onClick={() => generateInviteCode({ serverId: server._id })}
                         disabled={isPending}
                         className="flex items-center gap-2 text-gray-700 text-sm mt-4 mb-3 cursor-pointer hover:underline"
                     >

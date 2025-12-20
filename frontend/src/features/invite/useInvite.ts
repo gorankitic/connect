@@ -13,9 +13,9 @@ export const useInvite = () => {
 
     const { mutate: joinServer, isPending } = useMutation({
         mutationFn: joinServerApi,
-        onSuccess: (data) => {
+        onSuccess: ({ serverId }) => {
             queryClient.invalidateQueries({ queryKey: ["servers"] });
-            navigate(`/servers/${data.serverId}`);
+            navigate(`/servers/${serverId}`);
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

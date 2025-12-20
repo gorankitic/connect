@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 // services
 import { getUserApi } from "@/services/user.services";
 
-export const useUser = () => {
+export const useAuth = () => {
     const { isPending, data } = useQuery({
-        queryKey: ["user"],
+        queryKey: ["auth"],
         queryFn: getUserApi,
         staleTime: Infinity,
         retry: false,

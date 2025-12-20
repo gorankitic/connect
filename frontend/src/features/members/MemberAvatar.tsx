@@ -2,8 +2,9 @@
 import { format } from "date-fns";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-// types & constants
-import type { Member } from "@/lib/api/apiTypes";
+// types
+import type { Member } from "@/lib/types/member.types";
+// constants
 import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";

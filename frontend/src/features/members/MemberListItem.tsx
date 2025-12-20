@@ -1,31 +1,45 @@
+// lib
+import { useParams } from "react-router-dom";
 // types
-import type { Member } from "@/lib/api/apiTypes";
+import type { Member } from "@/lib/types/member.types";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // constants
 import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
+// hooks
+import { useGetOrCreateConversation } from "@/features/conversation/useGetOrCreateConversation";
 
 const MemberListItem = ({ member }: { member: Member }) => {
+    const { conversationId } = useParams<{ serverId: string, conversationId: string }>();
+    const { getOrCreate, conversation } = useGetOrCreateConversation();
 
     const Icon = MEMBER_ROLE_ICON_MAP[member.role];
 
+    let isActive = false;
+    if (conversationId) {
+        isActive = conversationId === conversation?.conversationId;
+    }
+
     return (
-        <button className="group flex items-center gap-2 w-full py-2 px-3 rounded-sm hover:bg-gray-200 cursor-pointer">
-            {member.avatarUuid ? (
-                <img
-                    src={getAvatarUrl(member.avatarUuid)!}
-                    alt={member.name}
-                    className="rounded-full object-cover size-8"
-                />
-            ) : (
-                <Avatar className="size-8 text-gray-700">
+        <button
+            onClick={() => getOrCreate({ serverId: member.serverId, memberId: member._id })}
+            className={cn("group flex items-center gap-2 w-full py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer", isActive && "bg-gray-300 text-gray-600")}
+        >
+            <Avatar className="size-8 text-gray-700">
+                {member.avatarUuid ? (
+                    <img
+                        src={getAvatarUrl(member.avatarUuid)!}
+                        alt={member.name}
+                        className="rounded-full object-cover size-8"
+                    />
+                ) : (
                     <AvatarFallback className="bg-gray-300">
                         {getInitials(member.name)}
                     </AvatarFallback>
-                </Avatar>
-            )}
+                )}
+            </Avatar>
             <div>
                 <div className="flex items-center gap-2">
                     <p className="font-medium text-gray-500 group-hover:text-gray-600">{member.name}</p>
@@ -35,4 +49,5 @@ const MemberListItem = ({ member }: { member: Member }) => {
         </button>
     )
 }
+
 export default MemberListItem;

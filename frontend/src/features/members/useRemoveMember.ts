@@ -11,9 +11,9 @@ export const useRemoveMember = () => {
 
     const { mutate: removeMember, isPending } = useMutation({
         mutationFn: removeMemberApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
-            queryClient.invalidateQueries({ queryKey: ["members"] });
+            queryClient.invalidateQueries({ queryKey: ["members", serverId] });
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

@@ -12,10 +12,9 @@ export const useGenerateInviteCode = () => {
     const { mutate: generateInviteCode, isPending } = useMutation({
         mutationFn: generateInviteCodeApi,
         retry: false,
-        onSuccess: (data) => {
-            toast.success(data.message);
-            queryClient.invalidateQueries({ queryKey: ["servers"] });
-            queryClient.invalidateQueries({ queryKey: ["server"] });
+        onSuccess: ({ message }, { serverId }) => {
+            toast.success(message);
+            queryClient.invalidateQueries({ queryKey: ["server", serverId] });
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

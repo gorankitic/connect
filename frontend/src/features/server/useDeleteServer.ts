@@ -13,10 +13,10 @@ export const useDeleteServer = () => {
 
     const { mutate: deleteServer, isPending } = useMutation({
         mutationFn: deleteServerApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
             queryClient.invalidateQueries({ queryKey: ["servers"] });
-            queryClient.removeQueries({ queryKey: ["server"] });
+            queryClient.removeQueries({ queryKey: ["server", serverId] });
             navigate("/", { replace: true });
         },
         onError: (error: NormalizedError) => {

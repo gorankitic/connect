@@ -13,9 +13,9 @@ export const useCreateServer = () => {
 
     const { mutate: createServer, isPending } = useMutation({
         mutationFn: createServerApi,
-        onSuccess: ({ server }) => {
-            navigate(`/servers/${server._id}`);
+        onSuccess: ({ serverId }) => {
             queryClient.invalidateQueries({ queryKey: ["servers"] });
+            navigate(`/servers/${serverId}`);
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

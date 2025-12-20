@@ -12,66 +12,70 @@ import MemberListItem from "@/features/members/MemberListItem";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useMembers } from "@/features/members/useMembers";
+import { useChannels } from "@/features/channels/useChannels";
+import { useMember } from "@/features/members/useMember";
 
 const ServerSidebar = () => {
-    const { serverId } = useParams();
-    const { server, member, error } = useServer(serverId);
+    const { serverId } = useParams<{ serverId: string }>();
+    const { server, error } = useServer(serverId);
+    const { currentMember } = useMember(serverId);
+    const { channels } = useChannels(serverId);
     const { members } = useMembers(serverId);
 
     if (error) return <ErrorState error={error} />
-    if (!server || !member) return null;
+    if (!server || !currentMember) return null;
 
-    const textChannels = server.channels.filter((channel) => channel.type === "TEXT");
-    const audioChannels = server.channels.filter((channel) => channel.type === "AUDIO");
-    const videoChannels = server.channels.filter((channel) => channel.type === "VIDEO");
-    const otherMembers = members.filter((m) => m._id !== member._id);
+    const textChannels = channels.filter((channel) => channel.type === "TEXT");
+    const audioChannels = channels.filter((channel) => channel.type === "AUDIO");
+    const videoChannels = channels.filter((channel) => channel.type === "VIDEO");
+    const otherMembers = members.filter((m) => m._id !== currentMember._id);
 
     return (
-        <div className="fixed flex flex-col w-80 bg-gray-100 border border-r-gray-300 h-full">
-            <ServerHeader serverId={server._id} name={server.name} role={member.role} />
+        <div className="fixed flex flex-col w-80 bg-gray-200 border-r border-r-gray-400/50 h-full">
+            <ServerHeader serverId={server._id} name={server.name} role={currentMember.role} />
             <ScrollArea className="flex-1 w-full overflow-y-auto">
                 <SidebarSection
                     label="Text channels"
-                    action={member.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="TEXT" />}
+                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="TEXT" />}
                     items={textChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
                             key={channel._id}
                             channel={channel}
                             serverId={server._id}
-                            role={member.role}
+                            role={currentMember.role}
                         />
                     }
                 />
                 <SidebarSection
                     label="Audio channels"
-                    action={member.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="AUDIO" />}
+                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="AUDIO" />}
                     items={audioChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
                             key={channel._id}
                             channel={channel}
                             serverId={server._id}
-                            role={member.role}
+                            role={currentMember.role}
                         />
                     }
                 />
                 <SidebarSection
                     label="Video channels"
-                    action={member.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="VIDEO" />}
+                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="VIDEO" />}
                     items={videoChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
                             key={channel._id}
                             channel={channel}
                             serverId={server._id}
-                            role={member.role}
+                            role={currentMember.role}
                         />
                     }
                 />
                 <SidebarSection
                     label="Server members"
-                    action={member.role === "ADMIN" && <ManageMembersButton serverId={server._id} />}
+                    action={currentMember.role === "ADMIN" && <ManageMembersButton serverId={server._id} />}
                     items={otherMembers}
                     renderItem={(member) => <MemberListItem key={member._id} member={member} />}
                 />

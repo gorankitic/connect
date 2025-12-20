@@ -13,10 +13,10 @@ export const useLeaveServer = () => {
 
     const { mutate: leaveServer, isPending } = useMutation({
         mutationFn: leaveServerApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
             queryClient.invalidateQueries({ queryKey: ["servers"] });
-            queryClient.removeQueries({ queryKey: ["server"] });
+            queryClient.removeQueries({ queryKey: ["server", serverId] });
             navigate("/", { replace: true });
         },
         onError: (error: NormalizedError) => {

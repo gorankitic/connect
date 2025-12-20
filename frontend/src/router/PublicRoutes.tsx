@@ -1,12 +1,12 @@
 // lib
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 // hooks
-import { useUser } from "@/features/user/useUser";
+import { useAuth } from "@/features/authentication/useAuth";
 // components
 import Loader from "@/components/Loader";
 
 const PublicRoutes = () => {
-    const { user, isPending } = useUser();
+    const { user, isPending } = useAuth();
     const location = useLocation();
 
     if (isPending) {

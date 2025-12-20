@@ -11,9 +11,9 @@ export const useDeleteChannel = () => {
 
     const { mutate: deleteChannel, isPending } = useMutation({
         mutationFn: deleteChannelApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
-            queryClient.invalidateQueries({ queryKey: ["server"] });
+            queryClient.invalidateQueries({ queryKey: ["channels", serverId] });
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

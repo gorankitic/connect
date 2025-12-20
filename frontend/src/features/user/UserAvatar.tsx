@@ -1,7 +1,7 @@
 // lib
 import { useState } from "react";
 // hooks
-import { useUser } from "@/features/user/useUser";
+import { useAuth } from "@/features/authentication/useAuth";
 import { useUploadAvatar } from "@/features/user/useUploadAvatar";
 import { useUpdateAvatar } from "@/features/user/useUpdateAvatar";
 // components
@@ -10,7 +10,7 @@ import UploadAvatar from "@/features/user/UploadAvatar";
 import { getAvatarUrl, getInitials } from "@/lib/utils";
 
 const UserAvatar = () => {
-    const { user } = useUser();
+    const { user } = useAuth();
     const { uploadAvatar } = useUploadAvatar();
     const { updateAvatar } = useUpdateAvatar();
     const [isUploading, setIsUploading] = useState(false);

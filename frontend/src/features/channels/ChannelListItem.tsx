@@ -1,14 +1,17 @@
 // lib
+import { useNavigate, useParams } from "react-router-dom";
 import { Edit, Lock, Trash } from "lucide-react";
-// types & constants
-import type { Channel } from "@/lib/api/apiTypes";
-import type { MemberRole } from "@/lib/constants/member.constants";
+// utils
+import { cn } from "@/lib/utils";
+// types
+import type { Channel } from "@/lib/types/channel.types";
+import type { MemberRole } from "@/lib/types/member.types";
+// constants
 import { CHANNEL_TYPE_ICON_MAP } from "@/lib/constants/channel.constants";
 // components
 import ActionTooltip from "@/components/ActionTooltip";
 // hooks
 import { useModal } from "@/hooks/useModal";
-import { useNavigate } from "react-router-dom";
 
 type ChannelListItemProps = {
     channel: Channel;
@@ -18,14 +21,18 @@ type ChannelListItemProps = {
 
 const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
     const navigate = useNavigate();
+    const { channelId } = useParams<{ serverId: string, channelId: string }>();
     const { onOpen } = useModal();
 
     const Icon = CHANNEL_TYPE_ICON_MAP[channel.type];
+    const isActive = channelId === channel._id;
 
     return (
         <div
             onClick={() => navigate(`/servers/${serverId}/channels/${channel._id}`)}
-            className="group text-gray-500 hover:text-gray-600 w-full flex items-center gap-2 py-2 px-3 rounded-sm hover:bg-gray-200 cursor-pointer"
+            className={cn("group text-gray-500 hover:text-gray-600 w-full flex items-center gap-2 py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer",
+                isActive && "bg-gray-300 text-gray-600"
+            )}
         >
             <Icon className="size-4" />
             <p className="font-semibold">{channel.name}</p>

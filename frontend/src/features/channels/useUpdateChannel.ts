@@ -11,9 +11,9 @@ export const useUpdateChannel = () => {
 
     const { mutate: updateChannel, isPending } = useMutation({
         mutationFn: updateChannelApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
-            queryClient.invalidateQueries({ queryKey: ["server"] });
+            queryClient.invalidateQueries({ queryKey: ["channels", serverId] });
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

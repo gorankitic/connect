@@ -1,22 +1,23 @@
 // api
 import api from "@/lib/api/apiClient";
-// types & schemas
+// types
 import type { CreateServerResponse, GetServerResponse, GetServersResponse, SuccessResponse } from "@/lib/api/apiTypes";
+// schemas
 import type { UpsertServerSchema } from "@/lib/schemas/server.schema";
 
 export const createServerApi = async ({ name, avatarUuid }: UpsertServerSchema) => {
     const { data } = await api.post<CreateServerResponse>("/servers", { name, avatarUuid });
-    return data;
+    return data.data;
 }
 
 export const getServersApi = async () => {
     const { data } = await api.get<GetServersResponse>("/servers");
-    return data;
+    return data.data.servers;
 }
 
 export const getServerApi = async (serverId: string) => {
     const { data } = await api.get<GetServerResponse>(`/servers/${serverId}`);
-    return data;
+    return data.data.server;
 }
 
 export const updateServerApi = async ({ serverId, name, avatarUuid }: { serverId: string, name: string, avatarUuid: string }) => {

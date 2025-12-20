@@ -8,9 +8,11 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-// schemas, types & constants
+// schemas & types
 import { upsertChannelSchema, type UpsertChannelSchema } from "@/lib/schemas/channel.schema";
-import { CHANNEL_TYPE_OPTIONS, type ChannelType, } from "@/lib/constants/channel.constants";
+import type { ChannelType } from "@/lib/types/channel.types";
+// constants
+import { CHANNEL_TYPE_OPTIONS } from "@/lib/constants/channel.constants";
 // hooks
 import { useModal } from "@/hooks/useModal";
 import { useCreateChannel } from "@/features/channels/useCreateChannel";

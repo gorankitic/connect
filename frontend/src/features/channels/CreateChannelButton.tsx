@@ -4,8 +4,9 @@ import { Plus } from "lucide-react";
 import ActionTooltip from "@/components/ActionTooltip";
 // hooks
 import { useModal } from "@/hooks/useModal";
-// types & constants
-import type { ChannelType } from "@/lib/constants/channel.constants";
+// types
+import type { ChannelType } from "@/lib/types/channel.types";
+
 
 type CreateChannelButtonProps = {
     serverId: string,
@@ -19,7 +20,7 @@ const CreateChannelButton = ({ serverId, channelType }: CreateChannelButtonProps
         <ActionTooltip label="Create channel" side="right">
             <button
                 onClick={() => onOpen("createChannel", { serverId, channelType })}
-                className="text-gray-500 hover:text-gray-600 transition cursor-pointer"
+                className="text-gray-600 hover:text-gray-700 transition cursor-pointer"
             >
                 <Plus className="size-5" />
             </button>

@@ -11,10 +11,10 @@ export const useUpdateServer = () => {
 
     const { mutate: updateServer, isPending } = useMutation({
         mutationFn: updateServerApi,
-        onSuccess: ({ message }) => {
+        onSuccess: ({ message }, { serverId }) => {
             toast.success(message);
             queryClient.invalidateQueries({ queryKey: ["servers"] });
-            queryClient.invalidateQueries({ queryKey: ["server"] });
+            queryClient.invalidateQueries({ queryKey: ["server", serverId] });
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);

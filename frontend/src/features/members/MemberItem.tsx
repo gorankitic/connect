@@ -1,7 +1,7 @@
 // lib
 import { Ban, Check, EllipsisVertical, ShieldCheck, ShieldQuestionMark, UserRound } from "lucide-react";
 // types
-import type { Member } from "@/lib/api/apiTypes";
+import type { Member } from "@/lib/types/member.types";
 // components
 import MemberAvatar from "@/features/members/MemberAvatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";

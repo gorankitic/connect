@@ -1,11 +1,17 @@
 // api
 import api from "@/lib/api/apiClient";
 // types
-import type { GetMembersResponse, MemberRole, SuccessResponse } from "@/lib/api/apiTypes";
+import type { GetMemberResponse, GetMembersResponse, SuccessResponse } from "@/lib/api/apiTypes";
+import type { MemberRole } from "@/lib/types/member.types";
 
-export const getMembersApi = async (serverId: string) => {
+export const getMembersApi = async ({ serverId }: { serverId: string }) => {
     const { data } = await api.get<GetMembersResponse>(`/servers/${serverId}/members`);
-    return data;
+    return data.data.members;
+}
+
+export const getMemberApi = async ({ serverId }: { serverId: string }) => {
+    const { data } = await api.get<GetMemberResponse>(`/servers/${serverId}/members/me`);
+    return data.data.member;
 }
 
 export const updateMemberRoleApi = async ({ serverId, memberId, role }: { serverId: string, memberId: string, role: MemberRole }) => {

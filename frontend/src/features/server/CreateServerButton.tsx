@@ -18,7 +18,7 @@ const CreateServerButton = () => {
                 onClick={() => onOpen("createServer")}
                 className="group flex items-center cursor-pointer"
             >
-                <div className="flex items-center justify-center size-10 rounded-3xl group-hover:rounded-xl transition-all overflow-hidden bg-background group-hover:bg-blue-600">
+                <div className="flex items-center justify-center size-12 rounded-3xl group-hover:rounded-xl transition-all overflow-hidden bg-background group-hover:bg-blue-600 shadow-sm">
                     <Plus className="group-hover:text-white transition text-blue-600" size={25} />
                 </div>
             </button>

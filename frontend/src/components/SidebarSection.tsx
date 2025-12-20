@@ -12,7 +12,7 @@ const SidebarSection = <T,>({ label, action, items, renderItem }: SidebarSection
     return (
         <div className="mt-3 px-5">
             <div className="flex items-center justify-between py-2">
-                <p className="text-gray-600 font-semibold uppercase text-sm">
+                <p className="text-gray-700 font-semibold uppercase text-sm">
                     {label}
                 </p>
                 {action}

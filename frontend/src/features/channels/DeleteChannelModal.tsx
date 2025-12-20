@@ -6,14 +6,16 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 // hooks
 import { useModal } from "@/hooks/useModal";
 import { useServer } from "@/features/server/useServer";
+import { useChannels } from "@/features/channels/useChannels";
 import { useDeleteChannel } from "@/features/channels/useDeleteChannel";
 
 const DeleteChannelModal = () => {
     const { isOpen, type, onClose, data: { serverId, channelId } } = useModal();
     const { server } = useServer(serverId);
+    const { channels } = useChannels(serverId);
     const { deleteChannel, isPending } = useDeleteChannel();
 
-    const channel = server?.channels.find(ch => ch._id === channelId);
+    const channel = channels.find(ch => ch._id === channelId);
 
     const isModalOpen = isOpen && type === "deleteChannel" && !!serverId && !!channelId;
     if (!isModalOpen || !server || !channel) return null;

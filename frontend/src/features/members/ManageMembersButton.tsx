@@ -12,7 +12,7 @@ const ManageMembersButton = ({ serverId }: { serverId: string }) => {
         <ActionTooltip label="Manage members" side="right">
             <button
                 onClick={() => onOpen("manageMembers", { serverId })}
-                className="text-gray-500 hover:text-gray-600 transition cursor-pointer"
+                className="text-gray-600 hover:text-gray-700 transition cursor-pointer"
             >
                 <Settings className="size-5" />
             </button>

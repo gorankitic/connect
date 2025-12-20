@@ -1,7 +1,7 @@
 // lib
 import { ChevronDown, LogOut, PlusCircle, Settings, Trash, UserPlus, Users } from "lucide-react";
-// types & constants
-import type { MemberRole } from "@/lib/constants/member.constants";
+// types
+import type { MemberRole } from "@/lib/types/member.types";
 // components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 // hooks
@@ -22,7 +22,7 @@ const ServerHeader = ({ serverId, name, role }: ServerHeaderProps) => {
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-                <button className="group w-full flex items-center px-5 py-2 border border-b-gray-300 bg-gray-200 hover:bg-gray-300/80 transition-all text-gray-600 font-semibold cursor-pointer">
+                <button className="group w-full h-12 flex items-center px-5 py-2 border-b border-b-gray-400/50 bg-gray-300 hover:bg-gray-400/40 transition-all text-gray-700 font-semibold cursor-pointer">
                     {name}
                     <ChevronDown className="text-gray-600 size-5 ml-auto group-hover:translate-y-1 transition-all duration-300 ease-in-out" />
                 </button>
