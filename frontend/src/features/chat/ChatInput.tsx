@@ -1,0 +1,78 @@
+// lib
+import { useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Send, Smile } from "lucide-react";
+// schemas & types
+import { upsertMessageSchema, type UpsertMessageSchema } from "@/lib/schemas/message.schema";
+import type { ChatVariant } from "@/lib/types/chat.types";
+
+type ChatInputProps = {
+    variant: ChatVariant,
+    name: string
+    onSend: (body: UpsertMessageSchema) => void;
+    isPending: boolean;
+};
+
+const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
+    const { register, handleSubmit, reset } = useForm<UpsertMessageSchema>({
+        resolver: zodResolver(upsertMessageSchema),
+        defaultValues: { content: "" }
+    });
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+    // RHF already registered ref, can't have 2 refs on one element
+    // Extract RHF ref and merge it with textareaRef 
+    const { ref: rhfRef, ...contentField } = register("content");
+
+    const onSubmit = ({ content }: UpsertMessageSchema) => {
+        onSend({ content });
+        // Reset text area input
+        reset({ content: "" });
+        // Reset textarea height after send
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+        }
+    }
+    // Override textarea default behavior: Enter & also Shift + Enter = New line
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(onSubmit)();
+        }
+    }
+    // Auto-expand textarea
+    const handleInput = (e: React.FormEvent<HTMLTextAreaElement>) => {
+        const target = e.currentTarget;
+        target.style.height = "auto";
+        target.style.height = `${target.scrollHeight}px`;
+    }
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mx-40 mb-10">
+                <div className="relative flex items-end">
+                    <Send className="size-6 absolute left-4 top-7 -translate-y-1/2 text-gray-600 pointer-events-none" />
+                    <textarea
+                        {...contentField}
+                        ref={(el) => {
+                            rhfRef(el);
+                            textareaRef.current = el;
+                        }}
+                        rows={1}
+                        onKeyDown={handleKeyDown}
+                        onInput={handleInput}
+                        placeholder={`Send message to ${variant === "channel" ? "#" + name : name}`}
+                        disabled={isPending}
+                        autoComplete="off"
+                        className="bg-gray-300 w-full py-4 px-14 rounded-sm shadow-sm text-gray-700 placeholder:text-gray-500 
+                        focus:outline-none disabled:opacity-60 resize-none max-h-60 overflow-y-auto"
+                    />
+                    <Smile className="size-6 absolute right-4 top-7 -translate-y-1/2 text-gray-600 cursor-pointer" />
+                </div>
+            </div>
+        </form >
+    )
+}
+
+export default ChatInput;

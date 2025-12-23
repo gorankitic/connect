@@ -1,6 +1,8 @@
 // types
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { ChannelHeaderProps, ConversationHeaderProps } from "@/lib/types/chat.types";
+// components
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+// utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 
 type ChatHeaderProps = ChannelHeaderProps | ConversationHeaderProps

@@ -3,6 +3,8 @@ import type { LucideIcon } from "lucide-react";
 // types
 import type { MemberRole } from "@/lib/types/member.types";
 
+export type ChatVariant = "channel" | "conversation";
+
 export type ChannelHeaderProps = {
     variant: "channel";
     name: string;

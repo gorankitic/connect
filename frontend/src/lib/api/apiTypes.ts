@@ -4,6 +4,7 @@ import type { Session } from "@/lib/types/session.types";
 import type { Server, ServerListItem } from "@/lib/types/server.types";
 import type { Member } from "@/lib/types/member.types";
 import type { Channel } from "@/lib/types/channel.types";
+import type { Message } from "@/lib/types/message.types";
 
 // Zod error response from server
 export type FieldError = {
@@ -110,4 +111,29 @@ export type GetOrCreateConversationResponse = {
             otherMember: Member;
         }
     }
+}
+
+export type CreateChannelMessageResponse = {
+    status: "success";
+    data: {
+        message: Message;
+    }
+}
+
+export type ChannelMessagesPage = {
+    messages: Message[];
+    nextCursor: string | null;
+};
+
+export type GetChannelMessagesResponse = {
+    status: "success";
+    results: number;
+    data: ChannelMessagesPage;
+}
+
+export type GetChannelMessagesParams = {
+    serverId: string;
+    channelId: string;
+    limit?: number;
+    cursor?: string | null;
 }
