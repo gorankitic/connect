@@ -8,6 +8,8 @@ export type CreateChannelMessageDTO = {
 export type GetChannelMessagesDTO = {
     serverId: string;
     channelId: string;
+    limit?: number;
+    cursor?: string;
 }
 
 export type CreateConversationMessageDTO = {

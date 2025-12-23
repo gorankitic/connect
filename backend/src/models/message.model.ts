@@ -43,10 +43,11 @@ const messageSchema = new Schema({
 // Compound indexes, pre-sorted lookup collections
 // Store messages grouped by channel, and within each channel, already sorted by createdAt
 // Used on queries Message.find({ channel: channelId }).sort({ createdAt: 1 });
-messageSchema.index({ channel: 1, createdAt: 1 });
+// For cursor pagination with stable ordering and tie-breaker _id
+messageSchema.index({ channel: 1, createdAt: -1, _id: -1 });
 // Store messages grouped by conversation, and within each conversation, already sorted by createdAt
 // Used on queries Message.find({ conversation: conversationId }).sort({ createdAt: 1 });
-messageSchema.index({ conversation: 1, createdAt: 1 });
+messageSchema.index({ conversation: 1, createdAt: -1, _id: -1 });
 
 // Enforce: message belongs to EITHER channel OR conversation
 messageSchema.pre("validate", function (next) {

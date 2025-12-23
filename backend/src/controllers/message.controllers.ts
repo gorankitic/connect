@@ -16,9 +16,13 @@ export const createChannelMessage = catchAsync(async (req, res) => {
 
     const message = await createNewChannelMessage({ content, serverId, channelId, currentMemberId });
 
+    const formattedMessage = formatMessage(message);
+
     res.status(201).json({
         status: "success",
-        message
+        data: {
+            message: formattedMessage
+        }
     });
 });
 
@@ -28,14 +32,20 @@ export const createChannelMessage = catchAsync(async (req, res) => {
 // Restricted route to all server members
 export const getChannelMessages = catchAsync(async (req, res) => {
     const { serverId, channelId } = req.params;
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const cursor = req.query.cursor ? String(req.query.cursor) : undefined;
 
-    const messages = await getMessagesByChannel({ serverId, channelId });
+    const { messages, nextCursor } = await getMessagesByChannel({ serverId, channelId, limit, cursor });
 
     const formattedMessages = messages.map(formatMessage);
 
     res.status(200).json({
         status: "success",
-        messages: formattedMessages
+        results: formattedMessages.length,
+        data: {
+            messages: formattedMessages,
+            nextCursor
+        }
     });
 });
 
