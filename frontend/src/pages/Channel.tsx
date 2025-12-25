@@ -6,8 +6,8 @@ import type { UpsertMessageSchema } from "@/lib/schemas/message.schema";
 import { CHANNEL_TYPE_ICON_MAP } from "@/lib/constants/channel.constants";
 // components
 import ChatHeader from "@/features/chat/ChatHeader";
-import ChatInput from "@/features/chat/ChatInput";
 import ChatMessages from "@/features/chat/ChatMessages";
+import ChatInput from "@/features/chat/ChatInput";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useChannels } from "@/features/channels/useChannels";

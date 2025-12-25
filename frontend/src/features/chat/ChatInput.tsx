@@ -26,12 +26,15 @@ const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
     const { ref: rhfRef, ...contentField } = register("content");
 
     const onSubmit = ({ content }: UpsertMessageSchema) => {
+        // disabled prop on textarea element blocks auto-focus, disable it on submitting
+        if (isPending) return;
         onSend({ content });
         // Reset text area input
         reset({ content: "" });
-        // Reset textarea height after send
+        // Reset textarea height and autofocus after sending message
         if (textareaRef.current) {
             textareaRef.current.style.height = "auto";
+            textareaRef.current.focus();
         }
     }
     // Override textarea default behavior: Enter & also Shift + Enter = New line
@@ -63,9 +66,8 @@ const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
                         onKeyDown={handleKeyDown}
                         onInput={handleInput}
                         placeholder={`Send message to ${variant === "channel" ? "#" + name : name}`}
-                        disabled={isPending}
                         autoComplete="off"
-                        className="bg-gray-300 w-full py-4 px-14 rounded-sm shadow-sm text-gray-700 placeholder:text-gray-500 
+                        className="bg-gray-300 w-full py-4 px-14 rounded-sm shadow-sm text-gray-700 placeholder:text-gray-600 
                         focus:outline-none disabled:opacity-60 resize-none max-h-60 overflow-y-auto"
                     />
                     <Smile className="size-6 absolute right-4 top-7 -translate-y-1/2 text-gray-600 cursor-pointer" />

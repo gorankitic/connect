@@ -113,6 +113,13 @@ export type GetOrCreateConversationResponse = {
     }
 }
 
+export type GetChannelMessagesParams = {
+    serverId: string;
+    channelId: string;
+    limit?: number;
+    cursor?: string | null;
+}
+
 export type CreateChannelMessageResponse = {
     status: "success";
     data: {
@@ -123,7 +130,7 @@ export type CreateChannelMessageResponse = {
 export type ChannelMessagesPage = {
     messages: Message[];
     nextCursor: string | null;
-};
+}
 
 export type GetChannelMessagesResponse = {
     status: "success";
@@ -131,9 +138,27 @@ export type GetChannelMessagesResponse = {
     data: ChannelMessagesPage;
 }
 
-export type GetChannelMessagesParams = {
+export type GetConversationMessagesParams = {
     serverId: string;
-    channelId: string;
+    conversationId: string;
     limit?: number;
     cursor?: string | null;
+}
+
+export type CreateConversationMessageResponse = {
+    status: "success";
+    data: {
+        message: Message;
+    }
+}
+
+export type ConversationMessagesPage = {
+    messages: Message[];
+    nextCursor: string | null;
+}
+
+export type GetConversationMessagesResponse = {
+    status: "success";
+    results: number;
+    data: ConversationMessagesPage;
 }

@@ -44,7 +44,11 @@ const ChatItem = ({ message }: ChatItemProps) => {
                     <p className="text-xs text-gray-400">{format(new Date(message.createdAt), 'd.M.y. H:m')}</p>
                 </div>
             </div>
-            <p className="ml-12">{message.content}</p>
+            {/* whitespace-pre-wrap: Preserves \n as line breaks, still wraps long lines */}
+            {/* wrap-break-word: Prevents long words / URLs from overflowing */}
+            <p className="ml-12 whitespace-pre-wrap wrap-break-word">
+                {message.content}
+            </p>
         </div>
     )
 }

@@ -60,8 +60,6 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
             return;
         }
 
-        if (messageCount === 0) return;
-
         const distanceFromBottom =
             container.scrollHeight - container.scrollTop - container.clientHeight;
 
@@ -74,11 +72,30 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
                 hasInitialized.current = true;
             });
         }
-    }, [messageCount, scrollKey]);
+    }, [messageCount]);
 
-    // Reset on chat (channels or conversations) change
+    // Reset on chat (channels or conversations) switch
     useEffect(() => {
+        const container = containerRef.current;
+        const bottom = bottomRef.current;
+        if (!container || !bottom) return;
+
         hasInitialized.current = false;
         prevScrollHeight.current = null;
+
+        // requestAnimationFrame (rAF) is a browser API
+        // Run this function right before the browser paints the next frame
+        // The browser rendering pipeline looks like this: JS, style recalculation, layout (measure DOM), paint (draw pixels)
+        // requestAnimationFrame(cb) schedules cb after JS finishes and after layout is known, but before paint
+        // That means: scrollHeight, clientHeight, and other DOM sizes are now accurate
+        // One requestAnimationFrame = “after JS, before paint”
+        // Two requestAnimationFrames = “after paint”
+        // Scroll needs: correct layout, painted DOM, correct scrollHeight
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                bottom.scrollIntoView({ behavior: "auto" });
+                hasInitialized.current = true;
+            });
+        });
     }, [scrollKey]);
 }
