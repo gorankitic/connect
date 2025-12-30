@@ -127,7 +127,7 @@ export type CreateChannelMessageResponse = {
     }
 }
 
-export type ChannelMessagesPage = {
+export type MessagesPage = {
     messages: Message[];
     nextCursor: string | null;
 }
@@ -135,7 +135,7 @@ export type ChannelMessagesPage = {
 export type GetChannelMessagesResponse = {
     status: "success";
     results: number;
-    data: ChannelMessagesPage;
+    data: MessagesPage;
 }
 
 export type GetConversationMessagesParams = {
@@ -152,13 +152,8 @@ export type CreateConversationMessageResponse = {
     }
 }
 
-export type ConversationMessagesPage = {
-    messages: Message[];
-    nextCursor: string | null;
-}
-
 export type GetConversationMessagesResponse = {
     status: "success";
     results: number;
-    data: ConversationMessagesPage;
+    data: MessagesPage;
 }

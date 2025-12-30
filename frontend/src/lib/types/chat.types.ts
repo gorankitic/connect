@@ -3,7 +3,7 @@ import type { LucideIcon } from "lucide-react";
 // types
 import type { MemberRole } from "@/lib/types/member.types";
 
-export type ChatVariant = "channel" | "conversation";
+export type ChatType = "channel" | "conversation";
 
 export type ChannelHeaderProps = {
     variant: "channel";
@@ -17,4 +17,10 @@ export type ConversationHeaderProps = {
     avatarUuid: string;
     role: MemberRole;
     Icon: LucideIcon;
+};
+
+export type ChatMessagesProps = {
+    type: ChatType,
+    serverId?: string,
+    targetId?: string
 };

@@ -11,15 +11,15 @@ import ChatInput from "@/features/chat/ChatInput";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useChannels } from "@/features/channels/useChannels";
-import { useChannelMessages } from "@/features/chat/useChannelMessages";
-import { useCreateChannelMessage } from "@/features/chat/useCreateChannelMessage";
+import { useMessages } from "@/features/chat/useMessages";
+import { useCreateMessage } from "@/features/chat/useCreateMessage";
 
 const Channel = () => {
     const { serverId, channelId } = useParams<{ serverId: string, channelId: string }>();
     const { server } = useServer(serverId);
     const { channels } = useChannels(serverId);
-    const { createChannelMessage, isPending } = useCreateChannelMessage();
-    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useChannelMessages({ serverId, channelId });
+    const { createMessage, isPending } = useCreateMessage({ type: "channel", serverId, targetId: channelId });
+    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "channel", serverId, targetId: channelId });
 
     const channel = channels.find((ch) => ch._id === channelId);
 
@@ -29,7 +29,7 @@ const Channel = () => {
 
     const handleSend = ({ content }: UpsertMessageSchema) => {
         if (!content.trim()) return;
-        createChannelMessage({ serverId, channelId, body: { content } });
+        createMessage({ content });
     }
 
     return (

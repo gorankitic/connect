@@ -19,7 +19,7 @@ type UseChatScrollProps = {
 }
 
 export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLoadingMore, messageCount, scrollKey }: UseChatScrollProps) => {
-    // const [hasInitialized, setHasInitialized] = useState(false);
+
     // Used to auto-scroll to bottom only once on first render
     const hasInitialized = useRef(false);
     // Used to track previous scroll height

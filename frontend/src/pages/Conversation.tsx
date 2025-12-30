@@ -11,15 +11,15 @@ import ChatInput from "@/features/chat/ChatInput";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useConversation } from "@/features/conversation/useConversation";
-import { useCreateConversationMessage } from "@/features/chat/useCreateConversationMessage";
-import { useConversationMessages } from "@/features/chat/useConversationMessages";
+import { useMessages } from "@/features/chat/useMessages";
+import { useCreateMessage } from "@/features/chat/useCreateMessage";
 
 const Conversation = () => {
     const { serverId, conversationId } = useParams<{ serverId: string, conversationId: string }>();
     const { server } = useServer(serverId);
     const { conversation } = useConversation(serverId, conversationId);
-    const { createConversationMessage, isPending } = useCreateConversationMessage();
-    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useConversationMessages({ serverId, conversationId });
+    const { createMessage, isPending } = useCreateMessage({ type: "conversation", serverId, targetId: conversationId });
+    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "conversation", serverId, targetId: conversationId });
 
     if (!server || !conversation || !serverId || !conversationId) return null;
 
@@ -27,7 +27,7 @@ const Conversation = () => {
 
     const handleSend = ({ content }: UpsertMessageSchema) => {
         if (!content.trim()) return;
-        createConversationMessage({ serverId, conversationId, body: { content } });
+        createMessage({ content });
     }
 
     return (

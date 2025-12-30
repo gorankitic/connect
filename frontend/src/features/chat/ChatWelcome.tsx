@@ -1,10 +1,10 @@
 // lib
 import { Hash } from "lucide-react";
 // types
-import type { ChatVariant } from "@/lib/types/chat.types";
+import type { ChatType } from "@/lib/types/chat.types";
 
 type ChatWelcomeProps = {
-    variant: ChatVariant;
+    variant: ChatType;
     name: string
 }
 

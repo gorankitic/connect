@@ -5,10 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Send, Smile } from "lucide-react";
 // schemas & types
 import { upsertMessageSchema, type UpsertMessageSchema } from "@/lib/schemas/message.schema";
-import type { ChatVariant } from "@/lib/types/chat.types";
+import type { ChatType } from "@/lib/types/chat.types";
 
 type ChatInputProps = {
-    variant: ChatVariant,
+    variant: ChatType,
     name: string
     onSend: (body: UpsertMessageSchema) => void;
     isPending: boolean;

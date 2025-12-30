@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { LoaderCircle } from "lucide-react";
 // types
 import type { Message } from "@/lib/types/message.types";
-import type { ChatVariant } from "@/lib/types/chat.types";
+import type { ChatType } from "@/lib/types/chat.types";
 import type { NormalizedError } from "@/lib/api/apiTypes";
 // components
 import ChatWelcome from "@/features/chat/ChatWelcome";
@@ -13,7 +13,7 @@ import ErrorState from "@/components/ErrorState";
 import { useChatScroll } from "@/hooks/useChatScroll";
 
 type ChatMessagesProps = {
-    variant: ChatVariant,
+    variant: ChatType,
     name: string,
     messages: Message[],
     hasNextPage: boolean,
@@ -44,7 +44,6 @@ const ChatMessages = ({ messages, variant, name, hasNextPage, fetchNextPage, isF
                 <LoaderCircle className='size-7 animate-spin text-gray-700 my-4' />
                 <span className="text-gray-600 text-xs">Loading messages...</span>
             </div>
-
         )
     }
 

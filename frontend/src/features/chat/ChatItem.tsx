@@ -41,7 +41,7 @@ const ChatItem = ({ message }: ChatItemProps) => {
                             {Icon && <Icon className={cn("size-4", message.member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
                         </ActionTooltip>
                     </div>
-                    <p className="text-xs text-gray-400">{format(new Date(message.createdAt), 'd.M.y. H:m')}</p>
+                    <p className="text-xs text-gray-400">{format(new Date(message.createdAt), 'd.M.y. HH:mm')}</p>
                 </div>
             </div>
             {/* whitespace-pre-wrap: Preserves \n as line breaks, still wraps long lines */}
