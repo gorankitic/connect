@@ -1,19 +1,20 @@
 // modules
 import { Types } from "mongoose";
 // schemas & types
-import { TCreateSession, TRotateSession } from "src/lib/types/session.types";
+import { TCreateSession, TRotateSession } from "@/lib/types/session.types";
 // utils
-import { signJWT } from "src/lib/utils/jwt";
-import { AppError } from "src/lib/utils/AppError";
-import { generateToken, hash } from "src/lib/utils/crypto";
+import { signJWT, verifyJWT } from "@/lib/utils/jwt";
+import { AppError } from "@/lib/utils/AppError";
+import { generateToken, hash } from "@/lib/utils/crypto";
 // models
-import Session from "src/models/session.model";
+import { User } from "@/models/user.model";
+import { Session } from "@/models/session.model";
 // constants
 import { REFRESH_TOKEN_TTL_MS } from "@/config/env";
 // services
-import { getLocation } from "./location.services";
+import { getLocation } from "@/services/location.services";
 
-export const createSession = async ({ userId, role, req }: TCreateSession) => {
+export const createSession = async ({ userId, req }: TCreateSession) => {
     // 1) Generate opaque refresh token
     const refreshToken = generateToken();
     const refreshTokenHash = hash(refreshToken);
@@ -37,7 +38,7 @@ export const createSession = async ({ userId, role, req }: TCreateSession) => {
     });
 
     // 4) Create access token 
-    const accessToken = signJWT({ sub: String(userId), role, sessionId: String(session._id) });
+    const accessToken = signJWT({ sub: String(userId), sessionId: String(session._id) });
 
     // 5) Return data to auth controller layer
     return { accessToken, refreshToken }
@@ -119,4 +120,29 @@ export const findAllUserSessions = async (userId: Types.ObjectId) => {
         .sort({ lastUsedAt: -1 });
 
     return sessions;
+}
+
+export const authenticateSession = async ({ accessToken }: { accessToken: string }) => {
+    // 1) Get access token and check if it exist
+    if (!accessToken) {
+        throw new AppError("Please sign in to get access.", 401);
+    }
+    // 2) Verify access token
+    const payload = verifyJWT(accessToken);
+    // 3) Check if session exists and is valid
+    const session = await Session.findById(payload.sessionId);
+    if (!session || session.revokedAt || session.expiresAt < new Date()) {
+        throw new AppError("Session has expired or been revoked. Please sign in again.", 401);
+    }
+    // 4) Find user based on _id decoded from JWT and check if user still exist
+    const user = await User.findById(payload.sub);
+    if (!user) {
+        throw new AppError("User owner of this token doesn't exist anymore.", 401);
+    }
+    // 5) Check if user changed password after the JWT was issued
+    if (payload.iat && user.passwordChangedAfterJWTIssued(payload.iat)) {
+        throw new AppError("You changed password recently. Please sign in again.", 401);
+    }
+
+    return { user, session };
 }

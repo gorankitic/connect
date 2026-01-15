@@ -3,7 +3,7 @@ import express from "express";
 // controllers
 import { getUploadcareSignature } from "src/controllers/upload.controllers";
 // middlewares
-import { uploadRateLimiter } from "src/middleware/rateLimiters";
+import { uploadRateLimiter } from "@/middlewares/rateLimiters";
 
 const router = express.Router();
 

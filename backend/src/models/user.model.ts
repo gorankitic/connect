@@ -3,9 +3,9 @@ import { model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 // types
-import { UserDocument } from "@/lib/types/user.types";
+import { IUser } from "@/lib/types/user.types";
 
-const userSchema = new Schema<UserDocument>({
+const userSchema = new Schema<IUser>({
     name: {
         type: String,
         required: [true, "Name is required."]
@@ -82,4 +82,4 @@ userSchema.methods.passwordChangedAfterJWTIssued = function (jwtIssuedAt: number
     }
 }
 
-export const User = model<UserDocument>("User", userSchema);
+export const User = model<IUser>("User", userSchema);

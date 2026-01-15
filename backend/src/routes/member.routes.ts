@@ -3,8 +3,8 @@ import express from "express";
 // controllers
 import { getMember, getServerMembers, leaveServer, removeMember, updateMemberRole } from "@/controllers/member.controllers";
 // middlewares
-import { restrictTo } from "@/middleware/restrictTo";
-import { validate } from "@/middleware/validateSchema";
+import { restrictTo } from "@/middlewares/restrictTo";
+import { validate } from "@/middlewares/validateSchema";
 // schemas
 import { updateMemberRoleSchema } from "@/lib/schemas/member.schemas";
 

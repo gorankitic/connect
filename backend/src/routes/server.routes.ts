@@ -3,8 +3,8 @@ import express from "express";
 // controllers
 import { createServer, deleteServer, generateNewInviteCode, getAllServers, getServer, updateServer } from "@/controllers/server.controllers";
 // middlewares
-import { validate } from "@/middleware/validateSchema";
-import { restrictTo } from "@/middleware/restrictTo";
+import { validate } from "@/middlewares/validateSchema";
+import { restrictTo } from "@/middlewares/restrictTo";
 // routers
 import memberRouter from "@/routes/member.routes";
 import channelRouter from "@/routes/channel.routes";

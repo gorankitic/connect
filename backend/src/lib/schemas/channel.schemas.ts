@@ -1,7 +1,7 @@
 // modules
 import { z } from "zod";
 // constants
-import { CHANNEL_TYPES } from "@/lib/constants";
+import { CHANNEL_TYPES } from "@/lib/constants/channel.constants";
 
 export const upsertChannelSchema = z.object({
     name: z

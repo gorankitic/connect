@@ -20,7 +20,9 @@ export type CreateConversationMessageDTO = {
 }
 
 export type GetConversationMessagesDTO = {
-    serverId: string,
-    conversationId: string,
-    currentMemberId: string
+    serverId: string;
+    conversationId: string;
+    currentMemberId: string;
+    limit?: number;
+    cursor?: string;
 }

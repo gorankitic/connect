@@ -1,13 +1,14 @@
-import { User } from "../../models/user.model.ts"
-import { Session } from "../../models/session.model.ts"
-import type { IMember } from "@/lib/types";
+// types
+import type { IMember } from "@/lib/types/member.types.js";
+import type { IUser } from "@/lib/types/user.types.js";
+import type { ISession } from "@/lib/types/session.types.js";
 
 declare global {
     namespace Express {
         interface Request {
-            user?: User;
-            session?: Session;
-            member?: IMember
+            user: IUser;
+            session: ISession;
+            member?: IMember;
         }
     }
 }

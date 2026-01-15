@@ -1,0 +1,1 @@
+export const CHANNEL_ROOM_PREFIX = "channel:";

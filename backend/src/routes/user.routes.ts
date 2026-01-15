@@ -5,7 +5,7 @@ import { getUser, updateAvatar, updateData } from "src/controllers/user.controll
 // schemas
 import { updateAvatarSchema, updateDataSchema } from "src/lib/schemas/user.schemas";
 // middlewares
-import { validate } from "src/middleware/validateSchema";
+import { validate } from "@/middlewares/validateSchema";
 
 const router = express.Router();
 

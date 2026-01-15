@@ -9,6 +9,7 @@ import { findConversationById, getOrCreate } from "@/services/conversation.servi
 // Protected route /api/v1/servers/:serverId/conversations
 // Restricted route to all server members
 export const getOrCreateConversation = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
     const { serverId } = req.params;
     const currentMemberId = String(req.member._id);
     // 1) Request body validation is done in the validateSchema middleware
@@ -34,6 +35,7 @@ export const getOrCreateConversation = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId
 // Restricted route to all server members
 export const getConversation = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
     const { serverId, conversationId } = req.params;
     const currentMemberId = String(req.member._id);
 

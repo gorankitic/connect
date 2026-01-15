@@ -1,5 +1,4 @@
 // utils
-import { AppError } from "@/lib/utils/AppError";
 import { catchAsync } from "@/lib/utils/catchAsync";
 import { formatServer, formatServers } from "@/lib/utils/formatting";
 // services
@@ -11,7 +10,7 @@ import { createNewInviteCode, createNewServer, deleteServerById, findAllServers,
 export const createServer = catchAsync(async (req, res) => {
     // 1) Request validation is done in the validateSchema middleware
     const { name, avatarUuid } = req.body;
-    const owner = req.user._id;
+    const owner = String(req.user._id);
 
     // 2) Handle business logic to create server document
     const server = await createNewServer({ name, avatarUuid, owner });

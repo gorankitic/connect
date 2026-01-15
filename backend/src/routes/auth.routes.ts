@@ -5,9 +5,9 @@ import { forgotPassword, refresh, resetPassword, signIn, signOut, signOutAll, si
 // schemas
 import { forgotPasswordSchema, resetPasswordSchema, signinSchema, signupSchema, updatePasswordSchema } from "src/lib/schemas/auth.schemas";
 // middlewares
-import { validate } from "src/middleware/validateSchema";
-import { protect } from "src/middleware/authMiddleware";
-import { authRateLimiter, sensitiveRateLimiter } from "src/middleware/rateLimiters";
+import { validate } from "@/middlewares/validateSchema";
+import { protect } from "@/middlewares/protect";
+import { authRateLimiter, sensitiveRateLimiter } from "@/middlewares/rateLimiters";
 
 const router = express.Router();
 

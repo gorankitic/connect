@@ -1,13 +1,13 @@
 // utils
-import { AppError } from "src/lib/utils/AppError";
-import { catchAsync } from "src/lib/utils/catchAsync";
-import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "src/lib/utils/cookies";
+import { AppError } from "@/lib/utils/AppError";
+import { catchAsync } from "@/lib/utils/catchAsync";
+import { clearAuthCookies, setAccessTokenCookie, setRefreshTokenCookie } from "@/lib/utils/cookies";
 // email
-import { sendEmail } from "src/lib/email/sendEmail";
-import { VERIFICATION_EMAIL_TEMPLATE } from "src/lib/email/email.templates";
+import { sendEmail } from "@/lib/email/sendEmail";
+import { VERIFICATION_EMAIL_TEMPLATE } from "@/lib/email/email.templates";
 // services
-import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "src/services/session.services";
-import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "src/services/auth.services";
+import { createSession, revokeAllUserSesions, revokeSession, rotateSession } from "@/services/session.services";
+import { deleteUser, requestResetPassword, resetUserPassword, signinUser, signupUser, tokenVerification, updateUserPassword } from "@/services/auth.services";
 // constants
 import { CLIENT_ORIGIN, SERVER_ORIGIN } from "@/config/env";
 
@@ -27,7 +27,7 @@ export const signUp = catchAsync(async (req, res, next) => {
 
     // 3.2) Delete the user from the database if sending email fails
     if (error) {
-        await deleteUser(user._id.toString());
+        await deleteUser(user._id);
         return next(new AppError("Failed to send verification email. Please try again.", 500));
     }
 
@@ -48,7 +48,7 @@ export const signIn = catchAsync(async (req, res, next) => {
     const user = await signinUser({ email, password });
 
     // 3) Create a session & issue tokens
-    const { accessToken, refreshToken } = await createSession({ userId: user._id, role: user.role, req });
+    const { accessToken, refreshToken } = await createSession({ userId: user._id, req });
 
     // 4) Set HttpOnly cookies
     setAccessTokenCookie(accessToken, res);

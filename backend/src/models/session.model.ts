@@ -46,6 +46,4 @@ const sessionSchema = new Schema({
 
 // MongoDB TTL index, sessions are deleted automatically after their expiration date
 
-const Session = mongoose.model("Session", sessionSchema);
-
-export default Session;
+export const Session = mongoose.model("Session", sessionSchema);

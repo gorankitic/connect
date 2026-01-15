@@ -72,6 +72,7 @@ export const updateMemberRole = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/members/:memberId
 // Restricted route to "ADMIN"
 export const removeMember = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
     const { serverId, memberId } = req.params;
     const adminId = String(req.member._id);
 
@@ -95,8 +96,10 @@ export const removeMember = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/members/leave
 // Restricted route to all members
 export const leaveServer = catchAsync(async (req, res, next) => {
+    if (!req.member) throw new Error("No member attached to request");
     const { serverId } = req.params;
-    const { _id: memberId, role } = req.member;
+    const { _id, role } = req.member;
+    const memberId = String(_id);
 
     // 1) Prevent admin leaving the server (single-admin rule)
     if (role === "ADMIN") {

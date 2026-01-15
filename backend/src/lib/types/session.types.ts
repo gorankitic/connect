@@ -6,14 +6,14 @@ export interface ISession {
     _id: Types.ObjectId;
     userId: Types.ObjectId;
     refreshTokenHash: string;
-    userAgent?: string;
-    location?: string;
-    ip?: string;
+    userAgent?: string | null;
+    location?: string | null;
+    ip?: string | null;
     createdAt: Date;
     lastUsedAt: Date;
     expiresAt: Date; // Session lifetime, based on refresh token TTL
-    revokedAt?: Date;
-    replacedBy?: Types.ObjectId; // Points to a new session on rotation
+    revokedAt?: Date | null;
+    replacedBy?: Types.ObjectId | null; // Points to a new session on rotation
 }
 
 export type TCreateSession = {

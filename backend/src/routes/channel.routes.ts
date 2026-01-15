@@ -1,8 +1,8 @@
 // modules
 import express from "express";
 // middlewares
-import { restrictTo } from "@/middleware/restrictTo";
-import { validate } from "@/middleware/validateSchema";
+import { restrictTo } from "@/middlewares/restrictTo";
+import { validate } from "@/middlewares/validateSchema";
 // schemas
 import { upsertChannelSchema } from "@/lib/schemas/channel.schemas";
 // controllers

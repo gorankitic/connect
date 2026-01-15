@@ -3,20 +3,16 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import helmet from "helmet";
-import chalk from "chalk";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import hpp from "hpp";
-// config
-import { connectDatabase } from "./config/database";
-import { connectResend } from "./config/resend";
 // constants
-import { CLIENT_ORIGIN, NODE_ENV, PORT } from "./config/env";
+import { CLIENT_ORIGIN } from "./config/env";
 // middlewares
-import { protect } from "./middleware/authMiddleware";
-import { globalErrorHandler } from "./middleware/globalErrorHandler";
-import { globalRateLimiter } from "./middleware/rateLimiters";
-import { sanitizeMongo } from "./middleware/sanitizeMongo";
+import { protect } from "./middlewares/protect";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler";
+import { globalRateLimiter } from "./middlewares/rateLimiters";
+import { sanitizeMongo } from "./middlewares/sanitizeMongo";
 // (routers)
 import authRouter from "./routes/auth.routes";
 import userRouter from "./routes/user.routes";
@@ -28,7 +24,7 @@ import inviteRouter from "./routes/invite.routes";
 import { AppError } from "./lib/utils/AppError";
 
 // Initialize express application
-const app = express();
+export const app = express();
 
 // MIDDLEWARES
 // 1) Trust proxy
@@ -63,18 +59,3 @@ app.use((req, res, next) => {
 
 // Global error handling middleware
 app.use(globalErrorHandler);
-
-(async () => {
-    try {
-        // Connect to MongoDb
-        await connectDatabase();
-        // Connect to Resend
-        await connectResend();
-        // Start listening for http requests
-        app.listen(PORT, () => {
-            console.log(chalk.bgGreen.bold(`Server is up in ${NODE_ENV} environment on port ${PORT}.`));
-        });
-    } catch (error) {
-        console.log(chalk.red.bold(error));
-    }
-})();

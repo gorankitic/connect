@@ -1,7 +1,7 @@
 // modules
 import { model, Schema } from "mongoose";
 // constants
-import { CHANNEL_TYPES } from "@/lib/constants";
+import { CHANNEL_TYPES } from "@/lib/constants/channel.constants";
 
 const channelSchema = new Schema({
     name: {

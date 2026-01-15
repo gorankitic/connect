@@ -24,3 +24,8 @@ export type DeleteChannelDTO = {
     serverId: string,
     channelId: string
 }
+
+export type AssertChannelAccessDTO = {
+    serverId: string;
+    channelId: string;
+}

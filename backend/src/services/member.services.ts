@@ -49,3 +49,16 @@ export const removeMemberFromServer = async ({ serverId, memberId }: RemoveMembe
         throw new AppError("Member not found.", 404);
     }
 }
+
+export const assertServerMember = async ({ serverId, userId }: GetMemberDTO) => {
+    // Check is user a member of this server
+    const member = await Member
+        .findOne({ user: userId, server: serverId })
+        .populate({ path: "user", select: "_id name avatarUuid" });
+
+    if (!member) {
+        throw new AppError("You don't have a permission for this action.", 403);
+    }
+
+    return member;
+}

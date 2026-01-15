@@ -1,17 +1,19 @@
+// modules
+import { Types } from "mongoose";
 // utils
-import { AppError } from "src/lib/utils/AppError";
-import { generateToken, hash } from "src/lib/utils/crypto";
+import { AppError } from "@/lib/utils/AppError";
+import { generateToken, hash } from "@/lib/utils/crypto";
 // schemas & types
-import { SigninSchema, SignupSchema } from "src/lib/schemas/auth.schemas";
+import { SigninSchema, SignupSchema } from "@/lib/schemas/auth.schemas";
 // email
-import { sendEmail } from "src/lib/email/sendEmail";
-import { RESET_PASSWORD_TEMPLATE } from "src/lib/email/email.templates";
+import { sendEmail } from "@/lib/email/sendEmail";
+import { RESET_PASSWORD_TEMPLATE } from "@/lib/email/email.templates";
 // models
-import { User } from "src/models/user.model";
+import { User } from "@/models/user.model";
 // constants
 import { CLIENT_ORIGIN } from "@/config/env";
 // services
-import { revokeAllUserSesions } from "./session.services";
+import { revokeAllUserSesions } from "@/services/session.services";
 
 export const signupUser = async ({ name, email, password }: SignupSchema) => {
     // 1) Initial check if user already exists in database
@@ -117,7 +119,7 @@ export const resetUserPassword = async (resetPasswordToken: string, newPassword:
     return user;
 }
 
-export const updateUserPassword = async (userId: string, currentPassword: string, newPassword: string) => {
+export const updateUserPassword = async (userId: Types.ObjectId, currentPassword: string, newPassword: string) => {
     // 1) Get user from collection
     const user = await User.findById(userId).select("+password");
     // We already checked for user in protect middleware, but typescript doesn't know that 
@@ -140,7 +142,7 @@ export const updateUserPassword = async (userId: string, currentPassword: string
     return user;
 }
 
-export const deleteUser = async (userId: string) => {
+export const deleteUser = async (userId: Types.ObjectId) => {
     const user = await User.findByIdAndDelete(userId);
 
     if (!user) {

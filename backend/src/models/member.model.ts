@@ -1,7 +1,7 @@
 // modules
 import { model, Schema } from "mongoose";
 // constants
-import { MEMBER_ROLES } from "@/lib/constants";
+import { MEMBER_ROLES } from "@/lib/constants/member.constants";
 // types
 import { IMember } from "@/lib/types/member.types";
 
