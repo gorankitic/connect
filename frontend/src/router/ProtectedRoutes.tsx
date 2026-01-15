@@ -4,6 +4,8 @@ import { Navigate, Outlet } from "react-router-dom";
 import Loader from "@/components/Loader";
 // hooks
 import { useAuth } from "@/features/authentication/useAuth";
+// providers
+import { SocketProvider } from "@/providers/SocketProvider";
 
 const ProtectedRoutes = () => {
     const { user, isPending } = useAuth();
@@ -20,7 +22,11 @@ const ProtectedRoutes = () => {
         return <Navigate to="/signin" replace />
     }
 
-    return <Outlet />
+    return (
+        <SocketProvider>
+            <Outlet />
+        </SocketProvider>
+    )
 }
 
 export default ProtectedRoutes;

@@ -13,6 +13,7 @@ import { useServer } from "@/features/server/useServer";
 import { useChannels } from "@/features/channels/useChannels";
 import { useMessages } from "@/features/chat/useMessages";
 import { useCreateMessage } from "@/features/chat/useCreateMessage";
+import { useChatSocket } from "@/features/chat/useChatSocket";
 
 const Channel = () => {
     const { serverId, channelId } = useParams<{ serverId: string, channelId: string }>();
@@ -20,6 +21,7 @@ const Channel = () => {
     const { channels } = useChannels(serverId);
     const { createMessage, isPending } = useCreateMessage({ type: "channel", serverId, targetId: channelId });
     const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "channel", serverId, targetId: channelId });
+    useChatSocket({ serverId, targetId: channelId, type: "channel" });
 
     const channel = channels.find((ch) => ch._id === channelId);
 

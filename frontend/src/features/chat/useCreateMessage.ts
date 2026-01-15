@@ -1,5 +1,5 @@
 // lib
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 // types
 import type { NormalizedError } from "@/lib/api/apiTypes";
@@ -15,7 +15,6 @@ export const useCreateMessage = ({ type, serverId, targetId }: ChatMessagesProps
             isPending: false,
         }
     }
-    const queryClient = useQueryClient();
 
     const { mutate: createMessage, isPending } = useMutation({
         mutationFn: ({ content }: UpsertMessageSchema) => {
@@ -31,26 +30,6 @@ export const useCreateMessage = ({ type, serverId, targetId }: ChatMessagesProps
                 conversationId: targetId,
                 body: { content },
             });
-        },
-        onSuccess: ({ message }) => {
-            queryClient.setQueryData(
-                [`${type}-messages`, serverId, targetId],
-                // OldData -> currently cached value
-                (oldData: any) => {
-                    if (!oldData) return oldData;
-                    return {
-                        ...oldData,
-                        pages: oldData.pages.map((page: any, index: number) => {
-                            // Only modify the first page (newest messages)
-                            if (index !== 0) return page;
-                            return {
-                                ...page,
-                                messages: [message, ...page.messages]
-                            }
-                        })
-                    }
-                }
-            )
         },
         onError: (error: NormalizedError) => {
             toast.error(error.message);
