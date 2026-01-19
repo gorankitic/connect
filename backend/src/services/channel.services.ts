@@ -77,4 +77,4 @@ export const assertChannelAccess = async ({ serverId, channelId }: AssertChannel
     }
 
     return channel;
-};
+}

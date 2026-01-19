@@ -1,5 +1,5 @@
 // constants
-import { MEMBER_ROLES } from "@/lib/constants";
+import { MEMBER_ROLES } from "@/lib/constants/member.constants";
 // types
 import { Types } from "mongoose";
 

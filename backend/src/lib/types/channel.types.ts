@@ -1,5 +1,5 @@
 // constants
-import { CHANNEL_TYPES } from "@/lib/constants";
+import { CHANNEL_TYPES } from "@/lib/constants/channel.constants";
 // schemas
 import { UpsertChannelSchema } from "@/lib/schemas/channel.schemas";
 

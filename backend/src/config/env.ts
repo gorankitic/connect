@@ -26,3 +26,7 @@ export const RESEND_API_KEY = getEnv("RESEND_API_KEY");
 
 export const UPLOADCARE_PUBLIC_KEY = getEnv("UPLOADCARE_PUBLIC_KEY");
 export const UPLOADCARE_SECRET_KEY = getEnv("UPLOADCARE_SECRET_KEY");
+
+export const LIVEKIT_URL = getEnv("LIVEKIT_URL");
+export const LIVEKIT_API_KEY = getEnv("LIVEKIT_API_KEY");
+export const LIVEKIT_API_SECRET = getEnv("LIVEKIT_API_SECRET");
