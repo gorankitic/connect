@@ -14,6 +14,7 @@ import { useServer } from "@/features/server/useServer";
 import { useConversation } from "@/features/conversation/useConversation";
 import { useMessages } from "@/features/chat/useMessages";
 import { useCreateMessage } from "@/features/chat/useCreateMessage";
+import { useChatSocket } from "@/features/chat/useChatSocket";
 
 const Conversation = () => {
     const { serverId, conversationId } = useParams<{ serverId: string, conversationId: string }>();
@@ -21,6 +22,7 @@ const Conversation = () => {
     const { conversation } = useConversation(serverId, conversationId);
     const { createMessage, isPending } = useCreateMessage({ type: "conversation", serverId, targetId: conversationId });
     const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "conversation", serverId, targetId: conversationId });
+    useChatSocket({ serverId, targetId: conversationId, type: "conversation" });
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
