@@ -9,6 +9,7 @@ import { CLIENT_ORIGIN } from "@/config/env";
 import { socketAuth } from "@/socket/middlewares/authenticate";
 // handlers
 import { registerChannelHandlers } from "@/socket/handlers/channel.handlers";
+import { registerConversationHandlers } from "@/socket/handlers/conversation.handlers";
 
 let ioInstance: Server | null = null;
 
@@ -43,7 +44,7 @@ export const initializeSocket = (httpServer: HttpServer) => {
         console.log(chalk.bgBlue.bold(`Socket connected: ${socket.id} (user: ${userId})`));
 
         registerChannelHandlers(io, socket);
-        // MORE TODO
+        registerConversationHandlers(io, socket);
 
         socket.on("disconnect", () => {
             console.log(chalk.blue.bold(`Socket disconnected: ${socket.id} (user: ${userId})`));

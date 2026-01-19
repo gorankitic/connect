@@ -2,8 +2,10 @@
 import express from "express";
 // controllers
 import { generateLivekitToken } from "@/controllers/livekit.controllers";
+// middlewares
 import { validate } from "@/middlewares/validateSchema";
-import { livekitTokenSchema } from "@/lib/schemas/call.schamas";
+// schemas
+import { livekitTokenSchema } from "@/lib/schemas/call.schemas";
 
 const router = express.Router();
 

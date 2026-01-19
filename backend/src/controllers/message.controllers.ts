@@ -2,7 +2,7 @@
 import { catchAsync } from "@/lib/utils/catchAsync";
 import { formatMessage } from "@/lib/utils/formatting";
 // constants
-import { CHANNEL_EVENTS } from "@/lib/constants/channel.constants";
+import { CHANNEL_EVENTS, CONVERSATION_EVENTS } from "@/socket/constants";
 // services
 import { createNewChannelMessage, createNewConversationMessage, getMessagesByChannel, getMessagesByConversation } from "@/services/message.services";
 // socket
@@ -81,7 +81,11 @@ export const createConversationMessage = catchAsync(async (req, res) => {
     // 3) Format conversation message document
     const formattedMessage = formatMessage(message);
 
-    // 4) Return response to the client
+    // 4) Emit real-time event to conversation members
+    const io = getIO();
+    io.to(`conversation:${conversationId}`).emit(CONVERSATION_EVENTS.MESSAGE_NEW, formattedMessage);
+
+    // 5) Return response to the client
     res.status(201).json({
         status: "success",
         data: {
