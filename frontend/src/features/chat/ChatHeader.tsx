@@ -1,6 +1,7 @@
 // types
 import type { ChannelHeaderProps, ConversationHeaderProps } from "@/lib/types/chat.types";
 // components
+import ChatVideoButton from "@/features/chat/ChatVideoButton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
@@ -34,6 +35,7 @@ const ChatHeader = (props: ChatHeaderProps) => {
                     </Avatar>
                     <span>{props.name}</span>
                     {props.Icon && <props.Icon className={cn("size-5", props.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
+                    <ChatVideoButton />
                 </div>
             )}
         </div>

@@ -25,7 +25,7 @@ const MemberListItem = ({ member }: { member: Member }) => {
     return (
         <button
             onClick={() => getOrCreate({ serverId: member.serverId, memberId: member._id })}
-            className={cn("group flex items-center gap-2 w-full py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer", isActive && "bg-gray-300 text-gray-600")}
+            className={cn("group flex items-center gap-2 w-full py-2 px-3 rounded-sm hover:bg-gray-300 cursor-pointer", isActive && "bg-gray-300")}
         >
             <Avatar className="size-8 text-gray-700">
                 {member.avatarUuid ? (
@@ -42,7 +42,7 @@ const MemberListItem = ({ member }: { member: Member }) => {
             </Avatar>
             <div>
                 <div className="flex items-center gap-2">
-                    <p className="font-medium text-gray-500 group-hover:text-gray-600">{member.name}</p>
+                    <p className={cn("font-medium text-gray-500 group-hover:text-gray-600", isActive && "text-gray-600")}>{member.name}</p>
                     {Icon && <Icon className={cn("size-5", member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
                 </div>
             </div>

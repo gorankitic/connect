@@ -8,6 +8,7 @@ import { CHANNEL_TYPE_ICON_MAP } from "@/lib/constants/channel.constants";
 import ChatHeader from "@/features/chat/ChatHeader";
 import ChatMessages from "@/features/chat/ChatMessages";
 import ChatInput from "@/features/chat/ChatInput";
+import MediaRoom from "@/components/MediaRoom";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useChannels } from "@/features/channels/useChannels";
@@ -41,23 +42,45 @@ const Channel = () => {
                 name={channel.name}
                 Icon={Icon}
             />
-            <ChatMessages
-                variant="channel"
-                name={channel.name}
-                messages={messages}
-                hasNextPage={hasNextPage}
-                fetchNextPage={fetchNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                scrollKey={channelId}
-                isLoading={isLoading}
-                error={error}
-            />
-            <ChatInput
-                variant="channel"
-                name={channel.name}
-                isPending={isPending}
-                onSend={handleSend}
-            />
+            {channel.type === "TEXT" && (
+                <>
+                    <ChatMessages
+                        variant="channel"
+                        name={channel.name}
+                        messages={messages}
+                        hasNextPage={hasNextPage}
+                        fetchNextPage={fetchNextPage}
+                        isFetchingNextPage={isFetchingNextPage}
+                        scrollKey={channelId}
+                        isLoading={isLoading}
+                        error={error}
+                    />
+                    <ChatInput
+                        variant="channel"
+                        name={channel.name}
+                        isPending={isPending}
+                        onSend={handleSend}
+                    />
+                </>
+            )}
+            {channel.type === "VIDEO" && (
+                <MediaRoom
+                    callType="channel"
+                    serverId={serverId}
+                    targetId={channelId}
+                    audio={true}
+                    video={true}
+                />
+            )}
+            {channel.type === "AUDIO" && (
+                <MediaRoom
+                    callType="channel"
+                    serverId={serverId}
+                    targetId={channelId}
+                    audio={true}
+                    video={false}
+                />
+            )}
         </div>
     )
 }

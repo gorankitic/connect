@@ -1,0 +1,1 @@
+export const CALL_TYPES = ["channel", "conversation"] as const;

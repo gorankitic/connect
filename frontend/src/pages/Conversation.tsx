@@ -1,5 +1,5 @@
 // lib
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 // constants
 import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // schemas & types
@@ -8,6 +8,7 @@ import type { UpsertMessageSchema } from "@/lib/schemas/message.schema";
 import ChatHeader from "@/features/chat/ChatHeader";
 import ChatMessages from "@/features/chat/ChatMessages";
 import ChatInput from "@/features/chat/ChatInput";
+import MediaRoom from "@/components/MediaRoom";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useConversation } from "@/features/conversation/useConversation";
@@ -20,6 +21,11 @@ const Conversation = () => {
     const { conversation } = useConversation(serverId, conversationId);
     const { createMessage, isPending } = useCreateMessage({ type: "conversation", serverId, targetId: conversationId });
     const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "conversation", serverId, targetId: conversationId });
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+
+    const callType = searchParams.get("call");
 
     if (!server || !conversation || !serverId || !conversationId) return null;
 
@@ -39,23 +45,36 @@ const Conversation = () => {
                 role={conversation.otherMember.role}
                 Icon={Icon!}
             />
-            <ChatMessages
-                variant="conversation"
-                name={conversation.otherMember.name}
-                messages={messages}
-                hasNextPage={hasNextPage}
-                fetchNextPage={fetchNextPage}
-                isFetchingNextPage={isFetchingNextPage}
-                scrollKey={conversationId}
-                isLoading={isLoading}
-                error={error}
-            />
-            <ChatInput
-                variant="conversation"
-                name={conversation.otherMember.name}
-                isPending={isPending}
-                onSend={handleSend}
-            />
+            {!callType && (
+                <>
+                    <ChatMessages
+                        variant="conversation"
+                        name={conversation.otherMember.name}
+                        messages={messages}
+                        hasNextPage={hasNextPage}
+                        fetchNextPage={fetchNextPage}
+                        isFetchingNextPage={isFetchingNextPage}
+                        scrollKey={conversationId}
+                        isLoading={isLoading}
+                        error={error}
+                    />
+                    <ChatInput
+                        variant="conversation"
+                        name={conversation.otherMember.name}
+                        isPending={isPending}
+                        onSend={handleSend}
+                    />
+                </>
+            )}
+            {callType === "video" && (
+                <MediaRoom
+                    callType="conversation"
+                    serverId={serverId}
+                    targetId={conversationId}
+                    video={true}
+                    audio={true}
+                />
+            )}
         </div>
     )
 }
