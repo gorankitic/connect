@@ -1,7 +1,7 @@
 // constants
-import type { CHANNEL_TYPE_OPTIONS } from "@/lib/constants/channel.constants";
+import type { CHANNEL_TYPE } from "@/lib/constants/channel.constants";
 
-export type ChannelType = typeof CHANNEL_TYPE_OPTIONS[number]["value"];
+export type ChannelType = typeof CHANNEL_TYPE[keyof typeof CHANNEL_TYPE];
 
 export type Channel = {
     _id: string;

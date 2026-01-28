@@ -14,6 +14,9 @@ import { useServer } from "@/features/server/useServer";
 import { useMembers } from "@/features/members/useMembers";
 import { useChannels } from "@/features/channels/useChannels";
 import { useMember } from "@/features/members/useMember";
+// constants
+import { CHANNEL_TYPE } from "@/lib/constants/channel.constants";
+import { MEMBER_ROLE } from "@/lib/constants/member.constants";
 
 const ServerSidebar = () => {
     const { serverId } = useParams<{ serverId: string }>();
@@ -25,9 +28,9 @@ const ServerSidebar = () => {
     if (error) return <ErrorState error={error} />
     if (!server || !currentMember) return null;
 
-    const textChannels = channels.filter((channel) => channel.type === "TEXT");
-    const audioChannels = channels.filter((channel) => channel.type === "AUDIO");
-    const videoChannels = channels.filter((channel) => channel.type === "VIDEO");
+    const textChannels = channels.filter((channel) => channel.type === CHANNEL_TYPE.TEXT);
+    const audioChannels = channels.filter((channel) => channel.type === CHANNEL_TYPE.AUDIO);
+    const videoChannels = channels.filter((channel) => channel.type === CHANNEL_TYPE.VIDEO);
     const otherMembers = members.filter((m) => m._id !== currentMember._id);
 
     return (
@@ -36,7 +39,7 @@ const ServerSidebar = () => {
             <ScrollArea className="flex-1 w-full overflow-y-auto">
                 <SidebarSection
                     label="Text channels"
-                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="TEXT" />}
+                    action={currentMember.role !== MEMBER_ROLE.GUEST && <CreateChannelButton serverId={server._id} channelType={CHANNEL_TYPE.TEXT} />}
                     items={textChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
@@ -49,7 +52,7 @@ const ServerSidebar = () => {
                 />
                 <SidebarSection
                     label="Audio channels"
-                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="AUDIO" />}
+                    action={currentMember.role !== MEMBER_ROLE.GUEST && <CreateChannelButton serverId={server._id} channelType={CHANNEL_TYPE.AUDIO} />}
                     items={audioChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
@@ -62,7 +65,7 @@ const ServerSidebar = () => {
                 />
                 <SidebarSection
                     label="Video channels"
-                    action={currentMember.role !== "GUEST" && <CreateChannelButton serverId={server._id} channelType="VIDEO" />}
+                    action={currentMember.role !== MEMBER_ROLE.GUEST && <CreateChannelButton serverId={server._id} channelType={CHANNEL_TYPE.VIDEO} />}
                     items={videoChannels}
                     renderItem={(channel) =>
                         <ChannelListItem
@@ -75,7 +78,7 @@ const ServerSidebar = () => {
                 />
                 <SidebarSection
                     label="Server members"
-                    action={currentMember.role === "ADMIN" && <ManageMembersButton serverId={server._id} />}
+                    action={currentMember.role === MEMBER_ROLE.ADMIN && <ManageMembersButton serverId={server._id} />}
                     items={otherMembers}
                     renderItem={(member) => <MemberListItem key={member._id} member={member} />}
                 />

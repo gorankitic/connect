@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { Channel } from "@/lib/types/channel.types";
 import type { MemberRole } from "@/lib/types/member.types";
 // constants
+import { MEMBER_ROLE } from "@/lib/constants/member.constants";
 import { CHANNEL_TYPE_ICON_MAP } from "@/lib/constants/channel.constants";
 // components
 import ActionTooltip from "@/components/ActionTooltip";
@@ -36,7 +37,7 @@ const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
         >
             <Icon className="size-4" />
             <p className="font-semibold">{channel.name}</p>
-            {channel.name !== "general" && role !== "GUEST" && (
+            {channel.name !== "general" && role !== MEMBER_ROLE.GUEST && (
                 <div className="flex items-center gap-1 ml-auto">
                     <ActionTooltip label="Update">
                         <button
@@ -45,7 +46,7 @@ const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
                                 onOpen("updateChannel", { serverId, channelId: channel._id });
                             }}
                         >
-                            <Edit className="size-4 hidden group-hover:block cursor-pointer" />
+                            <Edit className="size-4 hidden group-hover:block hover:text-gray-700 cursor-pointer transition" />
                         </button>
                     </ActionTooltip>
                     <ActionTooltip label="Delete">
@@ -55,7 +56,7 @@ const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
                                 onOpen("deleteChannel", { serverId, channelId: channel._id });
                             }}
                         >
-                            <Trash className="size-4 hidden group-hover:block hover:text-red-500 cursor-pointer" />
+                            <Trash className="size-4 hidden group-hover:block hover:text-red-500 cursor-pointer transition" />
                         </button>
                     </ActionTooltip>
                 </div>

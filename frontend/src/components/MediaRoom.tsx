@@ -4,20 +4,21 @@ import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 import { Loader2 } from "lucide-react";
 // styles
 import "@livekit/components-styles";
-// types
-import type { CallType } from "@/lib/types/call.types";
+// hooks
+import { useChat } from "@/hooks/useChat";
 
 type MediaRoomProps = {
-    callType: CallType,
-    serverId: string,
-    targetId: string,
     video: boolean,
     audio: boolean
 }
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
-const MediaRoom = ({ callType, serverId, targetId, audio, video }: MediaRoomProps) => {
+const MediaRoom = ({ audio, video }: MediaRoomProps) => {
+    const type = useChat((s) => s.type);
+    const targetId = useChat((s) => s.targetId);
+    const serverId = useChat((s) => s.serverId);
+
     const [token, setToken] = useState("");
     const [livekitUrl, setLivekitUrl] = useState("");
 
@@ -28,11 +29,7 @@ const MediaRoom = ({ callType, serverId, targetId, audio, video }: MediaRoomProp
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: 'include',
-                    body: JSON.stringify({
-                        type: callType,
-                        targetId,
-                        serverId
-                    })
+                    body: JSON.stringify({ type, targetId, serverId })
                 });
                 const data = await res.json();
                 setToken(data.token);

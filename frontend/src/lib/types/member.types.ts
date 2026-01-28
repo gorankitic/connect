@@ -1,7 +1,7 @@
 // constants
-import type { MEMBER_ROLES } from "@/lib/constants/member.constants";
+import type { MEMBER_ROLE } from "@/lib/constants/member.constants";
 
-export type MemberRole = typeof MEMBER_ROLES[number];
+export type MemberRole = typeof MEMBER_ROLE[keyof typeof MEMBER_ROLE];
 
 export type ServerMember = {
     _id: string;

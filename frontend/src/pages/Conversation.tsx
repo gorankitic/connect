@@ -1,9 +1,9 @@
 // lib
+import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 // constants
+import { CHAT_TYPE } from "@/lib/constants/chat.contants";
 import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
-// schemas & types
-import type { UpsertMessageSchema } from "@/lib/schemas/message.schema";
 // components
 import ChatHeader from "@/features/chat/ChatHeader";
 import ChatMessages from "@/features/chat/ChatMessages";
@@ -12,36 +12,33 @@ import MediaRoom from "@/components/MediaRoom";
 // hooks
 import { useServer } from "@/features/server/useServer";
 import { useConversation } from "@/features/conversation/useConversation";
-import { useMessages } from "@/features/chat/useMessages";
-import { useCreateMessage } from "@/features/chat/useCreateMessage";
 import { useChatSocket } from "@/features/chat/useChatSocket";
+import { useChat } from "@/hooks/useChat";
 
 const Conversation = () => {
+    const location = useLocation();
     const { serverId, conversationId } = useParams<{ serverId: string, conversationId: string }>();
     const { server } = useServer(serverId);
     const { conversation } = useConversation(serverId, conversationId);
-    const { createMessage, isPending } = useCreateMessage({ type: "conversation", serverId, targetId: conversationId });
-    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type: "conversation", serverId, targetId: conversationId });
-    useChatSocket({ serverId, targetId: conversationId, type: "conversation" });
+    const { enterChat, leaveChat } = useChat();
+    useChatSocket({ serverId, targetId: conversationId, type: CHAT_TYPE.CONVERSATION });
 
-    const location = useLocation();
-    const searchParams = new URLSearchParams(location.search);
-
-    const callType = searchParams.get("call");
+    useEffect(() => {
+        if (!serverId || !conversationId) return;
+        enterChat({ type: CHAT_TYPE.CONVERSATION, serverId, targetId: conversationId });
+        return () => leaveChat();
+    }, [serverId, conversationId]);
 
     if (!server || !conversation || !serverId || !conversationId) return null;
 
+    const searchParams = new URLSearchParams(location.search);
+    const callType = searchParams.get("call");
     const Icon = MEMBER_ROLE_ICON_MAP[conversation.otherMember.role];
-
-    const handleSend = ({ content }: UpsertMessageSchema) => {
-        if (!content.trim()) return;
-        createMessage({ content });
-    }
 
     return (
         <div className="ml-80 flex flex-col h-screen bg-gray-100">
             <ChatHeader
-                variant="conversation"
+                type={CHAT_TYPE.CONVERSATION}
                 name={conversation.otherMember.name}
                 avatarUuid={conversation.otherMember.avatarUuid}
                 role={conversation.otherMember.role}
@@ -49,34 +46,11 @@ const Conversation = () => {
             />
             {!callType && (
                 <>
-                    <ChatMessages
-                        variant="conversation"
-                        name={conversation.otherMember.name}
-                        messages={messages}
-                        hasNextPage={hasNextPage}
-                        fetchNextPage={fetchNextPage}
-                        isFetchingNextPage={isFetchingNextPage}
-                        scrollKey={conversationId}
-                        isLoading={isLoading}
-                        error={error}
-                    />
-                    <ChatInput
-                        variant="conversation"
-                        name={conversation.otherMember.name}
-                        isPending={isPending}
-                        onSend={handleSend}
-                    />
+                    <ChatMessages name={conversation.otherMember.name} scrollKey={conversationId} />
+                    <ChatInput name={conversation.otherMember.name} />
                 </>
             )}
-            {callType === "video" && (
-                <MediaRoom
-                    callType="conversation"
-                    serverId={serverId}
-                    targetId={conversationId}
-                    video={true}
-                    audio={true}
-                />
-            )}
+            {callType === "video" && <MediaRoom video={true} audio={true} />}
         </div>
     )
 }

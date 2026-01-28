@@ -2,23 +2,35 @@
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Send, Smile } from "lucide-react";
-// schemas & types
-import { upsertMessageSchema, type UpsertMessageSchema } from "@/lib/schemas/message.schema";
-import type { ChatType } from "@/lib/types/chat.types";
+import { Send } from "lucide-react";
+// components
+import EmojiPicker from "@/components/EmojiPicker";
+// schemas
+import { upsertMessageSchema } from "@/lib/schemas/message.schema";
+// types
+import type { UpsertMessageSchema } from "@/lib/schemas/message.schema";
+// constants
+import { CHAT_TYPE } from "@/lib/constants/chat.contants";
+// hooks
+import { useChat } from "@/hooks/useChat";
+import { useCreateMessage } from "@/features/chat/useCreateMessage";
 
 type ChatInputProps = {
-    variant: ChatType,
     name: string
-    onSend: (body: UpsertMessageSchema) => void;
-    isPending: boolean;
-};
+}
 
-const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
-    const { register, handleSubmit, reset } = useForm<UpsertMessageSchema>({
+const ChatInput = ({ name }: ChatInputProps) => {
+    const type = useChat((s) => s.type);
+    const targetId = useChat((s) => s.targetId);
+    const serverId = useChat((s) => s.serverId);
+
+    const { createMessage, isPending } = useCreateMessage({ type, serverId, targetId });
+
+    const { register, handleSubmit, reset, watch, setValue } = useForm<UpsertMessageSchema>({
         resolver: zodResolver(upsertMessageSchema),
         defaultValues: { content: "" }
     });
+
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
     // RHF already registered ref, can't have 2 refs on one element
@@ -27,8 +39,8 @@ const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
 
     const onSubmit = ({ content }: UpsertMessageSchema) => {
         // disabled prop on textarea element blocks auto-focus, disable it on submitting
-        if (isPending) return;
-        onSend({ content });
+        if (isPending || !content.trim()) return;
+        createMessage({ content });
         // Reset text area input
         reset({ content: "" });
         // Reset textarea height and autofocus after sending message
@@ -51,6 +63,12 @@ const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
         target.style.height = `${target.scrollHeight}px`;
     }
 
+    const addEmoji = (emoji: string) => {
+        const current = watch("content");
+        setValue("content", current + emoji, { shouldDirty: true });
+        textareaRef.current?.focus();
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="mx-40 mb-10">
@@ -65,12 +83,12 @@ const ChatInput = ({ variant, name, isPending, onSend }: ChatInputProps) => {
                         rows={1}
                         onKeyDown={handleKeyDown}
                         onInput={handleInput}
-                        placeholder={`Send message to ${variant === "channel" ? "#" + name : name}`}
+                        placeholder={`Send message to ${type === CHAT_TYPE.CHANNEL ? "#" + name : name}`}
                         autoComplete="off"
                         className="bg-gray-300 w-full py-4 px-14 rounded-sm shadow-sm text-gray-700 placeholder:text-gray-600 
                         focus:outline-none disabled:opacity-60 resize-none max-h-60 overflow-y-auto"
                     />
-                    <Smile className="size-6 absolute right-4 top-7 -translate-y-1/2 text-gray-600 cursor-pointer" />
+                    <EmojiPicker onChange={addEmoji} />
                 </div>
             </div>
         </form >

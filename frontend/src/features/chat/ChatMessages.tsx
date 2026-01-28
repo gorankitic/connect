@@ -1,30 +1,26 @@
 // lib
 import { useRef } from "react";
 import { LoaderCircle } from "lucide-react";
-// types
-import type { Message } from "@/lib/types/message.types";
-import type { ChatType } from "@/lib/types/chat.types";
-import type { NormalizedError } from "@/lib/api/apiTypes";
 // components
 import ChatWelcome from "@/features/chat/ChatWelcome";
 import ChatItem from "@/features/chat/ChatItem";
 import ErrorState from "@/components/ErrorState";
 // hooks
+import { useMessages } from "@/features/chat/useMessages";
 import { useChatScroll } from "@/hooks/useChatScroll";
+import { useChat } from "@/hooks/useChat";
 
 type ChatMessagesProps = {
-    variant: ChatType,
     name: string,
-    messages: Message[],
-    hasNextPage: boolean,
-    fetchNextPage: () => void,
-    isFetchingNextPage: boolean,
     scrollKey: string,
-    isLoading: boolean,
-    error: NormalizedError | null,
 }
 
-const ChatMessages = ({ messages, variant, name, hasNextPage, fetchNextPage, isFetchingNextPage, scrollKey, isLoading, error }: ChatMessagesProps) => {
+const ChatMessages = ({ name, scrollKey }: ChatMessagesProps) => {
+    const type = useChat((s) => s.type);
+    const targetId = useChat((s) => s.targetId);
+    const serverId = useChat((s) => s.serverId);
+    const { messages, hasNextPage, fetchNextPage, isFetchingNextPage, error, isLoading } = useMessages({ type, serverId, targetId });
+
     const containerRef = useRef<HTMLDivElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -55,7 +51,7 @@ const ChatMessages = ({ messages, variant, name, hasNextPage, fetchNextPage, isF
             className="flex-1 overflow-y-auto px-40 pb-4"
         >
             <div className="min-h-full flex flex-col justify-end">
-                {!hasNextPage && <ChatWelcome variant={variant} name={name} />}
+                {!hasNextPage && <ChatWelcome name={name} />}
 
                 {hasNextPage && (
                     <div className="flex justify-center py-4">
@@ -66,7 +62,7 @@ const ChatMessages = ({ messages, variant, name, hasNextPage, fetchNextPage, isF
                             </div>
                         ) : (
                             <button
-                                onClick={fetchNextPage}
+                                onClick={() => fetchNextPage()}
                                 className="text-xs text-gray-500 hover:text-gray-700 cursor-pointer"
                             >
                                 Load previous messages

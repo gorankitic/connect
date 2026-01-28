@@ -3,12 +3,13 @@ import { create } from "zustand";
 // types
 import type { ChannelType } from "@/lib/types/channel.types";
 
-export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer" | "deleteServer" | "createChannel" | "updateChannel" | "deleteChannel";
+export type ModalType = "createServer" | "updateServer" | "invite" | "manageMembers" | "leaveServer" | "deleteServer" | "createChannel" | "updateChannel" | "deleteChannel" | "deleteMessage";
 
 export type ModalData = {
     serverId?: string,
     channelId?: string,
     channelType?: ChannelType,
+    messageId?: string,
 }
 
 type ModalStore = {

@@ -5,6 +5,7 @@ import type { Server, ServerListItem } from "@/lib/types/server.types";
 import type { Member } from "@/lib/types/member.types";
 import type { Channel } from "@/lib/types/channel.types";
 import type { Message } from "@/lib/types/message.types";
+import type { UpsertMessageSchema } from "@/lib/schemas/message.schema";
 
 // Zod error response from server
 export type FieldError = {
@@ -120,11 +121,30 @@ export type GetChannelMessagesParams = {
     cursor?: string | null;
 }
 
-export type CreateChannelMessageResponse = {
-    status: "success";
-    data: {
-        message: Message;
-    }
+export type CreateMessageParams = {
+    serverId: string;
+    targetId: string;
+    body: UpsertMessageSchema;
+}
+
+export type GetMessagesParams = {
+    serverId: string;
+    targetId: string;
+    limit?: number;
+    cursor?: string | null;
+}
+
+export type UpdateMessageParams = {
+    serverId: string;
+    targetId: string;
+    messageId: string;
+    body: UpsertMessageSchema;
+}
+
+export type DeleteMessageParams = {
+    serverId: string;
+    targetId: string;
+    messageId: string;
 }
 
 export type MessagesPage = {
@@ -132,28 +152,15 @@ export type MessagesPage = {
     nextCursor: string | null;
 }
 
-export type GetChannelMessagesResponse = {
+export type MessagesResponse = {
     status: "success";
     results: number;
     data: MessagesPage;
 }
 
-export type GetConversationMessagesParams = {
-    serverId: string;
-    conversationId: string;
-    limit?: number;
-    cursor?: string | null;
-}
-
-export type CreateConversationMessageResponse = {
+export type MessageResponse = {
     status: "success";
     data: {
         message: Message;
     }
-}
-
-export type GetConversationMessagesResponse = {
-    status: "success";
-    results: number;
-    data: MessagesPage;
 }

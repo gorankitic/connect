@@ -7,7 +7,6 @@ import { useModal } from "@/hooks/useModal";
 // types
 import type { ChannelType } from "@/lib/types/channel.types";
 
-
 type CreateChannelButtonProps = {
     serverId: string,
     channelType: ChannelType

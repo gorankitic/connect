@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // types
 import type { Member } from "@/lib/types/member.types";
 // constants
-import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
+import { MEMBER_ROLE, MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ const MemberAvatar = ({ member }: MemberAvatarProps) => {
             <div>
                 <div className="flex items-center gap-1">
                     <p className="text-sm font-semibold text-gray-700">{member.name}</p>
-                    {Icon && <Icon className={cn("size-5", member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
+                    {Icon && <Icon className={cn("size-5", member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                 </div>
                 <p className="text-xs text-gray-500">{member.email}</p>
                 <p className="text-xs text-gray-500">Joined {format(new Date(member.createdAt), "dd.MM.yyyy.")}</p>

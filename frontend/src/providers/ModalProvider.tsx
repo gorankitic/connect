@@ -8,6 +8,7 @@ import MembersModal from "@/features/members/MembersModal";
 import CreateChannelModal from "@/features/channels/CreateChannelModal";
 import UpdateChannelModal from "@/features/channels/UpdateChannelModal";
 import DeleteChannelModal from "@/features/channels/DeleteChannelModal";
+import DeleteMessageModal from "@/features/chat/DeleteMessageModal";
 
 const ModalProvider = () => {
     return (
@@ -21,6 +22,7 @@ const ModalProvider = () => {
             <CreateChannelModal />
             <UpdateChannelModal />
             <DeleteChannelModal />
+            <DeleteMessageModal />
         </>
     )
 }

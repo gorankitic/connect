@@ -2,6 +2,8 @@
 import { Ban, Check, EllipsisVertical, ShieldCheck, ShieldQuestionMark, UserRound } from "lucide-react";
 // types
 import type { Member } from "@/lib/types/member.types";
+// constants
+import { MEMBER_ROLE } from "@/lib/constants/member.constants";
 // components
 import MemberAvatar from "@/features/members/MemberAvatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -22,7 +24,7 @@ const MemberItem = ({ member }: MemberItemProps) => {
     return (
         <div className="flex items-center justify-between mx-20 mb-5">
             <MemberAvatar member={member} />
-            {member.role !== "ADMIN" && (
+            {member.role !== MEMBER_ROLE.ADMIN && (
                 <DropdownMenu>
                     <DropdownMenuTrigger className="p-2 cursor-pointer hover:bg-gray-100 rounded-sm">
                         <EllipsisVertical className="size-5 text-gray-600" />
@@ -37,20 +39,20 @@ const MemberItem = ({ member }: MemberItemProps) => {
                                 <DropdownMenuSubContent className="w-36 p-2 text-gray-700">
                                     <DropdownMenuItem
                                         disabled={isLoading}
-                                        onClick={() => updateRole({ serverId: member.serverId, memberId: member._id, role: "GUEST" })}
+                                        onClick={() => updateRole({ serverId: member.serverId, memberId: member._id, role: MEMBER_ROLE.GUEST })}
                                         className="flex items-center gap-1 cursor-pointer"
                                     >
                                         <UserRound className="size-4 text-gray-600" />
                                         <span>Guest</span>
-                                        {member.role === "GUEST" && <Check className="size-4 text-blue-600 ml-auto" />}
+                                        {member.role === MEMBER_ROLE.GUEST && <Check className="size-4 text-blue-600 ml-auto" />}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem
                                         disabled={isLoading}
-                                        onClick={() => updateRole({ serverId: member.serverId, memberId: member._id, role: "MODERATOR" })}
+                                        onClick={() => updateRole({ serverId: member.serverId, memberId: member._id, role: MEMBER_ROLE.MODERATOR })}
                                         className="flex items-center gap-1 cursor-pointer">
                                         <ShieldCheck className="size-4 text-gray-600" />
                                         <span>Moderator</span>
-                                        {member.role === "MODERATOR" && <Check className="size-4 text-blue-600 ml-auto" />}
+                                        {member.role === MEMBER_ROLE.MODERATOR && <Check className="size-4 text-blue-600 ml-auto" />}
                                     </DropdownMenuItem>
                                 </DropdownMenuSubContent>
                             </DropdownMenuPortal>

@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { upsertChannelSchema, type UpsertChannelSchema } from "@/lib/schemas/channel.schema";
 import type { ChannelType } from "@/lib/types/channel.types";
 // constants
-import { CHANNEL_TYPE_OPTIONS } from "@/lib/constants/channel.constants";
+import { CHANNEL_TYPE, CHANNEL_TYPE_OPTIONS } from "@/lib/constants/channel.constants";
 // hooks
 import { useModal } from "@/hooks/useModal";
 import { useCreateChannel } from "@/features/channels/useCreateChannel";
@@ -22,7 +22,7 @@ const CreateChannelModal = () => {
     const { createChannel, isPending } = useCreateChannel();
     const { register, handleSubmit, setValue, formState: { errors }, reset, watch } = useForm<UpsertChannelSchema>({
         resolver: zodResolver(upsertChannelSchema),
-        defaultValues: { name: "", type: "TEXT" }
+        defaultValues: { name: "", type: CHANNEL_TYPE.TEXT }
     });
 
     const isModalOpen = isOpen && type === "createChannel" && !!serverId;
@@ -31,7 +31,7 @@ const CreateChannelModal = () => {
         if (isModalOpen && channelType) {
             reset({
                 name: "",
-                type: channelType ?? "TEXT",
+                type: channelType ?? CHANNEL_TYPE.TEXT,
             });
         }
     }, [isModalOpen, channelType, reset]);
@@ -39,14 +39,14 @@ const CreateChannelModal = () => {
     if (!isModalOpen) return null;
 
     const handleClose = () => {
-        reset({ name: "", type: "TEXT" });
+        reset({ name: "", type: CHANNEL_TYPE.TEXT });
         onClose();
     }
 
     const onSubmit = (body: UpsertChannelSchema) => {
         createChannel({ serverId, body });
 
-        reset({ name: "", type: "TEXT" });
+        reset({ name: "", type: CHANNEL_TYPE.TEXT });
         onClose();
     }
 

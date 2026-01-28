@@ -2,6 +2,8 @@
 import { ChevronDown, LogOut, PlusCircle, Settings, Trash, UserPlus, Users } from "lucide-react";
 // types
 import type { MemberRole } from "@/lib/types/member.types";
+// constants
+import { MEMBER_ROLE } from "@/lib/constants/member.constants";
 // components
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 // hooks
@@ -16,8 +18,8 @@ type ServerHeaderProps = {
 const ServerHeader = ({ serverId, name, role }: ServerHeaderProps) => {
     const { onOpen } = useModal();
 
-    const isAdmin = role === "ADMIN";
-    const isModerator = isAdmin || role === "MODERATOR";
+    const isAdmin = role === MEMBER_ROLE.ADMIN;
+    const isModerator = isAdmin || role === MEMBER_ROLE.MODERATOR;
 
     return (
         <DropdownMenu modal={false}>

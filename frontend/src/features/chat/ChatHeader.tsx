@@ -1,24 +1,26 @@
 // types
 import type { ChannelHeaderProps, ConversationHeaderProps } from "@/lib/types/chat.types";
+// constants
+import { CHAT_TYPE } from "@/lib/constants/chat.contants";
 // components
 import ChatVideoButton from "@/features/chat/ChatVideoButton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 
-type ChatHeaderProps = ChannelHeaderProps | ConversationHeaderProps
+type ChatHeaderProps = ChannelHeaderProps | ConversationHeaderProps;
 
 const ChatHeader = (props: ChatHeaderProps) => {
 
     return (
         <div className="h-12 flex gap-3 py-2 px-5 bg-gray-300 text-gray-700 font-semibold border-b border-b-gray-400/50">
-            {props.variant === "channel" && (
+            {props.type === CHAT_TYPE.CHANNEL && (
                 <div className="flex items-center gap-2">
                     <props.Icon className="size-5" />
                     <span>{props.name}</span>
                 </div>
             )}
-            {props.variant === "conversation" && (
+            {props.type === CHAT_TYPE.CONVERSATION && (
                 <div className="flex items-center gap-2">
                     <Avatar className="size-8 text-gray-700">
                         {props.avatarUuid ? (

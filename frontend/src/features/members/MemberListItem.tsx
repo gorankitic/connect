@@ -7,7 +7,7 @@ import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 // constants
-import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
+import { MEMBER_ROLE, MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // hooks
 import { useGetOrCreateConversation } from "@/features/conversation/useGetOrCreateConversation";
 
@@ -43,7 +43,7 @@ const MemberListItem = ({ member }: { member: Member }) => {
             <div>
                 <div className="flex items-center gap-2">
                     <p className={cn("font-medium text-gray-500 group-hover:text-gray-600", isActive && "text-gray-600")}>{member.name}</p>
-                    {Icon && <Icon className={cn("size-5", member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
+                    {Icon && <Icon className={cn("size-5", member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                 </div>
             </div>
         </button>

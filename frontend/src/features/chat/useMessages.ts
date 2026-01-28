@@ -1,12 +1,14 @@
 // lib
 import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 // types
-import type { ChatMessagesProps } from "@/lib/types/chat.types";
+import type { ChatStoreData } from "@/lib/types/chat.types";
 import type { MessagesPage, NormalizedError } from "@/lib/api/apiTypes";
+// constants
+import { CHAT_TYPE } from "@/lib/constants/chat.contants";
 // services
 import { getChannelMessagesApi, getConversationMessagesApi } from "@/services/message.services";
 
-export const useMessages = ({ type, serverId, targetId }: ChatMessagesProps) => {
+export const useMessages = ({ type, serverId, targetId }: ChatStoreData) => {
     const { data, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
         MessagesPage,                                       // TQueryFnData
         NormalizedError,                                    // TError
@@ -16,17 +18,17 @@ export const useMessages = ({ type, serverId, targetId }: ChatMessagesProps) => 
     >({
         queryKey: [`${type}-messages`, serverId, targetId],
         queryFn: ({ pageParam }) => {
-            if (type === "channel") {
+            if (type === CHAT_TYPE.CHANNEL) {
                 return getChannelMessagesApi({
                     serverId: serverId!,
-                    channelId: targetId!,
+                    targetId: targetId!,
                     cursor: pageParam ?? null,
                     limit: 15,
                 });
             }
             return getConversationMessagesApi({
                 serverId: serverId!,
-                conversationId: targetId!,
+                targetId: targetId!,
                 cursor: pageParam ?? null,
                 limit: 15,
             });

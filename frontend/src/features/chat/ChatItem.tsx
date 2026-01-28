@@ -3,23 +3,30 @@ import { format } from "date-fns";
 // types
 import type { Message } from "@/lib/types/message.types";
 // constants
-import { MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
+import { MEMBER_ROLE, MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // components
-import ActionTooltip from "@/components/ActionTooltip";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import ChatMessageActions from "@/features/chat/ChatMessageActions";
+import ChatMessageEditor from "@/features/chat/ChatMessageEditor";
+import ActionTooltip from "@/components/ActionTooltip";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
+// hooks
+import { useActiveMessage } from "@/hooks/useActiveMessage";
 
 type ChatItemProps = {
     message: Message
 }
 
 const ChatItem = ({ message }: ChatItemProps) => {
+    const { activeMessage } = useActiveMessage();
+
+    const isUpdating = activeMessage?.id === message._id;
 
     const Icon = MEMBER_ROLE_ICON_MAP[message.member.role];
 
     return (
-        <div className="text-gray-700 hover:bg-gray-200 py-2 px-3 rounded-sm">
+        <div className="group text-gray-700 hover:bg-gray-200 py-2 px-3 rounded-sm">
             <div className="flex items-center gap-2 mb-1" >
                 <Avatar className="size-10 text-gray-700">
                     {message.member.avatarUuid ? (
@@ -38,18 +45,32 @@ const ChatItem = ({ message }: ChatItemProps) => {
                     <div className="flex items-center gap-1">
                         <p className="font-semibold">{message.member.name}</p>
                         <ActionTooltip side="top" label={message.member.role.toLowerCase()}>
-                            {Icon && <Icon className={cn("size-4", message.member.role === "ADMIN" ? "text-amber-500" : "text-blue-500")} />}
+                            {Icon && <Icon className={cn("size-4", message.member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                         </ActionTooltip>
                     </div>
-                    <p className="text-xs text-gray-400">{format(new Date(message.createdAt), 'd.M.y. HH:mm')}</p>
+                    <p className="text-xs text-gray-400">
+                        {message.createdAt !== message.updatedAt
+                            ? message.deletedAt
+                                ? <span>{format(new Date(message.deletedAt), 'd.M.y. HH:mm')} &bull; Deleted</span>
+                                : <span>{format(new Date(message.updatedAt), 'd.M.y. HH:mm')} &bull; Updated</span>
+                            : format(new Date(message.createdAt), 'd.M.y. HH:mm')
+                        }
+                    </p>
                 </div>
+                {!isUpdating &&
+                    <ChatMessageActions
+                        messageId={message._id}
+                        messageAuthorId={message.member._id}
+                        messageAuthorRole={message.member.role}
+                        isDeleted={!!message.deletedAt}
+                    />}
             </div>
-            {/* whitespace-pre-wrap: Preserves \n as line breaks, still wraps long lines */}
-            {/* wrap-break-word: Prevents long words / URLs from overflowing */}
-            <p className="ml-12 whitespace-pre-wrap wrap-break-word">
-                {message.content}
-            </p>
-        </div>
+            {!isUpdating ? message.deletedAt
+                ? <i className="ml-12 font-semibold">This message is deleted.</i>
+                : <p className="ml-12 whitespace-pre-wrap wrap-break-word">{message.content}</p>
+                : <ChatMessageEditor content={message.content} messageId={message._id} />
+            }
+        </div >
     )
 }
 

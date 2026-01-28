@@ -5,23 +5,22 @@ import Button from "@/components/Button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 // hooks
 import { useModal } from "@/hooks/useModal";
-import { useServer } from "@/features/server/useServer";
-import { useChannels } from "@/features/channels/useChannels";
-import { useDeleteChannel } from "@/features/channels/useDeleteChannel";
+import { useDeleteMessage } from "@/features/chat/useDeleteMessage";
+import { useChat } from "@/hooks/useChat";
 
-const DeleteChannelModal = () => {
-    const { isOpen, type, onClose, data: { serverId, channelId } } = useModal();
-    const { server } = useServer(serverId);
-    const { channels } = useChannels(serverId);
-    const { deleteChannel, isPending } = useDeleteChannel();
+const DeleteMessageModal = () => {
+    const type = useChat((s) => s.type);
+    const serverId = useChat((s) => s.serverId);
+    const targetId = useChat((s) => s.targetId);
+    const { isOpen, type: modalType, onClose, data: { messageId } } = useModal();
 
-    const channel = channels.find(ch => ch._id === channelId);
+    const { deleteMessage, isPending } = useDeleteMessage({ type, serverId, targetId, messageId });
 
-    const isModalOpen = isOpen && type === "deleteChannel" && !!serverId && !!channelId;
-    if (!isModalOpen || !server || !channel) return null;
+    const isModalOpen = isOpen && modalType === "deleteMessage";
+    if (!isModalOpen) return null;
 
-    const handleDeleteChannel = () => {
-        deleteChannel({ serverId, channelId });
+    const handleDeleteMessage = () => {
+        deleteMessage();
         onClose();
     }
 
@@ -30,11 +29,10 @@ const DeleteChannelModal = () => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle className="text-center uppercase text-red-500 my-3">
-                        Delete channel
+                        Delete message
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        Are you sure you want to delete <span className="font-semibold text-red-500">{channel.name}</span> channel?
-                        This action cannot be undone. All channel content will be deleted.
+                        Are you sure you want to delete this message? This action cannot be undone right now.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex gap-3 justify-end mt-5">
@@ -51,7 +49,7 @@ const DeleteChannelModal = () => {
                         icon={Send}
                         disabled={isPending}
                         className="bg-red-500 text-white w-28"
-                        onClick={handleDeleteChannel}
+                        onClick={handleDeleteMessage}
                     >
                         Delete
                     </Button>
@@ -61,4 +59,4 @@ const DeleteChannelModal = () => {
     )
 }
 
-export default DeleteChannelModal;
+export default DeleteMessageModal;
