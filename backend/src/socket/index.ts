@@ -37,7 +37,10 @@ export const initializeSocket = (httpServer: HttpServer) => {
     io.on("connection", (socket) => {
         const userId = String(socket.data.user._id);
 
-        // Single user can have many sockets (new tab or device)→ all sockets join the same user room
+        // Single user can have many sockets (new tab or device) → all sockets join the same user room
+        // User A (Phone)  -> socket #1 -> joins user:123
+        // User A (Laptop) -> socket #2 -> joins user:123
+        // User A (Tablet) -> socket #3 -> joins user:123
         // Useful for signout, notifications...
         socket.join(`user:${userId}`);
 

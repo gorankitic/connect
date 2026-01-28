@@ -35,7 +35,7 @@ const messageSchema = new Schema({
         type: Date,
         default: null,
         index: {
-            expires: 60 * 60 * 24 * 30
+            expires: 60 * 60 * 24 * 7
         }
     }
 }, { timestamps: true });

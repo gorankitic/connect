@@ -2,9 +2,10 @@
 import { catchAsync } from "@/lib/utils/catchAsync";
 import { formatMessage } from "@/lib/utils/formatting";
 // constants
-import { CHANNEL_EVENTS, CONVERSATION_EVENTS } from "@/socket/constants";
+import { MESSAGE_TYPE } from "@/lib/constants/message.constants";
+import { CHANNEL_EVENTS, CONVERSATION_EVENTS, CHANNEL_ROOM_PREFIX, CONVERSATION_ROOM_PREFIX } from "@/socket/constants";
 // services
-import { createNewChannelMessage, createNewConversationMessage, getMessagesByChannel, getMessagesByConversation } from "@/services/message.services";
+import { createNewChannelMessage, createNewConversationMessage, deleteMessage, getMessagesByChannel, getMessagesByConversation, updateMessage } from "@/services/message.services";
 // socket
 import { getIO } from "@/socket";
 
@@ -25,9 +26,10 @@ export const createChannelMessage = catchAsync(async (req, res) => {
     // 3) Format channel message document
     const formattedMessage = formatMessage(message);
 
-    // 4) Emit real-time event to all channel members
-    const io = getIO();
-    io.to(`channel:${channelId}`).emit(CHANNEL_EVENTS.MESSAGE_NEW, formattedMessage);
+    // 4) Emit real-time "channel:message:create" event to all channel members
+    getIO()
+        .to(`${CHANNEL_ROOM_PREFIX}:${channelId}`)
+        .emit(CHANNEL_EVENTS.MESSAGE_CREATE, formattedMessage);
 
     // 5) Return response to the client
     res.status(201).json({
@@ -64,6 +66,68 @@ export const getChannelMessages = catchAsync(async (req, res) => {
     });
 });
 
+// Update channel message
+// PATCH method
+// Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
+// Restricted route to all server members
+export const updateChannelMessage = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
+    const currentMemberId = req.member._id;
+    const { messageId, channelId } = req.params;
+
+    // 1) Request body validation is done in the validateSchema middleware
+    const { content } = req.body;
+
+    // 2) Handle business logic, call service to update channel message
+    const message = await updateMessage({ content, messageId, currentMemberId, type: MESSAGE_TYPE.CHANNEL });
+
+    // 3) Format channel message document
+    const formattedMessage = formatMessage(message);
+
+    // 4) Emit real-time "channel:message:update" event to all channel members
+    getIO()
+        .to(`${CHANNEL_ROOM_PREFIX}:${channelId}`)
+        .emit(CHANNEL_EVENTS.MESSAGE_UPDATE, formattedMessage);
+
+    // 5) Return response to the client
+    res.status(200).json({
+        status: "success",
+        data: {
+            message: formattedMessage
+        }
+    });
+});
+
+// Delete channel message
+// DELETE method
+// Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
+// Restricted route to all server members
+export const deleteChannelMessage = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
+
+    const { _id: memberId, role: memberRole } = req.member;
+    const { messageId, channelId } = req.params;
+
+    // 1) Handle business logic, call service to delete channel message
+    const message = await deleteMessage({ messageId, memberId, memberRole, type: MESSAGE_TYPE.CHANNEL });
+
+    // 2) Format message
+    const formattedMessage = formatMessage(message);
+
+    // 3) Emit real-time "channel:message:update" event to all channel members
+    getIO()
+        .to(`${CHANNEL_ROOM_PREFIX}:${channelId}`)
+        .emit(CHANNEL_EVENTS.MESSAGE_DELETE, formattedMessage);
+
+    // 4) Return response to the client
+    res.status(200).json({
+        status: "success",
+        data: {
+            message: formattedMessage,
+        },
+    });
+});
+
 // Create a conversation message
 // POST method
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages
@@ -82,8 +146,9 @@ export const createConversationMessage = catchAsync(async (req, res) => {
     const formattedMessage = formatMessage(message);
 
     // 4) Emit real-time event to conversation members
-    const io = getIO();
-    io.to(`conversation:${conversationId}`).emit(CONVERSATION_EVENTS.MESSAGE_NEW, formattedMessage);
+    getIO()
+        .to(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`)
+        .emit(CONVERSATION_EVENTS.MESSAGE_CREATE, formattedMessage);
 
     // 5) Return response to the client
     res.status(201).json({
@@ -121,5 +186,67 @@ export const getConversationMessages = catchAsync(async (req, res) => {
             messages: formattedMessages,
             nextCursor
         }
+    });
+});
+
+// Update conversation message
+// PATCH method
+// Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
+// Restricted route to all server members
+export const updateConversationMessage = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
+    const currentMemberId = req.member._id;
+    const { messageId, conversationId } = req.params;
+
+    // 1) Request body validation is done in the validateSchema middleware
+    const { content } = req.body;
+
+    // 2) Handle business logic, call service to update conversation message
+    const message = await updateMessage({ content, messageId, currentMemberId, type: MESSAGE_TYPE.CONVERSATION });
+
+    // 3) Format conversation message document
+    const formattedMessage = formatMessage(message);
+
+    // 4) Emit real-time "conversation:message:update" event to all conversation members
+    getIO()
+        .to(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`)
+        .emit(CONVERSATION_EVENTS.MESSAGE_UPDATE, formattedMessage);
+
+    // 5) Return response to the client
+    res.status(200).json({
+        status: "success",
+        data: {
+            message: formattedMessage
+        }
+    });
+});
+
+// Delete conversation message
+// DELETE method
+// Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
+// Restricted route to all server members
+export const deleteConversationMessage = catchAsync(async (req, res) => {
+    if (!req.member) throw new Error("No member attached to request");
+
+    const { _id: memberId, role: memberRole } = req.member;
+    const { messageId, conversationId } = req.params;
+
+    // 1) Handle business logic, call service to delete conversation message
+    const message = await deleteMessage({ messageId, memberId, memberRole, type: MESSAGE_TYPE.CONVERSATION });
+
+    // 2) Format message
+    const formattedMessage = formatMessage(message);
+
+    // 3) Emit real-time "conversation:message:delete" event to all conversation members
+    getIO()
+        .to(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`)
+        .emit(CONVERSATION_EVENTS.MESSAGE_DELETE, formattedMessage);
+
+    // 4) Return response to the client
+    res.status(200).json({
+        status: "success",
+        data: {
+            message: formattedMessage,
+        },
     });
 });

@@ -1,1 +1,5 @@
-export const MEMBER_ROLES = ["ADMIN", "MODERATOR", "GUEST"] as const;
+export const MEMBER_ROLES = {
+    ADMIN: "ADMIN",
+    MODERATOR: "MODERATOR",
+    GUEST: "GUEST"
+} as const;

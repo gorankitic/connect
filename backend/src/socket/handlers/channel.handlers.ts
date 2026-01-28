@@ -25,7 +25,7 @@ export const registerChannelHandlers = (io: Server, socket: Socket) => {
                 if (room.startsWith(CHANNEL_ROOM_PREFIX)) socket.leave(room);
             }
 
-            socket.join(`${CHANNEL_ROOM_PREFIX}${channelId}`);
+            socket.join(`${CHANNEL_ROOM_PREFIX}:${channelId}`);
 
             console.log(chalk.bgBlue.bold(`[channel:join] user=${socket.data.user._id} socket=${socket.id} channel=${channelId}`));
 
@@ -36,7 +36,7 @@ export const registerChannelHandlers = (io: Server, socket: Socket) => {
     });
 
     socket.on("channel:leave", ({ channelId }: { channelId: string }, ack?: (res: any) => void) => {
-        socket.leave(`${CHANNEL_ROOM_PREFIX}${channelId}`);
+        socket.leave(`${CHANNEL_ROOM_PREFIX}:${channelId}`);
 
         console.log(chalk.bgBlue.bold(`[channel:leave] user=${socket.data.user._id} socket=${socket.id} channel=${channelId}`));
 

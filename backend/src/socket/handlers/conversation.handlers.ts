@@ -25,7 +25,7 @@ export const registerConversationHandlers = (io: Server, socket: Socket) => {
                 if (room.startsWith(CONVERSATION_ROOM_PREFIX)) socket.leave(room);
             }
 
-            socket.join(`${CONVERSATION_ROOM_PREFIX}${conversationId}`);
+            socket.join(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`);
 
             console.log(chalk.bgBlue.bold(`[conversation:join] user=${socket.data.user._id} socket=${socket.id} conversation=${conversationId}`));
 
@@ -36,7 +36,7 @@ export const registerConversationHandlers = (io: Server, socket: Socket) => {
     });
 
     socket.on("conversation:leave", ({ conversationId }: { conversationId: string }, ack?: (res: any) => void) => {
-        socket.leave(`${CONVERSATION_ROOM_PREFIX}${conversationId}`);
+        socket.leave(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`);
 
         console.log(chalk.bgBlue.bold(`[conversation:leave] user=${socket.data.user._id} socket=${socket.id} conversation=${conversationId}`));
 

@@ -6,7 +6,7 @@ import { validate } from "@/middlewares/validateSchema";
 // schemas
 import { upsertMessageSchema } from "@/lib/schemas/message.schemas";
 // controllers
-import { createConversationMessage, getConversationMessages } from "@/controllers/message.controllers";
+import { createConversationMessage, deleteConversationMessage, getConversationMessages, updateConversationMessage } from "@/controllers/message.controllers";
 
 const router = express.Router({ mergeParams: true });
 
@@ -15,5 +15,9 @@ router
     .get(restrictTo(), getConversationMessages)
     .post(restrictTo(), validate(upsertMessageSchema), createConversationMessage)
 
+router
+    .route("/:messageId")
+    .patch(restrictTo(), validate(upsertMessageSchema), updateConversationMessage)
+    .delete(restrictTo(), deleteConversationMessage)
 
 export default router;
