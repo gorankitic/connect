@@ -4,12 +4,18 @@ import { Member } from "@/models/member.model";
 import { GetMemberDTO, GetServerMembersDTO, RemoveMemberDTO, UpdateMemberRoleDTO } from "@/lib/types/member.types";
 // utils
 import { AppError } from "@/lib/utils/AppError";
+// constants
+import { MEMBER_ROLES } from "@/lib/constants/member.constants";
 
-export const findServerMembers = async ({ serverId }: GetServerMembersDTO) => {
+export const findServerMembers = async ({ serverId, includeEmail = false }: GetServerMembersDTO) => {
 
     const members = await Member
         .find({ server: serverId })
-        .populate({ path: "user", select: "name email avatarUuid" })
+        .populate({
+            path: "user",
+            // Email is PII: only include it when explicitly requested (e.g. admin-only UI)
+            select: includeEmail ? "name email avatarUuid" : "name avatarUuid"
+        })
         .sort({ createdAt: 1 })
         .lean();
 
@@ -18,7 +24,7 @@ export const findServerMembers = async ({ serverId }: GetServerMembersDTO) => {
 
 export const updateRole = async ({ serverId, memberId, adminId, role }: UpdateMemberRoleDTO) => {
     // Prevent creation of additional admins (single-admin rule)
-    if (role === "ADMIN") {
+    if (role === MEMBER_ROLES.ADMIN) {
         throw new AppError("You are not authorized to perform this action.", 403);
     }
 
@@ -41,7 +47,6 @@ export const updateRole = async ({ serverId, memberId, adminId, role }: UpdateMe
 }
 
 export const removeMemberFromServer = async ({ serverId, memberId }: RemoveMemberDTO) => {
-
     // Find & delete the target member within the same server
     const deletedMember = await Member.findOneAndDelete({ _id: memberId, server: serverId });
 

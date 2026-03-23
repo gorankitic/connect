@@ -17,4 +17,9 @@ export const buildOlderThanCursorFilter = (cursor: Cursor) => {
     }
 }
 
-export const clampLimit = (n: number) => Math.max(1, Math.min(n, 30));
+export const clampLimit = (n: number) => {
+    // `n` might become `NaN` when query params can't be parsed (e.g. `limit=abc`).
+    // In that case, fall back to a safe default.
+    if (!Number.isFinite(n)) return 30;
+    return Math.max(1, Math.min(n, 30));
+};

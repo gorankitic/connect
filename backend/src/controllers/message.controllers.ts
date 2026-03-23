@@ -14,7 +14,6 @@ import { getIO } from "@/socket";
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages
 // Restricted route to all server members
 export const createChannelMessage = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
     const currentMemberId = String(req.member._id);
     const { channelId, serverId } = req.params;
     // 1) Request body validation is done in the validateSchema middleware
@@ -71,7 +70,6 @@ export const getChannelMessages = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
 // Restricted route to all server members
 export const updateChannelMessage = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
     const currentMemberId = req.member._id;
     const { messageId, channelId } = req.params;
 
@@ -103,8 +101,6 @@ export const updateChannelMessage = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
 // Restricted route to all server members
 export const deleteChannelMessage = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
-
     const { _id: memberId, role: memberRole } = req.member;
     const { messageId, channelId } = req.params;
 
@@ -134,7 +130,6 @@ export const deleteChannelMessage = catchAsync(async (req, res) => {
 // Restricted route to all server members
 export const createConversationMessage = catchAsync(async (req, res) => {
     const { conversationId, serverId } = req.params;
-    if (!req.member) throw new Error("No member attached to request");
     const currentMemberId = String(req.member._id);
     // 1) Request body validation is done in the validateSchema middleware
     const { content } = req.body;
@@ -164,8 +159,6 @@ export const createConversationMessage = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages
 // Restricted route to all server members
 export const getConversationMessages = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
-
     const { serverId, conversationId } = req.params;
     const currentMemberId = String(req.member._id);
 
@@ -194,7 +187,6 @@ export const getConversationMessages = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
 // Restricted route to all server members
 export const updateConversationMessage = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
     const currentMemberId = req.member._id;
     const { messageId, conversationId } = req.params;
 
@@ -226,8 +218,6 @@ export const updateConversationMessage = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
 // Restricted route to all server members
 export const deleteConversationMessage = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
-
     const { _id: memberId, role: memberRole } = req.member;
     const { messageId, conversationId } = req.params;
 

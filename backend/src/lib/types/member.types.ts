@@ -14,6 +14,7 @@ export interface IMember extends Document {
 
 export type GetServerMembersDTO = {
     serverId: string
+    includeEmail?: boolean
 }
 
 export type UpdateMemberRoleDTO = {

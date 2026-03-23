@@ -5,7 +5,7 @@ export const formatMember = (member: any) => ({
     createdAt: member.createdAt,
     name: member.user.name,
     avatarUuid: member.user.avatarUuid,
-    email: member.user.email,
+    ...(member.user.email ? { email: member.user.email } : {}),
 });
 
 export const formatMessage = (message: any) => ({

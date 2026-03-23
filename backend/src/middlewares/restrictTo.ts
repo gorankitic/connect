@@ -8,9 +8,6 @@ import { assertServerMember } from "@/services/member.services";
 
 export const restrictTo = (...allowedRoles: MemberRole[]) => {
     return catchAsync(async (req, res, next) => {
-        if (!req.user) {
-            throw new AppError("Not authenticated", 401);
-        }
         const userId = String(req.user._id);
         const { serverId } = req.params;
 

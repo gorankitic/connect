@@ -72,7 +72,7 @@ export const updateChannel = catchAsync(async (req, res) => {
 export const deleteChannel = catchAsync(async (req, res) => {
     const { serverId, channelId } = req.params;
 
-    // 1) Handle business logic to update channel document
+    // 1) Handle business logic to delete channel document
     const channel = await deleteChannelById({ serverId, channelId });
 
     // 2) Return response to the client

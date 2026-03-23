@@ -2,6 +2,8 @@
 import { AppError } from "@/lib/utils/AppError";
 import { catchAsync } from "@/lib/utils/catchAsync";
 import { formatMember } from "@/lib/utils/formatting";
+// constants
+import { MEMBER_ROLES } from "@/lib/constants/member.constants";
 // services
 import { findServerMembers, removeMemberFromServer, updateRole } from "@/services/member.services";
 
@@ -11,9 +13,11 @@ import { findServerMembers, removeMemberFromServer, updateRole } from "@/service
 // Restricted route to all members
 export const getServerMembers = catchAsync(async (req, res) => {
     const { serverId } = req.params;
+    // Email is PII: only allow admins to see member emails.
+    const includeEmail = req.member.role === MEMBER_ROLES.ADMIN;
 
     // 1) Handle business logic to find all server's member documents
-    const members = await findServerMembers({ serverId });
+    const members = await findServerMembers({ serverId, includeEmail });
 
     // 2) Format member documents
     const formattedMembers = members.map(formatMember);
@@ -72,7 +76,6 @@ export const updateMemberRole = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/members/:memberId
 // Restricted route to "ADMIN"
 export const removeMember = catchAsync(async (req, res) => {
-    if (!req.member) throw new Error("No member attached to request");
     const { serverId, memberId } = req.params;
     const adminId = String(req.member._id);
 
@@ -96,7 +99,6 @@ export const removeMember = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/members/leave
 // Restricted route to all members
 export const leaveServer = catchAsync(async (req, res, next) => {
-    if (!req.member) throw new Error("No member attached to request");
     const { serverId } = req.params;
     const { _id, role } = req.member;
     const memberId = String(_id);
