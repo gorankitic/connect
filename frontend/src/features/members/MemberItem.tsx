@@ -22,7 +22,7 @@ const MemberItem = ({ member }: MemberItemProps) => {
     const isLoading = isUpdating || isRemoving;
 
     return (
-        <div className="flex items-center justify-between mx-20 mb-5">
+        <div className="flex items-center justify-between mx-3 md:mx-20 mb-5">
             <MemberAvatar member={member} />
             {member.role !== MEMBER_ROLE.ADMIN && (
                 <DropdownMenu>

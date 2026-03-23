@@ -37,7 +37,7 @@ const MemberAvatar = ({ member }: MemberAvatarProps) => {
                     <p className="text-sm font-semibold text-gray-700">{member.name}</p>
                     {Icon && <Icon className={cn("size-5", member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                 </div>
-                <p className="text-xs text-gray-500">{member.email}</p>
+                {member.email ? <p className="text-xs text-gray-500">{member.email}</p> : null}
                 <p className="text-xs text-gray-500">Joined {format(new Date(member.createdAt), "dd.MM.yyyy.")}</p>
             </div>
         </div>

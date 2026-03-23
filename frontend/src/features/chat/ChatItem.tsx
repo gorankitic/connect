@@ -13,17 +13,30 @@ import ActionTooltip from "@/components/ActionTooltip";
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 // hooks
 import { useActiveMessage } from "@/hooks/useActiveMessage";
+import { useGetOrCreateConversation } from "@/features/conversation/useGetOrCreateConversation";
+import { useMember } from "@/features/members/useMember";
+import { useChat } from "@/hooks/useChat";
 
 type ChatItemProps = {
     message: Message
 }
 
 const ChatItem = ({ message }: ChatItemProps) => {
+    const serverId = useChat(s => s.serverId);
     const { activeMessage } = useActiveMessage();
+    const { getOrCreate } = useGetOrCreateConversation();
+    const { currentMember } = useMember(serverId);
 
     const isUpdating = activeMessage?.id === message._id;
 
     const Icon = MEMBER_ROLE_ICON_MAP[message.member.role];
+
+    if (!serverId || !currentMember) return null;
+
+    const handleRedirect = () => {
+        if (currentMember._id === message.member._id) return;
+        getOrCreate({ serverId, memberId: message.member._id });
+    }
 
     return (
         <div className="group text-gray-700 hover:bg-gray-200 py-2 px-3 rounded-sm">
@@ -42,12 +55,17 @@ const ChatItem = ({ message }: ChatItemProps) => {
                     )}
                 </Avatar>
                 <div className="flex flex-col">
-                    <div className="flex items-center gap-1">
-                        <p className="font-semibold">{message.member.name}</p>
+                    <button
+                        onClick={handleRedirect}
+                        className="flex items-center gap-1"
+                    >
+                        <p className={cn("font-semibold", currentMember._id !== message.member._id && "hover:underline cursor-pointer")}>
+                            {message.member.name}
+                        </p>
                         <ActionTooltip side="top" label={message.member.role.toLowerCase()}>
                             {Icon && <Icon className={cn("size-4", message.member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                         </ActionTooltip>
-                    </div>
+                    </button>
                     <p className="text-xs text-gray-400">
                         {message.createdAt !== message.updatedAt
                             ? message.deletedAt

@@ -48,7 +48,7 @@ const ChatMessages = ({ name, scrollKey }: ChatMessagesProps) => {
     return (
         <div
             ref={containerRef}
-            className="flex-1 overflow-y-auto px-40 pb-4"
+            className="flex-1 overflow-y-auto px-5 md:px-16 lg:px-40 pb-4"
         >
             <div className="min-h-full flex flex-col justify-end">
                 {!hasNextPage && <ChatWelcome name={name} />}

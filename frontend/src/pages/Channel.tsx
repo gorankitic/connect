@@ -35,7 +35,7 @@ const Channel = () => {
     const Icon = CHANNEL_TYPE_ICON_MAP[channel.type];
 
     return (
-        <div className="ml-80 flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-screen bg-gray-100">
             <ChatHeader
                 type={CHAT_TYPE.CHANNEL}
                 name={channel.name}

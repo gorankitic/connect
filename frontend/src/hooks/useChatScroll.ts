@@ -22,8 +22,18 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
 
     // Used to auto-scroll to bottom only once on first render
     const hasInitialized = useRef(false);
+    // Force one auto-scroll after chat switch (channel/DM).
+    const shouldForceScrollToBottom = useRef(true);
     // Used to track previous scroll height
     const prevScrollHeight = useRef<number | null>(null);
+    // Keep track if user is currently near the bottom of the list
+    const isNearBottom = useRef(true);
+
+    const scrollToBottom = () => {
+        const bottom = bottomRef.current;
+        if (!bottom) return;
+        bottom.scrollIntoView({ behavior: "auto", block: "end" });
+    };
 
     // Handle scrolling UP: load older messages when user scrolls to the top
     useEffect(() => {
@@ -31,7 +41,11 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
         if (!container) return;
 
         const handleScroll = () => {
-            if (container.scrollTop === 0 && hasMore && !isLoadingMore) {
+            const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+            isNearBottom.current = distanceFromBottom < 100;
+
+            // Used a small threshold to avoid exact-zero edge cases.
+            if (container.scrollTop <= 16 && hasMore && !isLoadingMore) {
                 // Save current scroll height BEFORE loading more messages
                 prevScrollHeight.current = container.scrollHeight;
                 loadMore();
@@ -60,19 +74,46 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
             return;
         }
 
-        const distanceFromBottom =
-            container.scrollHeight - container.scrollTop - container.clientHeight;
-
         const shouldAutoScroll =
-            !hasInitialized.current || distanceFromBottom < 100;
+            shouldForceScrollToBottom.current ||
+            !hasInitialized.current ||
+            isNearBottom.current;
 
         if (shouldAutoScroll) {
+            // Two RAFs make scroll more reliable when layout height changes
+            // after render (e.g. multiline text wrapping)
             requestAnimationFrame(() => {
-                bottom.scrollIntoView({ behavior: "auto" });
-                hasInitialized.current = true;
+                requestAnimationFrame(() => {
+                    scrollToBottom();
+                    hasInitialized.current = true;
+                    shouldForceScrollToBottom.current = false;
+                });
             });
         }
-    }, [messageCount]);
+    }, [messageCount, scrollKey]);
+
+    // If message content height changes after render (multiline wrapping, images),
+    // keep the view pinned to bottom only when user is already near bottom
+    useEffect(() => {
+        const bottom = bottomRef.current;
+        if (!bottom || typeof ResizeObserver === "undefined") return;
+
+        // Observe the message list wrapper, not the scroll container itself
+        const messagesWrapper = bottom.parentElement;
+        if (!messagesWrapper) return;
+
+        const observer = new ResizeObserver(() => {
+            if (shouldForceScrollToBottom.current || isNearBottom.current) {
+                scrollToBottom();
+            }
+        });
+
+        observer.observe(messagesWrapper);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [bottomRef, scrollKey]);
 
     // Reset on chat (channels or conversations) switch
     useEffect(() => {
@@ -81,6 +122,7 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
         if (!container || !bottom) return;
 
         hasInitialized.current = false;
+        shouldForceScrollToBottom.current = true;
         prevScrollHeight.current = null;
 
         // requestAnimationFrame (rAF) is a browser API
@@ -93,8 +135,7 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
         // Scroll needs: correct layout, painted DOM, correct scrollHeight
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
-                bottom.scrollIntoView({ behavior: "auto" });
-                hasInitialized.current = true;
+                scrollToBottom();
             });
         });
     }, [scrollKey]);

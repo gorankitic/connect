@@ -36,7 +36,7 @@ const Conversation = () => {
     const Icon = MEMBER_ROLE_ICON_MAP[conversation.otherMember.role];
 
     return (
-        <div className="ml-80 flex flex-col h-screen bg-gray-100">
+        <div className="flex flex-col h-screen bg-gray-100">
             <ChatHeader
                 type={CHAT_TYPE.CONVERSATION}
                 name={conversation.otherMember.name}

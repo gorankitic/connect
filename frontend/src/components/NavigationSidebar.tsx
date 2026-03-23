@@ -6,7 +6,7 @@ import ServersList from "@/features/server/ServersList";
 
 const NavigationSidebar = () => {
     return (
-        <aside className="fixed bg-gray-300 flex flex-col items-center h-full w-20 py-2 border-r border-r-gray-400/50">
+        <aside className="bg-gray-300 flex flex-col items-center h-full w-20 py-2 border-r border-r-gray-400/50">
             <div className="flex flex-col items-center w-full">
                 <CreateServerButton />
                 <div className="border-b border-gray-400/50 h-1 w-2/3 mt-2 mb-3 mx-auto" />

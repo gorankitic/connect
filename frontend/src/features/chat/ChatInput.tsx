@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Send } from "lucide-react";
 // components
-import EmojiPicker from "@/components/EmojiPicker";
+import EmojisPicker from "@/components/EmojisPicker";
 // schemas
 import { upsertMessageSchema } from "@/lib/schemas/message.schema";
 // types
@@ -71,7 +71,7 @@ const ChatInput = ({ name }: ChatInputProps) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="mx-40 mb-10">
+            <div className="px-5 md:px-16 lg:px-40 mb-10">
                 <div className="relative flex items-end">
                     <Send className="size-6 absolute left-4 top-7 -translate-y-1/2 text-gray-600 pointer-events-none" />
                     <textarea
@@ -88,7 +88,7 @@ const ChatInput = ({ name }: ChatInputProps) => {
                         className="bg-gray-300 w-full py-4 px-14 rounded-sm shadow-sm text-gray-700 placeholder:text-gray-600 
                         focus:outline-none disabled:opacity-60 resize-none max-h-60 overflow-y-auto"
                     />
-                    <EmojiPicker onChange={addEmoji} />
+                    <EmojisPicker onChange={addEmoji} />
                 </div>
             </div>
         </form >

@@ -26,7 +26,7 @@ const ServerSidebar = () => {
     const { members } = useMembers(serverId);
 
     if (error) return <ErrorState error={error} />
-    if (!server || !currentMember) return null;
+    if (!serverId || !server || !currentMember) return null;
 
     const textChannels = channels.filter((channel) => channel.type === CHANNEL_TYPE.TEXT);
     const audioChannels = channels.filter((channel) => channel.type === CHANNEL_TYPE.AUDIO);
@@ -34,7 +34,7 @@ const ServerSidebar = () => {
     const otherMembers = members.filter((m) => m._id !== currentMember._id);
 
     return (
-        <div className="fixed flex flex-col w-80 bg-gray-200 border-r border-r-gray-400/50 h-full">
+        <div className="flex flex-col w-72 lg:w-80 bg-gray-200 border-r border-r-gray-400/50 h-full">
             <ServerHeader serverId={server._id} name={server.name} role={currentMember.role} />
             <ScrollArea className="flex-1 w-full overflow-y-auto">
                 <SidebarSection

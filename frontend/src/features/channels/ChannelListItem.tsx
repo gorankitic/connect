@@ -46,7 +46,7 @@ const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
                                 onOpen("updateChannel", { serverId, channelId: channel._id });
                             }}
                         >
-                            <Edit className="size-4 hidden group-hover:block hover:text-gray-700 cursor-pointer transition" />
+                            <Edit className="size-4 block md:hidden md:group-hover:block hover:text-gray-700 cursor-pointer transition" />
                         </button>
                     </ActionTooltip>
                     <ActionTooltip label="Delete">
@@ -56,7 +56,7 @@ const ChannelListItem = ({ channel, role, serverId }: ChannelListItemProps) => {
                                 onOpen("deleteChannel", { serverId, channelId: channel._id });
                             }}
                         >
-                            <Trash className="size-4 hidden group-hover:block hover:text-red-500 cursor-pointer transition" />
+                            <Trash className="size-4 block md:hidden md:group-hover:block hover:text-red-500 cursor-pointer transition" />
                         </button>
                     </ActionTooltip>
                 </div>

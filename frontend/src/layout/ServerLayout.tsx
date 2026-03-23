@@ -6,7 +6,9 @@ import ServerSidebar from "@/features/server/ServerSidebar";
 const ServerLayout = () => {
     return (
         <div className="flex h-full">
-            <ServerSidebar />
+            <div className="hidden md:flex">
+                <ServerSidebar />
+            </div>
             <main className="flex-1">
                 <Outlet />
             </main>

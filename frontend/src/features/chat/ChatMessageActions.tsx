@@ -33,7 +33,7 @@ const ChatMessageActions = ({ messageId, isDeleted, messageAuthorId, messageAuth
             {canUpdate && (
                 <ActionTooltip label="Update">
                     <button onClick={() => startUpdating(messageId)}>
-                        <Edit className="size-4 hidden group-hover:block hover:text-gray-700 cursor-pointer transition" />
+                        <Edit className="size-4 block md:hidden md:group-hover:block hover:text-gray-700 cursor-pointer transition" />
                     </button>
                 </ActionTooltip>
             )}
@@ -45,7 +45,7 @@ const ChatMessageActions = ({ messageId, isDeleted, messageAuthorId, messageAuth
                             onOpen("deleteMessage", { messageId });
                         }}
                     >
-                        <Trash className="size-4 hidden group-hover:block hover:text-red-500 cursor-pointer transition" />
+                        <Trash className="size-4 block md:hidden md:group-hover:block hover:text-red-500 cursor-pointer transition" />
                     </button>
                 </ActionTooltip>
             )}
