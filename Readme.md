@@ -19,9 +19,7 @@ It was built as a student project while learning modern web development technolo
 
 ©️ 2026 Goran Kitic
 
-| 📞 Video calls                    | 💬 Real-time communication        |
-| --------------------------------- | --------------------------------- |
-| ![](screenshots/Screenshot-1.png) | ![](screenshots/Screenshot-2.png) |
+<img src="screenshots/Screenshot-2.png" />
 
 ## 🚀 Tech Stack
 
