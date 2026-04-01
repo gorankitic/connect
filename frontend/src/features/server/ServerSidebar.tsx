@@ -14,6 +14,9 @@ import { useServer } from "@/features/server/useServer";
 import { useMembers } from "@/features/members/useMembers";
 import { useChannels } from "@/features/channels/useChannels";
 import { useMember } from "@/features/members/useMember";
+import { useNotificationsMap } from "@/features/notifications/useNotificationsMap";
+import { useNotificationsSocket } from "@/features/notifications/useNotificationsSocket";
+import { useSyncDataSocket } from "@/features/chat/useSyncDataSocket";
 // constants
 import { CHANNEL_TYPE } from "@/lib/constants/channel.constants";
 import { MEMBER_ROLE } from "@/lib/constants/member.constants";
@@ -24,6 +27,9 @@ const ServerSidebar = () => {
     const { currentMember } = useMember(serverId);
     const { channels } = useChannels(serverId);
     const { members } = useMembers(serverId);
+    const { notificationsMap } = useNotificationsMap(serverId);
+    useNotificationsSocket(serverId);
+    useSyncDataSocket(serverId);
 
     if (error) return <ErrorState error={error} />
     if (!serverId || !server || !currentMember) return null;
@@ -80,7 +86,13 @@ const ServerSidebar = () => {
                     label="Server members"
                     action={currentMember.role === MEMBER_ROLE.ADMIN && <ManageMembersButton serverId={server._id} />}
                     items={otherMembers}
-                    renderItem={(member) => <MemberListItem key={member._id} member={member} />}
+                    renderItem={(member) =>
+                        <MemberListItem
+                            key={member._id}
+                            member={member}
+                            notificationsMap={notificationsMap}
+                        />
+                    }
                 />
             </ScrollArea>
         </div>

@@ -6,12 +6,18 @@ import type { Member } from "@/lib/types/member.types";
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 // components
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import NotificationsBadge from "@/features/notifications/NotificationBadge";
 // constants
 import { MEMBER_ROLE, MEMBER_ROLE_ICON_MAP } from "@/lib/constants/member.constants";
 // hooks
 import { useGetOrCreateConversation } from "@/features/conversation/useGetOrCreateConversation";
 
-const MemberListItem = ({ member }: { member: Member }) => {
+type MemberListItemProps = {
+    member: Member;
+    notificationsMap: Map<string, number>;
+}
+
+const MemberListItem = ({ member, notificationsMap }: MemberListItemProps) => {
     const { conversationId } = useParams<{ serverId: string, conversationId: string }>();
     const { getOrCreate, conversation } = useGetOrCreateConversation();
 
@@ -21,6 +27,8 @@ const MemberListItem = ({ member }: { member: Member }) => {
     if (conversationId) {
         isActive = conversationId === conversation?.conversationId;
     }
+
+    const unreadCount = notificationsMap.get(member._id) || 0;
 
     return (
         <button
@@ -46,6 +54,7 @@ const MemberListItem = ({ member }: { member: Member }) => {
                     {Icon && <Icon className={cn("size-5", member.role === MEMBER_ROLE.ADMIN ? "text-amber-500" : "text-blue-500")} />}
                 </div>
             </div>
+            <NotificationsBadge count={unreadCount} />
         </button>
     )
 }

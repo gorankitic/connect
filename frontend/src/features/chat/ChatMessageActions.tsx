@@ -11,22 +11,30 @@ import { useModal } from "@/hooks/useModal";
 import { canDeleteMessage } from "@/lib/utils";
 // types
 import type { MemberRole } from "@/lib/types/member.types";
+import type { ChatType } from "@/lib/types/chat.types";
 
 type ChatMessageActionsProps = {
     messageId: string;
     isDeleted: boolean;
     messageAuthorRole: MemberRole;
     messageAuthorId: string;
+    type: ChatType
 }
 
-const ChatMessageActions = ({ messageId, isDeleted, messageAuthorId, messageAuthorRole }: ChatMessageActionsProps) => {
+const ChatMessageActions = ({ messageId, isDeleted, messageAuthorId, messageAuthorRole, type }: ChatMessageActionsProps) => {
     const { onOpen } = useModal();
     const serverId = useChat(s => s.serverId);
     const { startUpdating } = useActiveMessage();
     const { currentMember } = useMember(serverId);
 
     const canUpdate = currentMember?._id === messageAuthorId && !isDeleted;
-    const canDelete = !isDeleted && canDeleteMessage({ memberId: currentMember?._id, memberRole: currentMember?.role, messageAuthorId, messageAuthorRole });
+    const canDelete = !isDeleted && canDeleteMessage({
+        memberId: currentMember?._id,
+        memberRole: currentMember?.role,
+        messageAuthorId,
+        messageAuthorRole,
+        type
+    });
 
     return (
         <div className="flex items-center gap-2 ml-auto text-gray-600">

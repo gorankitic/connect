@@ -12,10 +12,10 @@ import ActionTooltip from "@/components/ActionTooltip";
 // utils
 import { cn, getAvatarUrl, getInitials } from "@/lib/utils";
 // hooks
+import { useChat } from "@/hooks/useChat";
+import { useMember } from "@/features/members/useMember";
 import { useActiveMessage } from "@/hooks/useActiveMessage";
 import { useGetOrCreateConversation } from "@/features/conversation/useGetOrCreateConversation";
-import { useMember } from "@/features/members/useMember";
-import { useChat } from "@/hooks/useChat";
 
 type ChatItemProps = {
     message: Message
@@ -23,6 +23,7 @@ type ChatItemProps = {
 
 const ChatItem = ({ message }: ChatItemProps) => {
     const serverId = useChat(s => s.serverId);
+    const type = useChat(s => s.type);
     const { activeMessage } = useActiveMessage();
     const { getOrCreate } = useGetOrCreateConversation();
     const { currentMember } = useMember(serverId);
@@ -31,7 +32,7 @@ const ChatItem = ({ message }: ChatItemProps) => {
 
     const Icon = MEMBER_ROLE_ICON_MAP[message.member.role];
 
-    if (!serverId || !currentMember) return null;
+    if (!serverId || !currentMember || !type) return null;
 
     const handleRedirect = () => {
         if (currentMember._id === message.member._id) return;
@@ -81,6 +82,7 @@ const ChatItem = ({ message }: ChatItemProps) => {
                         messageAuthorId={message.member._id}
                         messageAuthorRole={message.member.role}
                         isDeleted={!!message.deletedAt}
+                        type={type}
                     />}
             </div>
             {!isUpdating ? message.deletedAt

@@ -42,10 +42,10 @@ export const useChatScroll = ({ containerRef, bottomRef, loadMore, hasMore, isLo
 
         const handleScroll = () => {
             const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-            isNearBottom.current = distanceFromBottom < 100;
+            isNearBottom.current = distanceFromBottom < 150;
 
             // Used a small threshold to avoid exact-zero edge cases.
-            if (container.scrollTop <= 16 && hasMore && !isLoadingMore) {
+            if (container.scrollTop <= 10 && hasMore && !isLoadingMore) {
                 // Save current scroll height BEFORE loading more messages
                 prevScrollHeight.current = container.scrollHeight;
                 loadMore();

@@ -164,3 +164,24 @@ export type MessageResponse = {
         message: Message;
     }
 }
+
+export type GetNotificationsParams = {
+    serverId: string;
+}
+
+export type Notification = {
+    _id: string;
+    unreadCount: number;
+    senderId: string;
+    recipientId: string;
+    conversationId: string;
+    serverId: string;
+}
+
+export type NotificationsResponse = {
+    status: "success";
+    results: number;
+    data: {
+        notifications: Notification[];
+    }
+}

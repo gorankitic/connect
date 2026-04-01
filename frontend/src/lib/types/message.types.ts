@@ -1,5 +1,6 @@
 // types
 import type { Member, MemberRole } from "@/lib/types/member.types";
+import type { ChatType } from "@/lib/types/chat.types";
 
 export type Message = {
     _id: string;
@@ -17,4 +18,5 @@ export type CanDeleteMessageProps = {
     messageAuthorRole: MemberRole;
     memberId: string | undefined;
     memberRole: MemberRole | undefined;
+    type: ChatType
 }

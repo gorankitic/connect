@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 import { UAParser } from "ua-parser-js";
 // constants
 import { MEMBER_ROLE } from "@/lib/constants/member.constants";
+import { CHAT_TYPE } from "@/lib/constants/chat.contants";
 // types
 import type { CanDeleteMessageProps } from "@/lib/types/message.types";
 
@@ -46,19 +47,21 @@ export const getAvatarUrl = (uuid?: string | null) => {
   return `https://ucarecdn.com/${uuid}/-/scale_crop/256x256/smart/-/quality/smart/-/format/auto/`;
 }
 
-export const canDeleteMessage = ({ messageAuthorId, messageAuthorRole, memberId, memberRole }: CanDeleteMessageProps) => {
+export const canDeleteMessage = ({ messageAuthorId, messageAuthorRole, memberId, memberRole, type }: CanDeleteMessageProps) => {
   // 1) Message's author (sender) can always delete his own message
   const isSender = messageAuthorId === memberId;
   if (isSender) return true;
 
-  // 2) Admin can delete everyone messages
+  // 2) If it's (DM-private) conversation no one gets special privileges over the others
+  if (type === CHAT_TYPE.CONVERSATION) return false;
+
+  // 3) Admin can delete everyone messages
   if (memberRole === MEMBER_ROLE.ADMIN) return true;
 
-  // 3) Moderator can delete their own messages, but not Admin or other Moderator messages
+  // 4) Moderator can delete their own messages, but not Admin or other Moderator messages
   if (memberRole === MEMBER_ROLE.MODERATOR) {
     if (messageAuthorRole === MEMBER_ROLE.ADMIN) return false;
     if (messageAuthorRole === MEMBER_ROLE.MODERATOR) return false;
-
     return true;
   }
 

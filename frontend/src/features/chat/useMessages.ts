@@ -36,7 +36,8 @@ export const useMessages = ({ type, serverId, targetId }: ChatStoreData) => {
         enabled: !!serverId && !!targetId,
         initialPageParam: null as string | null,
         getNextPageParam: (lastPage) => { return lastPage.nextCursor },
-        staleTime: Infinity,
+        staleTime: 1000 * 5,
+        refetchOnMount: "always",
         retry: false
     });
 
