@@ -1,3 +1,6 @@
+// modules
+import { Types } from "mongoose";
+
 export const formatMember = (member: any) => ({
     _id: member._id,
     role: member.role,
@@ -47,8 +50,8 @@ export const formatServer = (server: any) => ({
     createdAt: server.createdAt
 });
 
-export const formatConversation = (conversation: any, currentMemberId: string) => {
-    const isCurrentMemberOne = String(conversation.memberOne._id) === currentMemberId;
+export const formatConversation = (conversation: any, currentMemberId: Types.ObjectId) => {
+    const isCurrentMemberOne = String(conversation.memberOne._id) === String(currentMemberId);
 
     return {
         conversationId: conversation._id,
@@ -56,3 +59,12 @@ export const formatConversation = (conversation: any, currentMemberId: string) =
         otherMember: isCurrentMemberOne ? formatMember(conversation.memberTwo) : formatMember(conversation.memberOne),
     };
 };
+
+export const formatNotification = (notification: any) => ({
+    _id: notification._id.toString(),
+    unreadCount: notification.unreadCount,
+    senderId: notification.sender.toString(),
+    recipientId: notification.recipient.toString(),
+    conversationId: notification.conversation.toString(),
+    serverId: notification.server.toString(),
+});

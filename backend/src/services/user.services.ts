@@ -1,14 +1,17 @@
 // modules
+import { Types } from "mongoose";
 import { deleteFile } from "@uploadcare/rest-client";
 // config
-import { uploadcareAuth } from "src/config/uploadcare";
+import { uploadcareAuth } from "@/config/uploadcare";
 // models
-import { User } from "src/models/user.model";
+import { User } from "@/models/user.model";
 // schemas
-import { UpdateDataSchema } from "../lib/schemas/user.schemas";
+import { UpdateDataSchema } from "@/lib/schemas/user.schemas";
+// utils
+import { AppError } from "@/lib/utils/AppError";
 
-export const updateUserData = async (id: string, data: UpdateDataSchema) => {
-    const updatedUser = await User.findByIdAndUpdate(id, data, {
+export const updateUserData = async (userId: Types.ObjectId, data: UpdateDataSchema) => {
+    const updatedUser = await User.findByIdAndUpdate(userId, data, {
         new: true,
         runValidators: true,
     });
@@ -16,9 +19,12 @@ export const updateUserData = async (id: string, data: UpdateDataSchema) => {
     return updatedUser;
 };
 
-export const updateUserAvatar = async (userId: string, avatarUuid: string) => {
+export const updateUserAvatar = async (userId: Types.ObjectId, avatarUuid: string) => {
     // 1) Get user document from collection
-    const user = (await User.findById(userId))!;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new AppError("User is not found.", 404);
+    }
 
     // 2) If user already had an avatar, delete it from Uploadcare
     if (user.avatarUuid && user.avatarUuid !== avatarUuid) {

@@ -189,7 +189,13 @@ export const deleteMessage = async ({ messageId, memberId, memberRole, type }: D
     }
 
     // 3) Authorize who can delete message
-    if (!canDeleteMessage({ messageAuthorId: message.sender._id, messageAuthorRole: message.sender.role, memberId, memberRole })) {
+    if (!canDeleteMessage({
+        messageAuthorId: message.sender._id,
+        messageAuthorRole: message.sender.role,
+        memberId,
+        memberRole,
+        type
+    })) {
         throw new AppError("You are not allowed to delete this message.", 403);
     }
 

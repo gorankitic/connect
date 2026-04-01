@@ -16,13 +16,13 @@ export interface ISession {
     replacedBy?: Types.ObjectId | null; // Points to a new session on rotation
 }
 
-export type TCreateSession = {
+export type CreateSessionDTO = {
     userId: Types.ObjectId,
     role?: string,
     req: Request
 }
 
-export type TRotateSession = {
+export type RotateSessionDTO = {
     refreshToken: string,
     req: Request
 }

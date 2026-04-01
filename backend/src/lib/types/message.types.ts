@@ -11,7 +11,7 @@ export type CreateChannelMessageDTO = {
     content: string;
     serverId: string;
     channelId: string;
-    currentMemberId: string;
+    currentMemberId: Types.ObjectId;
 }
 
 export type GetChannelMessagesDTO = {
@@ -25,13 +25,13 @@ export type CreateConversationMessageDTO = {
     content: string;
     serverId: string;
     conversationId: string;
-    currentMemberId: string;
+    currentMemberId: Types.ObjectId;
 }
 
 export type GetConversationMessagesDTO = {
     serverId: string;
     conversationId: string;
-    currentMemberId: string;
+    currentMemberId: Types.ObjectId;
     limit?: number;
     cursor?: string;
 }
@@ -55,6 +55,7 @@ export type CanDeleteMessageDTO = {
     messageAuthorRole: MemberRole;
     memberId: Types.ObjectId;
     memberRole: MemberRole;
+    type: MessageType;
 }
 
 export interface MessageSender {

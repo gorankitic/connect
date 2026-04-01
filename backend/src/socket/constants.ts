@@ -15,3 +15,11 @@ export const CONVERSATION_EVENTS = {
     MESSAGE_UPDATE: "conversation:message:update",
     MESSAGE_DELETE: "conversation:message:delete",
 } as const;
+
+// Notification constants
+export const NOTIFICATION_ROOM_PREFIX = "user";
+
+export const NOTIFICATION_EVENTS = {
+    NOTIFICATION_SET: "notification:set",
+    NOTIFICATION_RESET: "notification:reset"
+} as const;

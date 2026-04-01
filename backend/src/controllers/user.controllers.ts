@@ -1,4 +1,5 @@
 // utils
+import { AppError } from "@/lib/utils/AppError";
 import { catchAsync } from "src/lib/utils/catchAsync";
 // models
 import { User } from "src/models/user.model";
@@ -9,9 +10,12 @@ import { updateUserAvatar, updateUserData } from "src/services/user.services";
 // GET method
 // Protected route /api/v1/users
 export const getUser = catchAsync(async (req, res, next) => {
-    const userId = (req.user._id);
+    const userId = req.user._id;
 
-    const user = (await User.findById(userId))!;
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new AppError("User is not found.", 404);
+    }
 
     res.status(200).json({
         status: "success",
@@ -29,9 +33,12 @@ export const getUser = catchAsync(async (req, res, next) => {
 // PATCH method
 // Protected route /api/v1/users/update-data
 export const updateData = catchAsync(async (req, res, next) => {
+    const userId = req.user._id;
+
     // 1) Request validation is done in the validateSchema middleware
     // 2) Handle business logic, call service to update user data
-    await updateUserData(String(req.user._id), req.body);
+    await updateUserData(userId, req.body);
+
     // 3) Send response to the client
     res.status(201).json({
         status: "success",
@@ -44,9 +51,12 @@ export const updateData = catchAsync(async (req, res, next) => {
 // Protected route /api/v1/users/update-avatar
 export const updateAvatar = catchAsync(async (req, res, next) => {
     const { avatarUuid } = req.body;
+    const userId = req.user._id;
+
     // 1) Request validation is done in the validateSchema middleware
     // 2) Handle business logic, call service to update user avatarUuid
-    await updateUserAvatar(String(req.user._id), avatarUuid);
+    await updateUserAvatar(userId, avatarUuid);
+
     // 3) Send response to the client
     res.status(201).json({
         status: "success",

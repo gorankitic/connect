@@ -1,16 +1,17 @@
 // utils
 import { AppError } from "@/lib/utils/AppError";
 // types
-import { AssertConversationAccessDTO, GetConversationDTO, GetOrCreateConversationDTO } from "@/lib/types/conversation.types";
+import { ConversationDTO, GetOrCreateConversationDTO } from "@/lib/types/conversation.types";
 // models
-import { Conversation } from "@/models/conversation.model";
 import { Member } from "@/models/member.model";
+import { Conversation } from "@/models/conversation.model";
 
 export const getOrCreate = async ({ serverId, memberId, currentMemberId }: GetOrCreateConversationDTO) => {
     // Prevent self conversation
-    if (memberId === currentMemberId) {
+    if (memberId === String(currentMemberId)) {
         throw new AppError("You cannot start conversation with yourself.", 400);
     }
+
     // Check if targeted member exists in same server
     const member = await Member.findOne({ _id: memberId, server: serverId });
     if (!member) {
@@ -21,7 +22,7 @@ export const getOrCreate = async ({ serverId, memberId, currentMemberId }: GetOr
     // Members can start a DM in either direction: A → B || B → A
     // Enforce the same rule as the schema validate hook, but before querying
     // Hook forces a rule: Always store the smaller id first, bigger id second
-    const [memberOne, memberTwo] = currentMemberId < memberId ? [currentMemberId, memberId] : [memberId, currentMemberId];
+    const [memberOne, memberTwo] = String(currentMemberId) < memberId ? [currentMemberId, memberId] : [memberId, currentMemberId];
 
     // Try to find conversation based on serverId and two members
     const conversationDoc = await Conversation.findOne({ server: serverId, memberOne, memberTwo });
@@ -49,7 +50,7 @@ export const getOrCreate = async ({ serverId, memberId, currentMemberId }: GetOr
     return conversation;
 }
 
-export const findConversationById = async ({ serverId, conversationId, currentMemberId }: GetConversationDTO) => {
+export const findConversationById = async ({ serverId, conversationId, currentMemberId }: ConversationDTO) => {
 
     const conversation = await Conversation
         .findOne({
@@ -68,7 +69,7 @@ export const findConversationById = async ({ serverId, conversationId, currentMe
     return conversation;
 }
 
-export const assertConversationAccess = async ({ serverId, conversationId, currentMemberId }: AssertConversationAccessDTO) => {
+export const assertConversationAccess = async ({ serverId, conversationId, currentMemberId }: ConversationDTO) => {
 
     const conversation = await Conversation
         .findOne({
@@ -83,4 +84,20 @@ export const assertConversationAccess = async ({ serverId, conversationId, curre
     }
 
     return conversation;
+}
+
+export const getOtherMemberFromConversation = async ({ serverId, conversationId, currentMemberId }: ConversationDTO) => {
+
+    const conversation = await findConversationById({ serverId, conversationId, currentMemberId });
+
+    const memberOne = conversation.memberOne as any;
+    const memberTwo = conversation.memberTwo as any;
+
+    const isCurrentMemberOne = String(memberOne._id) === String(currentMemberId);
+    const otherMember = isCurrentMemberOne ? memberTwo : memberOne;
+
+    return {
+        otherMemberId: String(otherMember._id),
+        otherUserId: String(otherMember.user._id),
+    }
 }

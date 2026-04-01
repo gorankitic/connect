@@ -24,7 +24,7 @@ export const generateLivekitToken = catchAsync(async (req, res) => {
 
     if (type === MESSAGE_TYPE.CONVERSATION) {
         const member = await assertServerMember({ serverId, userId });
-        const conversation = await assertConversationAccess({ serverId, conversationId: targetId, currentMemberId: String(member._id) });
+        const conversation = await assertConversationAccess({ serverId, conversationId: targetId, currentMemberId: member._id });
         roomName = `dm_${conversation._id}`;
     }
 

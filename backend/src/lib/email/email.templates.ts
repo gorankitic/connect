@@ -11,14 +11,14 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
     <h1 style="color: white; margin: 0; font-size: 1.6rem">Confirm your email address</h1>
   </div>
   <div style="background-color: #f9f9f9; text-align: center; padding: 10px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <p style="font-size: 1.6rem; font-weight: bold">Welcome to Connexio</p>
+    <p style="font-size: 1.6rem; font-weight: bold">Welcome to Connect</p>
     <p>Hello, thank you for joining us! Click the link below to confirm your email. </p>
     <div style="text-align: center; margin: 30px 0;">
       <a href="{verificationUrl}" style="background-color: #3b82f6; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Confirm email</a>
     </div>
     <p>This link will expire in 1 hour.</p>
     <p>If you didn't create an account with us, please ignore this email.</p>
-    <p>Kind regards,<br>Connexio Team</p>
+    <p>Kind regards,<br>Connect Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>
@@ -47,7 +47,7 @@ export const RESET_PASSWORD_TEMPLATE = `
       <a href="{resetPasswordUrl}" style="background-color: #3b82f6; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
     </div>
     <p>This link will expire in 10 minutes.</p>
-    <p>Kind regards,<br>Connexio Team</p>
+    <p>Kind regards,<br>Connect Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
     <p>This is an automated message, please do not reply to this email.</p>

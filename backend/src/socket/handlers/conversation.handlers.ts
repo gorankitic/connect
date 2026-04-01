@@ -18,7 +18,7 @@ export const registerConversationHandlers = (io: Server, socket: Socket) => {
             // Check is user a member of this server
             const member = await assertServerMember({ serverId, userId });
             // Check does conversation exist in this server 
-            await assertConversationAccess({ serverId, conversationId, currentMemberId: String(member._id) });
+            await assertConversationAccess({ serverId, conversationId, currentMemberId: member._id });
 
             // Leave any previously joined conversation rooms (prevents duplicate deliveries)
             for (const room of socket.rooms) {

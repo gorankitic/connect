@@ -1,18 +1,14 @@
+// modules
+import { Types } from "mongoose"
+
 export type GetOrCreateConversationDTO = {
     serverId: string,
     memberId: string,
-    currentMemberId: string
+    currentMemberId: Types.ObjectId;
 }
 
-export type GetConversationDTO = {
+export type ConversationDTO = {
     serverId: string,
     conversationId: string,
-    currentMemberId: string
-}
-
-
-export type AssertConversationAccessDTO = {
-    serverId: string,
-    conversationId: string,
-    currentMemberId: string
+    currentMemberId: Types.ObjectId;
 }

@@ -1,11 +1,13 @@
 // utils
 import { catchAsync } from "@/lib/utils/catchAsync";
-import { formatMessage } from "@/lib/utils/formatting";
+import { formatMessage, formatNotification } from "@/lib/utils/formatting";
 // constants
 import { MESSAGE_TYPE } from "@/lib/constants/message.constants";
-import { CHANNEL_EVENTS, CONVERSATION_EVENTS, CHANNEL_ROOM_PREFIX, CONVERSATION_ROOM_PREFIX } from "@/socket/constants";
+import { CHANNEL_EVENTS, CONVERSATION_EVENTS, CHANNEL_ROOM_PREFIX, CONVERSATION_ROOM_PREFIX, NOTIFICATION_ROOM_PREFIX, NOTIFICATION_EVENTS } from "@/socket/constants";
 // services
 import { createNewChannelMessage, createNewConversationMessage, deleteMessage, getMessagesByChannel, getMessagesByConversation, updateMessage } from "@/services/message.services";
+import { resetUnreadCount, upsertNotification } from "@/services/notification.services";
+import { getOtherMemberFromConversation } from "@/services/conversation.services";
 // socket
 import { getIO } from "@/socket";
 
@@ -14,8 +16,9 @@ import { getIO } from "@/socket";
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages
 // Restricted route to all server members
 export const createChannelMessage = catchAsync(async (req, res) => {
-    const currentMemberId = String(req.member._id);
     const { channelId, serverId } = req.params;
+    const currentMemberId = req.member._id;
+
     // 1) Request body validation is done in the validateSchema middleware
     const { content } = req.body;
 
@@ -51,7 +54,7 @@ export const getChannelMessages = catchAsync(async (req, res) => {
     // 1) Handle business logic, call service to find all channel messages
     const { messages, nextCursor } = await getMessagesByChannel({ serverId, channelId, limit, cursor });
 
-    // 2) Format channel messages documents
+    // 2) Format channel message documents
     const formattedMessages = messages.map(formatMessage);
 
     // 3) Return response to the client
@@ -70,8 +73,8 @@ export const getChannelMessages = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
 // Restricted route to all server members
 export const updateChannelMessage = catchAsync(async (req, res) => {
-    const currentMemberId = req.member._id;
     const { messageId, channelId } = req.params;
+    const currentMemberId = req.member._id;
 
     // 1) Request body validation is done in the validateSchema middleware
     const { content } = req.body;
@@ -101,8 +104,8 @@ export const updateChannelMessage = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/channels/:channelId/messages/:messageId
 // Restricted route to all server members
 export const deleteChannelMessage = catchAsync(async (req, res) => {
-    const { _id: memberId, role: memberRole } = req.member;
     const { messageId, channelId } = req.params;
+    const { _id: memberId, role: memberRole } = req.member;
 
     // 1) Handle business logic, call service to delete channel message
     const message = await deleteMessage({ messageId, memberId, memberRole, type: MESSAGE_TYPE.CHANNEL });
@@ -110,7 +113,7 @@ export const deleteChannelMessage = catchAsync(async (req, res) => {
     // 2) Format message
     const formattedMessage = formatMessage(message);
 
-    // 3) Emit real-time "channel:message:update" event to all channel members
+    // 3) Emit real-time "channel:message:delete" event to all channel members
     getIO()
         .to(`${CHANNEL_ROOM_PREFIX}:${channelId}`)
         .emit(CHANNEL_EVENTS.MESSAGE_DELETE, formattedMessage);
@@ -130,7 +133,8 @@ export const deleteChannelMessage = catchAsync(async (req, res) => {
 // Restricted route to all server members
 export const createConversationMessage = catchAsync(async (req, res) => {
     const { conversationId, serverId } = req.params;
-    const currentMemberId = String(req.member._id);
+    const currentMemberId = req.member._id;
+
     // 1) Request body validation is done in the validateSchema middleware
     const { content } = req.body;
 
@@ -140,12 +144,32 @@ export const createConversationMessage = catchAsync(async (req, res) => {
     // 3) Format conversation message document
     const formattedMessage = formatMessage(message);
 
-    // 4) Emit real-time event to conversation members
+    // 4) Create notification (only upsert & emit if recipent is not in the room)
+    // 4.1) Get all sockets currently in this specific conversation room
+    const roomName = `${CONVERSATION_ROOM_PREFIX}:${conversationId}`;
+    const activeSocketsInRoom = await getIO().in(roomName).fetchSockets();
+    // 4.2) Identify the recipient's user ID
+    const { otherUserId: recipientUserId } = await getOtherMemberFromConversation({ conversationId, currentMemberId, serverId });
+    // 4.3) Check if any socket in that room belongs to the recipient
+    const isRecipientPresent = activeSocketsInRoom.some((s) => String(s.data.user._id) === String(recipientUserId));
+    if (!isRecipientPresent) {
+        // 4.4) Handle business logic, call service to upsert notification document
+        //      Create a new notification document OR update unreadCount field of an existing notification
+        const { notification, otherUserId: recipientId } = await upsertNotification({ currentMemberId, conversationId, serverId });
+        // 4.5) Format notification document
+        const formattedNotification = formatNotification(notification);
+        // 4.6) Emit real-time "notification:set" to recipient
+        getIO()
+            .to(`${NOTIFICATION_ROOM_PREFIX}:${recipientId}`)
+            .emit(NOTIFICATION_EVENTS.NOTIFICATION_SET, formattedNotification);
+    }
+
+    // 5) Emit real-time "conversation:message:create" event to conversation members
     getIO()
         .to(`${CONVERSATION_ROOM_PREFIX}:${conversationId}`)
         .emit(CONVERSATION_EVENTS.MESSAGE_CREATE, formattedMessage);
 
-    // 5) Return response to the client
+    // 6) Return response to the client
     res.status(201).json({
         status: "success",
         data: {
@@ -160,7 +184,7 @@ export const createConversationMessage = catchAsync(async (req, res) => {
 // Restricted route to all server members
 export const getConversationMessages = catchAsync(async (req, res) => {
     const { serverId, conversationId } = req.params;
-    const currentMemberId = String(req.member._id);
+    const currentMemberId = req.member._id;
 
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
     const cursor = req.query.cursor ? String(req.query.cursor) : undefined;
@@ -168,10 +192,21 @@ export const getConversationMessages = catchAsync(async (req, res) => {
     // 1) Handle business logic, call service to find all conversation messages
     const { messages, nextCursor } = await getMessagesByConversation({ serverId, conversationId, currentMemberId, limit, cursor });
 
-    // 2) Format conversation messages documents
+    // 2) Format conversation message documents
     const formattedMessages = messages.map(formatMessage);
 
-    // 3) Return response to the client
+    // 3) Handle business logic, call service to reset unreadCount field in notification's document
+    const { notification } = await resetUnreadCount({ currentMemberId, conversationId, serverId });
+
+    // 4) Format notification document & emit real-time "notification:reset" event
+    if (notification) {
+        const formattedNotification = formatNotification(notification);
+        getIO()
+            .to(`${NOTIFICATION_ROOM_PREFIX}:${req.user._id}`)
+            .emit(NOTIFICATION_EVENTS.NOTIFICATION_RESET, formattedNotification);
+    }
+
+    // 5) Return response to the client
     res.status(200).json({
         status: "success",
         results: formattedMessages.length,
@@ -187,8 +222,8 @@ export const getConversationMessages = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
 // Restricted route to all server members
 export const updateConversationMessage = catchAsync(async (req, res) => {
-    const currentMemberId = req.member._id;
     const { messageId, conversationId } = req.params;
+    const currentMemberId = req.member._id;
 
     // 1) Request body validation is done in the validateSchema middleware
     const { content } = req.body;
@@ -218,13 +253,13 @@ export const updateConversationMessage = catchAsync(async (req, res) => {
 // Protected route /api/v1/servers/:serverId/conversations/:conversationId/messages/:messageId
 // Restricted route to all server members
 export const deleteConversationMessage = catchAsync(async (req, res) => {
-    const { _id: memberId, role: memberRole } = req.member;
     const { messageId, conversationId } = req.params;
+    const { _id: memberId, role: memberRole } = req.member;
 
     // 1) Handle business logic, call service to delete conversation message
     const message = await deleteMessage({ messageId, memberId, memberRole, type: MESSAGE_TYPE.CONVERSATION });
 
-    // 2) Format message
+    // 2) Format conversation message document
     const formattedMessage = formatMessage(message);
 
     // 3) Emit real-time "conversation:message:delete" event to all conversation members

@@ -4,13 +4,14 @@ import { formatConversation } from "@/lib/utils/formatting";
 // services
 import { findConversationById, getOrCreate } from "@/services/conversation.services";
 
-// Get or create new conversation
+// Get or create a new conversation
 // POST method
 // Protected route /api/v1/servers/:serverId/conversations
 // Restricted route to all server members
 export const getOrCreateConversation = catchAsync(async (req, res) => {
     const { serverId } = req.params;
-    const currentMemberId = String(req.member._id);
+    const currentMemberId = req.member._id;
+
     // 1) Request body validation is done in the validateSchema middleware
     const { memberId } = req.body;
 
@@ -35,7 +36,7 @@ export const getOrCreateConversation = catchAsync(async (req, res) => {
 // Restricted route to all server members
 export const getConversation = catchAsync(async (req, res) => {
     const { serverId, conversationId } = req.params;
-    const currentMemberId = String(req.member._id);
+    const currentMemberId = req.member._id;
 
     // 1) Handle business logic, call service to find conversation document
     const conversation = await findConversationById({ serverId, conversationId, currentMemberId });

@@ -1,7 +1,7 @@
 // modules
 import { Types } from "mongoose";
-// schemas & types
-import { TCreateSession, TRotateSession } from "@/lib/types/session.types";
+// types
+import { CreateSessionDTO, RotateSessionDTO } from "@/lib/types/session.types";
 // utils
 import { signJWT, verifyJWT } from "@/lib/utils/jwt";
 import { AppError } from "@/lib/utils/AppError";
@@ -14,7 +14,7 @@ import { REFRESH_TOKEN_TTL_MS } from "@/config/env";
 // services
 import { getLocation } from "@/services/location.services";
 
-export const createSession = async ({ userId, req }: TCreateSession) => {
+export const createSession = async ({ userId, req }: CreateSessionDTO) => {
     // 1) Generate opaque refresh token
     const refreshToken = generateToken();
     const refreshTokenHash = hash(refreshToken);
@@ -44,7 +44,7 @@ export const createSession = async ({ userId, req }: TCreateSession) => {
     return { accessToken, refreshToken }
 }
 
-export const rotateSession = async ({ refreshToken, req }: TRotateSession) => {
+export const rotateSession = async ({ refreshToken, req }: RotateSessionDTO) => {
     // 1.1) Find current session using hashed refreshToken
     const refreshTokenHash = hash(refreshToken);
     const currentSession = await Session.findOne({ refreshTokenHash });

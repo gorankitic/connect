@@ -16,10 +16,7 @@ let ioInstance: Server | null = null;
 export const initializeSocket = (httpServer: HttpServer) => {
 
     const io = new Server(httpServer, {
-        cors: {
-            origin: CLIENT_ORIGIN,
-            credentials: true
-        },
+        cors: { origin: CLIENT_ORIGIN, credentials: true },
         // Do not use HTTP polling, only accept native WebSocket connections
         transports: ["websocket"],
         // Server sends a pings (heartbeat pings to keep the connection alive) every 25 seconds
