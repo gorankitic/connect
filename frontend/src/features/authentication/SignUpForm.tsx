@@ -22,7 +22,7 @@ const SignUpForm = () => {
 
     return (
         <AuthCard
-            title="Create an Connexio account"
+            title="Create an Connect account"
             backLinkHref="/signin"
             label="Already have an account?"
         >
