@@ -1,6 +1,6 @@
-# Connexio 💬
+# Connect 💬
 
-Connexio is a full-stack application inspired by platforms like Discord and MS Teams.
+Connect is a full-stack web application inspired by platforms like Discord and MS Teams.
 
 It was built as a student project while learning modern web development technologies including **Node.js, Express, MongoDB, React, TypeScript and Socket.io**.
 
@@ -20,6 +20,8 @@ It was built as a student project while learning modern web development technolo
 ©️ 2026 Goran Kitic
 
 <img src="screenshots/Screenshot-2.png" />
+<img src="screenshots/Screenshot-1.png" />
+<img src="screenshots/Screenshot-3.png" />
 
 ## 🚀 Tech Stack
 
