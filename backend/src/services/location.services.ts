@@ -1,6 +1,7 @@
 import { Request } from "express";
 
 export const getLocation = async (req: Request) => {
+    console.error("HERE START: ")
     try {
         let ip =
             (req.headers["cf-connecting-ip"] as string) ||
@@ -10,15 +11,24 @@ export const getLocation = async (req: Request) => {
 
         if (ip === "::1") ip = "127.0.0.1";
 
-        // Skip private IPs
-        if (ip.startsWith("127.") || ip.startsWith("10.") || ip.startsWith("192.168.")) {
-            return null;
-        }
+        console.log("Detected IP:", ip);
 
-        const response = await fetch(`https://ipwho.is/${ip}`);
+        // Comment this out while testing locally
+        // if (ip.startsWith("127.") || ip.startsWith("10.") || ip.startsWith("192.168.")) {
+        //     console.log("Skipping private IP check...");
+        //     return null;
+        // }
+
+        // When testing locally, ip-api will return info for mine router's public IP
+        // if you call it with a blank IP, or it might fail for 127.0.0.1.  
+        // For testing locally, you can force a public IP:
+        const fetchIp = (ip === "127.0.0.1") ? "31.223.129.87" : ip;
+        console.log("FETCHIP: ", fetchIp);
+
+        const response = await fetch(`http://ip-api.com/json/${fetchIp}`);
         const data = await response.json();
 
-        const location = data.city && data.country && data.region ? `${data.city}, ${data.region}, ${data.country}` : null;
+        const location = data.city && data.country && data.regionName ? `${data.city}, ${data.regionName}, ${data.country}` : null;
 
         return { location, ip };
     } catch (err) {
